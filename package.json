@@ -1,5 +1,5 @@
 {
-  "name": "nd-edge-gateway",
+  "name": "nd-iot-edge-gateway",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
