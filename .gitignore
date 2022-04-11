@@ -1,6 +1,7 @@
-/node_modules
+node_modules
 dist
 .vscode
 package-lock.json
 demo
-
+.config.nodes.json
+.config.runtime.json
