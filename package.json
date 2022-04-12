@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "mqtt": "systemctl start mqtt-broker",
-    "edge": "node ./index.js -u ./data",
+    "edge": "git pull && node ./index.js -u ./data",
     "start": "npm run mqtt && npm run edge"
   },
   "author": "CZQ",
