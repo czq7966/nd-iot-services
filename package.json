@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "mqtt": "echo 'systemctl start mqtt-broker'",
-    "edge": "echo \"123456\" | git pull && node ./index.js -u ./data",
-    "start": "npm run mqtt && npm run edge"
+    "mqtt": "systemctl start mqtt-broker || echo",
+    "update": "git pull || echo",
+    "edge": "node ./index.js -u ./data",
+    "start": "npm run mqtt && npm run update && npm run edge"
   },
   "author": "CZQ",
   "license": "ISC",
