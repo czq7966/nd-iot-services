@@ -5,10 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "mqtt": "systemctl start mqtt-broker || echo",
-    "update": "git pull || echo",
-    "edge": "node ./index.js -u ./data",
-    "start": "npm run mqtt && npm run update && npm run edge"
+    "mqtt:start": "systemctl start mqtt-broker",
+    "mqtt": "npm run mqtt:start || echo",
+    "edge:update": "git reset --hard && git pull || echo",
+    "edge:start": "node ./index.js -u ./data",
+    "edge": "npm run edge:update && npm run edge:start",
+    "start": "npm run mqtt && npm run edge"
   },
   "author": "CZQ",
   "license": "ISC",
