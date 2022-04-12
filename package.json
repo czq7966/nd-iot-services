@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "mqtt": "systemctl start mqtt-broker",
-    "edge": "git pull && node ./index.js -u ./data",
+    "mqtt": "echo 'systemctl start mqtt-broker'",
+    "edge": "echo \"123456\" | git pull && node ./index.js -u ./data",
     "start": "npm run mqtt && npm run edge"
   },
   "author": "CZQ",

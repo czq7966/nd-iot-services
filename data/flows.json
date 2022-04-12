@@ -8,6 +8,32 @@
         "env": []
     },
     {
+        "id": "da35b48ff806507c",
+        "type": "mqtt-broker",
+        "name": "push",
+        "broker": "push-access.sdp.101.com",
+        "port": "1780",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
         "id": "667c951c0c4a35e5",
         "type": "debug",
         "z": "7c7a09edf982e2f4",
@@ -22,5 +48,24 @@
         "x": 350,
         "y": 220,
         "wires": []
+    },
+    {
+        "id": "4d8acb6b22e22954",
+        "type": "mqtt in",
+        "z": "7c7a09edf982e2f4",
+        "name": "",
+        "topic": "test",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "da35b48ff806507c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 310,
+        "y": 380,
+        "wires": [
+            []
+        ]
     }
 ]
