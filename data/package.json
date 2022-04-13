@@ -4,6 +4,7 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-        "node-red-nd-mtcp-server": "0.0.1"
+        "node-red-nd-mtcp-server": "~0.0.1",
+        "node-red-node-base64": "~0.3.0"
       }
 }

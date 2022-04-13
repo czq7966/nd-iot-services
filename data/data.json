@@ -1,0 +1,62 @@
+{
+    "app": {
+        "id": "ndiot",
+        "name": "网龙物联网"
+
+    },
+    "product": {
+        "id": "nd",
+        "name": "网龙公司"
+    },
+    "namespaces": {
+        "CL_VRTYG": {
+            "id": "",
+            "name": "",
+            "nick": "长乐VR体验馆"
+        },
+        "FZ_DEV": {
+            "id": "",
+            "name": "",
+            "nick": "福州开发环境"
+        }        
+    },
+    "devices": {
+        "ESP8266x0006dbe5" : {
+            "id": "",
+            "name": "",
+            "nick": "",                    
+            "facturer": "ND",
+            "model": "Z3CO2652ESP8266",
+            "namespace": "FZ_DEV",
+            "subtopic": null,
+            "pubtopic": null,
+            "parent": "0"
+        }        
+    },
+
+    "tsl": {
+        "ND": {
+            "Z3CO2652ESP8266": {
+                "define": {
+                    "tsl_version": "",
+                    "profile": {
+                        "product_id": "产品ID或租户ID",
+                        "group_id": "设备所隶属组ID",
+                        "manufacturer": "设备制造商",
+                        "device_model": "设备型号",
+                        "device_type": "z3-co",
+                        "device_name": "设备名称",
+                        "device_id": "设备ID",
+                        "owner_id": "拥有者ID",
+                        "heart_beat_sec": "int, 心跳间隔(秒),0为无需启动心跳检测",
+                        "report_exp_sec": "int, 主动上报超期检测(秒),无心跳场合,等待设备主动上报",
+                        "parent_device_id": "父设备ID",
+                        "production_date": "生产日期",
+                        "extend_info": "扩展信息",
+                        "remark": "备注信息"
+                    }
+                }
+            }
+        }
+    }
+}

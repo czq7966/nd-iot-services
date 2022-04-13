@@ -2,7 +2,15 @@
     {
         "id": "7c7a09edf982e2f4",
         "type": "tab",
-        "label": "流程 1",
+        "label": "全局配置",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "95aaa5b3dec11e56",
+        "type": "tab",
+        "label": "Z3协调器",
         "disabled": false,
         "info": "",
         "env": []
@@ -45,8 +53,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 350,
-        "y": 220,
+        "x": 810,
+        "y": 460,
         "wires": []
     },
     {
@@ -54,18 +62,325 @@
         "type": "mqtt in",
         "z": "7c7a09edf982e2f4",
         "name": "",
-        "topic": "test",
+        "topic": "",
         "qos": "2",
         "datatype": "auto",
         "broker": "da35b48ff806507c",
         "nl": false,
         "rap": true,
         "rh": 0,
-        "inputs": 0,
-        "x": 570,
+        "inputs": 1,
+        "x": 330,
+        "y": 400,
+        "wires": [
+            [
+                "667c951c0c4a35e5"
+            ]
+        ]
+    },
+    {
+        "id": "f544f205.d51a7",
+        "type": "inject",
+        "z": "7c7a09edf982e2f4",
+        "name": "开始",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "d6802406.a5a078"
+            ]
+        ]
+    },
+    {
+        "id": "d6802406.a5a078",
+        "type": "change",
+        "z": "7c7a09edf982e2f4",
+        "name": "数据",
+        "rules": [
+            {
+                "t": "set",
+                "p": "data",
+                "pt": "global",
+                "to": "{\"app\":{\"id\":\"ndiot\",\"name\":\"网龙物联网\"},\"product\":{\"id\":\"nd\",\"name\":\"网龙公司\"},\"namespaces\":{\"CL_VRTYG\":{\"id\":\"\",\"name\":\"\",\"nick\":\"长乐VR体验馆\"},\"FZ_DEV\":{\"id\":\"\",\"name\":\"\",\"nick\":\"福州开发环境\"}},\"devices\":{\"ESP8266x0006dbe5\":{\"id\":\"\",\"name\":\"\",\"nick\":\"\",\"facturer\":\"ND\",\"model\":\"Z3CO2652ESP8266\",\"namespace\":\"FZ_DEV\"}},\"tsl\":{\"ND\":{\"Z3CO2652ESP8266\":{\"define\":{\"tsl_version\":\"\",\"profile\":{\"product_id\":\"产品ID或租户ID\",\"group_id\":\"设备所隶属组ID\",\"manufacturer\":\"设备制造商\",\"device_model\":\"设备型号\",\"device_type\":\"z3-co\",\"device_name\":\"设备名称\",\"device_id\":\"设备ID\",\"owner_id\":\"拥有者ID\",\"heart_beat_sec\":\"int, 心跳间隔(秒),0为无需启动心跳检测\",\"report_exp_sec\":\"int, 主动上报超期检测(秒),无心跳场合,等待设备主动上报\",\"parent_device_id\":\"父设备ID\",\"production_date\":\"生产日期\",\"extend_info\":\"扩展信息\",\"remark\":\"备注信息\"}}}}}}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 290,
+        "y": 100,
+        "wires": [
+            [
+                "04a622cf8260f366"
+            ]
+        ]
+    },
+    {
+        "id": "04a622cf8260f366",
+        "type": "function",
+        "z": "7c7a09edf982e2f4",
+        "name": "数据补全",
+        "func": "let data = global.get(\"data\");\n\nlet namespaces = data.namespaces;\nlet devices = data.devices;\nlet tsl = data.tsl;\nlet keys;\nlet setDeviceTopic = (device) => {\n    let appId = data.app.id;\n    let typeId = \"/device\";\n    let productId = \"/\" + data.product.id;\n    let parentId = \"/\" + device.parent || \"0\";\n    let did = \"/\" + device.id;\n    device.subtopic = appId + typeId + productId + parentId + did + \"/sub\";\n    device.subtopic = appId + typeId + productId + parentId + did + \"/pub\";\n}\n\nkeys = Object.keys(namespaces);\nkeys.forEach(key => {\n    namespaces[key].id = key;\n});\n\n\n\nkeys = Object.keys(devices);\nkeys.forEach(key => {\n    let device = devices[key];\n    device.id = key;\n    if(typeof(device.namespace) == \"string\") {\n        device.namespace=namespaces[device.namespace];\n    }\n    device.tsl = tsl[device.facturer][device.model]\n    setDeviceTopic(device);\n});\n\nreturn {payload: data};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 100,
+        "wires": [
+            [
+                "500adc0994d94415"
+            ]
+        ]
+    },
+    {
+        "id": "500adc0994d94415",
+        "type": "link out",
+        "z": "7c7a09edf982e2f4",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "971801346bcfe01d"
+        ],
+        "x": 605,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "2a50d92d7b1e8c5f",
+        "type": "mtcp-server",
+        "z": "95aaa5b3dec11e56",
+        "action": "action",
+        "actionType": "msg",
+        "port": "port",
+        "portType": "msg",
+        "datamode": "stream",
+        "datatype": "buffer",
+        "newline": "",
+        "xmlAttrkey": "$",
+        "xmlCharkey": "_",
+        "xmlStrip": false,
+        "xmlArray": false,
+        "xmlNormalizeTags": false,
+        "xmlNormalize": false,
+        "write": "payload",
+        "writeType": "msg",
+        "writeHost": "",
+        "writeHostType": "str",
+        "writePort": "",
+        "writePortType": "str",
+        "closeHost": "",
+        "closeHostType": "str",
+        "closePort": "",
+        "closePortType": "str",
+        "topic": "",
+        "name": "",
+        "x": 670,
+        "y": 240,
+        "wires": [
+            [
+                "146f6d28af979aef"
+            ]
+        ]
+    },
+    {
+        "id": "971801346bcfe01d",
+        "type": "link in",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "links": [
+            "500adc0994d94415"
+        ],
+        "x": 135,
+        "y": 80,
+        "wires": [
+            [
+                "3403f1cca771583e"
+            ]
+        ]
+    },
+    {
+        "id": "dd1d9c395a642389",
+        "type": "function",
+        "z": "95aaa5b3dec11e56",
+        "name": "退出TCP",
+        "func": "\nreturn {action: \"kill\"};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 220,
+        "wires": [
+            [
+                "2a50d92d7b1e8c5f"
+            ]
+        ]
+    },
+    {
+        "id": "3403f1cca771583e",
+        "type": "function",
+        "z": "95aaa5b3dec11e56",
+        "name": "Z3数据",
+        "func": "let gData = msg.payload;\nlet data = {};\nlet tcpPort = 8190;\nlet devices = gData.devices;\n\ndata.devices = {};\nlet setDevice = (device, define, tcpPort) => {\n    data.devices[device.id] = {\n        device: device,\n        tcp: {\n            port: tcpPort\n        },\n        configuration: {\n            mqtt: {\n                base_topic: device.id,\n                server: \"mqtt://push-access.sdp.101.com:1780\",\n                user: \"ioe\"\n            },\n            serial: {\n                port: \"tcp://127.0.0.1:\" + tcpPort\n            },\n            frontend: {\n                port: tcpPort - 100\n            }\n        }\n    }\n}\n\nlet keys;\nkeys = Object.keys(devices);\nkeys.forEach(key => {\n    let device = devices[key];\n    if (device.tsl && device.tsl.define) {\n        let define = device.tsl.define;\n        if (define.profile.device_type == \"z3-co\") {\n            setDevice(device, define, tcpPort);\n            tcpPort++;\n        }\n    }\n});\n\nflow.set(\"data\", data)\n\nreturn {payload: data};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 80,
+        "wires": [
+            [
+                "dd1d9c395a642389",
+                "24e2bbdf06e9b037"
+            ]
+        ]
+    },
+    {
+        "id": "4da7e379a1c8765f",
+        "type": "function",
+        "z": "95aaa5b3dec11e56",
+        "name": "启动TCP",
+        "func": "let data = msg.payload;\nlet devices = data.devices;\nlet keys;\nkeys = Object.keys(data.devices);\nkeys.forEach(key => {\n    let device = devices[key];\n    node.send({\n        action: \"listen\",\n        port: device.tcp.port,\n        topic: key\n    })\n});\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 280,
+        "wires": [
+            [
+                "2a50d92d7b1e8c5f"
+            ]
+        ]
+    },
+    {
+        "id": "24e2bbdf06e9b037",
+        "type": "delay",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 240,
+        "y": 300,
+        "wires": [
+            [
+                "4da7e379a1c8765f",
+                "589883c5ddd06e17"
+            ]
+        ]
+    },
+    {
+        "id": "146f6d28af979aef",
+        "type": "base64",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "action": "",
+        "property": "payload",
+        "x": 840,
+        "y": 240,
+        "wires": [
+            [
+                "7c8a25fc966a2456"
+            ]
+        ]
+    },
+    {
+        "id": "7c8a25fc966a2456",
+        "type": "function",
+        "z": "95aaa5b3dec11e56",
+        "name": "指令",
+        "func": "let devices = flow.get(\"data\").devices;\nlet did = msg.topic;\nlet device = devices[did];\nlet hd = {\n    cmd: 3\n}\nlet pld = {\n    code: msg.payload\n}\n\nreturn {\n    topic: device.subtopic,\n    payload:{\n        hd: hd, \n        pld: pld\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 320,
+        "wires": [
+            [
+                "e944094b190529e4"
+            ]
+        ]
+    },
+    {
+        "id": "e944094b190529e4",
+        "type": "mqtt out",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "da35b48ff806507c",
+        "x": 1030,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "61037682fdfa3411",
+        "type": "mqtt in",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "topic": "",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "da35b48ff806507c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 590,
         "y": 340,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "589883c5ddd06e17",
+        "type": "function",
+        "z": "95aaa5b3dec11e56",
+        "name": "订阅主题",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 340,
+        "wires": [
+            [
+                "61037682fdfa3411"
+            ]
         ]
     }
 ]
