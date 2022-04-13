@@ -8,8 +8,9 @@
     "mqtt:start": "systemctl start mqtt-broker",
     "mqtt": "npm run mqtt:start || echo",
     "edge:update": "git reset --hard && git pull || echo",
+    "edge:install": "npm i && cd data && npm i || echo",
     "edge:start": "node ./index.js -u ./data",
-    "edge": "npm run edge:update && npm run edge:start",
+    "edge": "npm run edge:update && npm run edge:install && npm run edge:start",
     "start": "npm run mqtt && npm run edge"
   },
   "author": "CZQ",
