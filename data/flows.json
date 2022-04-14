@@ -93,7 +93,7 @@
         "y": 100,
         "wires": [
             [
-                "d6802406.a5a078"
+                "52f82eb73840e302"
             ]
         ]
     },
@@ -109,6 +109,13 @@
                 "pt": "global",
                 "to": "{\"app\":{\"id\":\"ndiot\",\"name\":\"网龙物联网\"},\"product\":{\"id\":\"nd\",\"name\":\"网龙公司\"},\"namespaces\":{\"CL_VRTYG\":{\"id\":\"\",\"name\":\"\",\"nick\":\"长乐VR体验馆\"},\"FZ_DEV\":{\"id\":\"\",\"name\":\"\",\"nick\":\"福州开发环境\"}},\"devices\":{\"ESP8266x0006dbe5\":{\"id\":\"\",\"name\":\"\",\"nick\":\"\",\"facturer\":\"ND\",\"model\":\"Z3CO2652ESP8266\",\"namespace\":\"FZ_DEV\"}},\"tsl\":{\"ND\":{\"Z3CO2652ESP8266\":{\"define\":{\"tsl_version\":\"\",\"profile\":{\"product_id\":\"产品ID或租户ID\",\"group_id\":\"设备所隶属组ID\",\"manufacturer\":\"设备制造商\",\"device_model\":\"设备型号\",\"device_type\":\"z3-co\",\"device_name\":\"设备名称\",\"device_id\":\"设备ID\",\"owner_id\":\"拥有者ID\",\"heart_beat_sec\":\"int, 心跳间隔(秒),0为无需启动心跳检测\",\"report_exp_sec\":\"int, 主动上报超期检测(秒),无心跳场合,等待设备主动上报\",\"parent_device_id\":\"父设备ID\",\"production_date\":\"生产日期\",\"extend_info\":\"扩展信息\",\"remark\":\"备注信息\"}}}}}}",
                 "tot": "json"
+            },
+            {
+                "t": "set",
+                "p": "os",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
             }
         ],
         "action": "",
@@ -116,7 +123,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 290,
+        "x": 410,
         "y": 100,
         "wires": [
             [
@@ -129,13 +136,13 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据补全",
-        "func": "let data = global.get(\"data\");\n\nlet namespaces = data.namespaces;\nlet devices = data.devices;\nlet tsl = data.tsl;\nlet keys;\nlet setDeviceTopic = (device) => {\n    let appId = data.app.id;\n    let typeId = \"/device\";\n    let productId = \"/\" + data.product.id;\n    let parentId = \"/\" + device.parent || \"0\";\n    let did = \"/\" + device.id;\n    device.subtopic = appId + typeId + productId + parentId + did + \"/sub\";\n    device.subtopic = appId + typeId + productId + parentId + did + \"/pub\";\n}\n\nkeys = Object.keys(namespaces);\nkeys.forEach(key => {\n    namespaces[key].id = key;\n});\n\n\n\nkeys = Object.keys(devices);\nkeys.forEach(key => {\n    let device = devices[key];\n    device.id = key;\n    if(typeof(device.namespace) == \"string\") {\n        device.namespace=namespaces[device.namespace];\n    }\n    device.tsl = tsl[device.facturer][device.model]\n    setDeviceTopic(device);\n});\n\nreturn {payload: data};",
+        "func": "let data = global.get(\"data\");\n\nlet namespaces = data.namespaces;\nlet devices = data.devices;\nlet tsl = data.tsl;\nlet keys;\nlet setDeviceTopic = (device) => {\n    let appId = data.app.id;\n    let typeId = \"/device\";\n    let productId = \"/\" + data.product.id;\n    let parentId = \"/\" + (device.parent || \"0\");\n    let did = \"/\" + device.id;\n    device.subtopic = appId + typeId + productId + parentId + did + \"/sub\";\n    device.pubtopic = appId + typeId + productId + parentId + did + \"/pub\";\n}\n\nkeys = Object.keys(namespaces);\nkeys.forEach(key => {\n    namespaces[key].id = key;\n});\n\n\n\nkeys = Object.keys(devices);\nkeys.forEach(key => {\n    let device = devices[key];\n    device.id = key;\n    if(typeof(device.namespace) == \"string\") {\n        device.namespace=namespaces[device.namespace];\n    }\n    device.tsl = tsl[device.facturer][device.model]\n    setDeviceTopic(device);\n});\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 460,
+        "x": 560,
         "y": 100,
         "wires": [
             [
@@ -152,9 +159,22 @@
         "links": [
             "971801346bcfe01d"
         ],
-        "x": 605,
+        "x": 805,
         "y": 100,
         "wires": []
+    },
+    {
+        "id": "52f82eb73840e302",
+        "type": "OS",
+        "z": "7c7a09edf982e2f4",
+        "name": "",
+        "x": 270,
+        "y": 100,
+        "wires": [
+            [
+                "d6802406.a5a078"
+            ]
+        ]
     },
     {
         "id": "2a50d92d7b1e8c5f",
@@ -185,8 +205,8 @@
         "closePortType": "str",
         "topic": "",
         "name": "",
-        "x": 670,
-        "y": 240,
+        "x": 770,
+        "y": 120,
         "wires": [
             [
                 "146f6d28af979aef"
@@ -201,8 +221,8 @@
         "links": [
             "500adc0994d94415"
         ],
-        "x": 135,
-        "y": 80,
+        "x": 85,
+        "y": 40,
         "wires": [
             [
                 "3403f1cca771583e"
@@ -220,8 +240,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 440,
-        "y": 220,
+        "x": 410,
+        "y": 80,
         "wires": [
             [
                 "2a50d92d7b1e8c5f"
@@ -232,15 +252,15 @@
         "id": "3403f1cca771583e",
         "type": "function",
         "z": "95aaa5b3dec11e56",
-        "name": "Z3数据",
+        "name": "Z3设备",
         "func": "let gData = msg.payload;\nlet data = {};\nlet tcpPort = 8190;\nlet devices = gData.devices;\n\ndata.devices = {};\nlet setDevice = (device, define, tcpPort) => {\n    data.devices[device.id] = {\n        device: device,\n        tcp: {\n            port: tcpPort\n        },\n        configuration: {\n            mqtt: {\n                base_topic: device.id,\n                server: \"mqtt://push-access.sdp.101.com:1780\",\n                user: \"ioe\"\n            },\n            serial: {\n                port: \"tcp://127.0.0.1:\" + tcpPort\n            },\n            frontend: {\n                port: tcpPort - 100\n            }\n        }\n    }\n}\n\nlet keys;\nkeys = Object.keys(devices);\nkeys.forEach(key => {\n    let device = devices[key];\n    if (device.tsl && device.tsl.define) {\n        let define = device.tsl.define;\n        if (define.profile.device_type == \"z3-co\") {\n            setDevice(device, define, tcpPort);\n            tcpPort++;\n        }\n    }\n});\n\nflow.set(\"data\", data)\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 280,
-        "y": 80,
+        "x": 230,
+        "y": 40,
         "wires": [
             [
                 "dd1d9c395a642389",
@@ -259,8 +279,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 440,
-        "y": 280,
+        "x": 410,
+        "y": 120,
         "wires": [
             [
                 "2a50d92d7b1e8c5f"
@@ -284,8 +304,8 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 240,
-        "y": 300,
+        "x": 230,
+        "y": 120,
         "wires": [
             [
                 "4da7e379a1c8765f",
@@ -300,8 +320,8 @@
         "name": "",
         "action": "",
         "property": "payload",
-        "x": 840,
-        "y": 240,
+        "x": 900,
+        "y": 120,
         "wires": [
             [
                 "7c8a25fc966a2456"
@@ -312,15 +332,15 @@
         "id": "7c8a25fc966a2456",
         "type": "function",
         "z": "95aaa5b3dec11e56",
-        "name": "指令",
+        "name": "下行数据",
         "func": "let devices = flow.get(\"data\").devices;\nlet did = msg.topic;\nlet device = devices[did];\nlet hd = {\n    cmd: 3\n}\nlet pld = {\n    code: msg.payload\n}\n\nreturn {\n    topic: device.subtopic,\n    payload:{\n        hd: hd, \n        pld: pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 850,
-        "y": 320,
+        "x": 960,
+        "y": 200,
         "wires": [
             [
                 "e944094b190529e4"
@@ -341,8 +361,8 @@
         "correl": "",
         "expiry": "",
         "broker": "da35b48ff806507c",
-        "x": 1030,
-        "y": 320,
+        "x": 1110,
+        "y": 200,
         "wires": []
     },
     {
@@ -358,28 +378,474 @@
         "rap": true,
         "rh": 0,
         "inputs": 1,
-        "x": 590,
-        "y": 340,
+        "x": 290,
+        "y": 200,
         "wires": [
-            []
+            [
+                "ae67f15e.3ab57"
+            ]
         ]
     },
     {
         "id": "589883c5ddd06e17",
         "type": "function",
         "z": "95aaa5b3dec11e56",
-        "name": "订阅主题",
+        "name": "主题订阅",
+        "func": "let data = global.get(\"data\")\nlet devices = data.devices;\n\nlet keys;\nkeys = Object.keys(data.devices);\nkeys.forEach(key => {\n    let device = devices[key];\n    node.send({\n        action: \"subscribe\",\n        topic: device.pubtopic\n    })\n});\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 160,
+        "y": 200,
+        "wires": [
+            [
+                "61037682fdfa3411"
+            ]
+        ]
+    },
+    {
+        "id": "ae67f15e.3ab57",
+        "type": "switch",
+        "z": "95aaa5b3dec11e56",
+        "name": "Z3数据",
+        "property": "payload.hd.cmd",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "3",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 420,
+        "y": 200,
+        "wires": [
+            [
+                "e832c137.1576"
+            ]
+        ]
+    },
+    {
+        "id": "e832c137.1576",
+        "type": "base64",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "action": "",
+        "property": "payload.pld.code",
+        "x": 560,
+        "y": 200,
+        "wires": [
+            [
+                "6a00af3d.fcc16"
+            ]
+        ]
+    },
+    {
+        "id": "6a00af3d.fcc16",
+        "type": "function",
+        "z": "95aaa5b3dec11e56",
+        "name": "上行数据",
+        "func": "\nreturn {\n    action: \"write\",\n    topic: msg.payload.hd.did,\n    payload: msg.payload.pld.code\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 200,
+        "wires": [
+            [
+                "2a50d92d7b1e8c5f"
+            ]
+        ]
+    },
+    {
+        "id": "883458eec864377d",
+        "type": "complete",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "scope": [
+            "4da7e379a1c8765f",
+            "589883c5ddd06e17"
+        ],
+        "uncaught": false,
+        "x": 170,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1597ce13b80c174d",
+        "type": "exec",
+        "z": "95aaa5b3dec11e56",
+        "command": "",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 530,
+        "y": 480,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "07f20c3b16bb22aa",
+        "type": "function",
+        "z": "95aaa5b3dec11e56",
+        "name": "启动Z2M",
         "func": "\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 440,
-        "y": 340,
+        "x": 360,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a4de7784c8a5b141",
+        "type": "yaml",
+        "z": "95aaa5b3dec11e56",
+        "property": "payload",
+        "name": "",
+        "x": 290,
+        "y": 660,
         "wires": [
             [
-                "61037682fdfa3411"
+                "e4a1cf79f25b7d76",
+                "3848d1b62809a168"
+            ]
+        ]
+    },
+    {
+        "id": "c4818ccfd1367106",
+        "type": "inject",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "homeassistant: false permit_join: false mqtt:   base_topic: CMDGATE_FZ_DEV_CC2652   server: mqtt://push-access.sdp.101.com:1780   user: ioe serial:   port: COM19 device_options:   legacy: false advanced:   channel: 15   baudrate: 115200   homeassistant_legacy_entity_attributes: false   legacy_api: false   log_level: debug frontend:   port: 8090 external_converters:   - netdragon.js   - honyar.js devices:   '0x00158d00035330f1':     friendly_name: '0x00158d00035330f1'   '0x00158d000353c53f':     friendly_name: '0x00158d000353c53f'   '0x60a423fffe348618':     friendly_name: '0x60a423fffe348618'   '0x00158d0007ee2669':     friendly_name: '0x00158d0007ee2669'   '0xa4c138d1a72aca60':     friendly_name: '0xa4c138d1a72aca60'   '0xa4c138b3897919ff':     friendly_name: '0xa4c138b3897919ff'",
+        "payloadType": "str",
+        "x": 130,
+        "y": 660,
+        "wires": [
+            [
+                "8b1d994bbdbb71db"
+            ]
+        ]
+    },
+    {
+        "id": "e4a1cf79f25b7d76",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 510,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "8b1d994bbdbb71db",
+        "type": "file in",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "filename": "E:\\temp\\z2m\\configuration.yaml",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 230,
+        "y": 580,
+        "wires": [
+            [
+                "e4a1cf79f25b7d76",
+                "a4de7784c8a5b141"
+            ]
+        ]
+    },
+    {
+        "id": "3848d1b62809a168",
+        "type": "yaml",
+        "z": "95aaa5b3dec11e56",
+        "property": "payload",
+        "name": "",
+        "x": 390,
+        "y": 800,
+        "wires": [
+            [
+                "e4a1cf79f25b7d76"
+            ]
+        ]
+    },
+    {
+        "id": "1b9d76d1beb414b9",
+        "type": "Drives",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "x": 250,
+        "y": 960,
+        "wires": [
+            [
+                "d4697f4f2ba11e50"
+            ]
+        ]
+    },
+    {
+        "id": "4431333a2c5b62fd",
+        "type": "OS",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "x": 250,
+        "y": 1000,
+        "wires": [
+            [
+                "8b4c81ae3cc89a32"
+            ]
+        ]
+    },
+    {
+        "id": "b8cd83b248bdaf3c",
+        "type": "Uptime",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "x": 260,
+        "y": 1040,
+        "wires": [
+            [
+                "1dc036ad19c157b3"
+            ]
+        ]
+    },
+    {
+        "id": "f04b600f4ef9670a",
+        "type": "CPUs",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "x": 250,
+        "y": 1080,
+        "wires": [
+            [
+                "430c1d24d6ff58bb"
+            ]
+        ]
+    },
+    {
+        "id": "3c1fdc419054989d",
+        "type": "Loadavg",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "x": 260,
+        "y": 1120,
+        "wires": [
+            [
+                "169271b9eb89b020"
+            ]
+        ]
+    },
+    {
+        "id": "60d9386e91b09fe7",
+        "type": "Memory",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "scale": "Byte",
+        "x": 260,
+        "y": 1160,
+        "wires": [
+            [
+                "5be1836ccfc9d920"
+            ]
+        ]
+    },
+    {
+        "id": "80f6975482134892",
+        "type": "NetworkIntf",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "x": 270,
+        "y": 1200,
+        "wires": [
+            [
+                "66b0ef6de57a6faf"
+            ]
+        ]
+    },
+    {
+        "id": "d4697f4f2ba11e50",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 430,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "8b4c81ae3cc89a32",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 430,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "1dc036ad19c157b3",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 430,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "430c1d24d6ff58bb",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 430,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "169271b9eb89b020",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 430,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "5be1836ccfc9d920",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 430,
+        "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "66b0ef6de57a6faf",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 430,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "3b3d32c4b7a865a5",
+        "type": "inject",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 70,
+        "y": 1060,
+        "wires": [
+            [
+                "1b9d76d1beb414b9",
+                "4431333a2c5b62fd",
+                "b8cd83b248bdaf3c",
+                "f04b600f4ef9670a",
+                "3c1fdc419054989d",
+                "60d9386e91b09fe7",
+                "80f6975482134892",
+                "24525891cb87bbdd"
+            ]
+        ]
+    },
+    {
+        "id": "24525891cb87bbdd",
+        "type": "home-dir",
+        "z": "95aaa5b3dec11e56",
+        "x": 320,
+        "y": 1460,
+        "wires": [
+            [
+                "66b0ef6de57a6faf"
             ]
         ]
     }
