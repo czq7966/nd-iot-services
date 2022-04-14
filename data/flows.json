@@ -42,54 +42,17 @@
         "sessionExpiry": ""
     },
     {
-        "id": "667c951c0c4a35e5",
-        "type": "debug",
-        "z": "7c7a09edf982e2f4",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 810,
-        "y": 460,
-        "wires": []
-    },
-    {
-        "id": "4d8acb6b22e22954",
-        "type": "mqtt in",
-        "z": "7c7a09edf982e2f4",
-        "name": "",
-        "topic": "",
-        "qos": "2",
-        "datatype": "auto",
-        "broker": "da35b48ff806507c",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 1,
-        "x": 330,
-        "y": 400,
-        "wires": [
-            [
-                "667c951c0c4a35e5"
-            ]
-        ]
-    },
-    {
         "id": "f544f205.d51a7",
         "type": "inject",
         "z": "7c7a09edf982e2f4",
-        "name": "开始",
+        "name": "初始化",
         "props": [],
         "repeat": "",
         "crontab": "",
         "once": true,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 130,
+        "x": 140,
         "y": 100,
         "wires": [
             [
@@ -109,7 +72,70 @@
                 "pt": "global",
                 "to": "{\"app\":{\"id\":\"ndiot\",\"name\":\"网龙物联网\"},\"product\":{\"id\":\"nd\",\"name\":\"网龙公司\"},\"namespaces\":{\"CL_VRTYG\":{\"id\":\"\",\"name\":\"\",\"nick\":\"长乐VR体验馆\"},\"FZ_DEV\":{\"id\":\"\",\"name\":\"\",\"nick\":\"福州开发环境\"}},\"devices\":{\"ESP8266x0006dbe5\":{\"id\":\"\",\"name\":\"\",\"nick\":\"\",\"facturer\":\"ND\",\"model\":\"Z3CO2652ESP8266\",\"namespace\":\"FZ_DEV\"}},\"tsl\":{\"ND\":{\"Z3CO2652ESP8266\":{\"define\":{\"tsl_version\":\"\",\"profile\":{\"product_id\":\"产品ID或租户ID\",\"group_id\":\"设备所隶属组ID\",\"manufacturer\":\"设备制造商\",\"device_model\":\"设备型号\",\"device_type\":\"z3-co\",\"device_name\":\"设备名称\",\"device_id\":\"设备ID\",\"owner_id\":\"拥有者ID\",\"heart_beat_sec\":\"int, 心跳间隔(秒),0为无需启动心跳检测\",\"report_exp_sec\":\"int, 主动上报超期检测(秒),无心跳场合,等待设备主动上报\",\"parent_device_id\":\"父设备ID\",\"production_date\":\"生产日期\",\"extend_info\":\"扩展信息\",\"remark\":\"备注信息\"}}}}}}",
                 "tot": "json"
-            },
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 290,
+        "y": 280,
+        "wires": [
+            [
+                "04a622cf8260f366"
+            ]
+        ]
+    },
+    {
+        "id": "04a622cf8260f366",
+        "type": "function",
+        "z": "7c7a09edf982e2f4",
+        "name": "数据补全",
+        "func": "let data = global.get(\"data\");\n\nlet namespaces = data.namespaces;\nlet devices = data.devices;\nlet tsl = data.tsl;\nlet keys;\nlet setDeviceTopic = (device) => {\n    let appId = data.app.id;\n    let typeId = \"/device\";\n    let productId = \"/\" + data.product.id;\n    let parentId = \"/\" + (device.parent || \"0\");\n    let did = \"/\" + device.id;\n    device._inner.topic = {\n        device: {\n            sub: appId + typeId + productId + parentId + did + \"/sub\",\n            pub: appId + typeId + productId + parentId + did + \"/pub\"\n        }\n    };\n}\n\nkeys = Object.keys(namespaces);\nkeys.forEach(key => {\n    namespaces[key].id = key;\n});\n\n\n\nkeys = Object.keys(devices);\nkeys.forEach(key => {\n    let device = devices[key];\n    device.id = key;\n    if(typeof(device.namespace) == \"string\") {\n        device.namespace=namespaces[device.namespace];\n    }\n    device.tsl = tsl[device.facturer][device.model];\n    device._inner = {};\n    setDeviceTopic(device);\n});\n\nreturn {payload: data};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "500adc0994d94415",
+        "type": "link out",
+        "z": "7c7a09edf982e2f4",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "971801346bcfe01d"
+        ],
+        "x": 365,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "52f82eb73840e302",
+        "type": "OS",
+        "z": "7c7a09edf982e2f4",
+        "name": "",
+        "x": 270,
+        "y": 100,
+        "wires": [
+            [
+                "705cd1a4e7548610"
+            ]
+        ]
+    },
+    {
+        "id": "705cd1a4e7548610",
+        "type": "change",
+        "z": "7c7a09edf982e2f4",
+        "name": "OS",
+        "rules": [
             {
                 "t": "set",
                 "p": "os",
@@ -127,23 +153,60 @@
         "y": 100,
         "wires": [
             [
-                "04a622cf8260f366"
+                "c27b74647cc92e82"
             ]
         ]
     },
     {
-        "id": "04a622cf8260f366",
-        "type": "function",
+        "id": "c27b74647cc92e82",
+        "type": "home-dir",
         "z": "7c7a09edf982e2f4",
-        "name": "数据补全",
-        "func": "let data = global.get(\"data\");\n\nlet namespaces = data.namespaces;\nlet devices = data.devices;\nlet tsl = data.tsl;\nlet keys;\nlet setDeviceTopic = (device) => {\n    let appId = data.app.id;\n    let typeId = \"/device\";\n    let productId = \"/\" + data.product.id;\n    let parentId = \"/\" + (device.parent || \"0\");\n    let did = \"/\" + device.id;\n    device.subtopic = appId + typeId + productId + parentId + did + \"/sub\";\n    device.pubtopic = appId + typeId + productId + parentId + did + \"/pub\";\n}\n\nkeys = Object.keys(namespaces);\nkeys.forEach(key => {\n    namespaces[key].id = key;\n});\n\n\n\nkeys = Object.keys(devices);\nkeys.forEach(key => {\n    let device = devices[key];\n    device.id = key;\n    if(typeof(device.namespace) == \"string\") {\n        device.namespace=namespaces[device.namespace];\n    }\n    device.tsl = tsl[device.facturer][device.model]\n    setDeviceTopic(device);\n});\n\nreturn {payload: data};",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
         "x": 560,
         "y": 100,
+        "wires": [
+            [
+                "3e822ed879b8777e"
+            ]
+        ]
+    },
+    {
+        "id": "3e822ed879b8777e",
+        "type": "change",
+        "z": "7c7a09edf982e2f4",
+        "name": "homedir",
+        "rules": [
+            {
+                "t": "set",
+                "p": "os.homedir",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 720,
+        "y": 100,
+        "wires": [
+            [
+                "218508c64f4f08dd"
+            ]
+        ]
+    },
+    {
+        "id": "9cd429a5958b404e",
+        "type": "complete",
+        "z": "7c7a09edf982e2f4",
+        "name": "",
+        "scope": [
+            "04a622cf8260f366"
+        ],
+        "uncaught": false,
+        "x": 150,
+        "y": 460,
         "wires": [
             [
                 "500adc0994d94415"
@@ -151,25 +214,59 @@
         ]
     },
     {
-        "id": "500adc0994d94415",
-        "type": "link out",
+        "id": "c8aeafe354ddd36b",
+        "type": "yaml",
         "z": "7c7a09edf982e2f4",
+        "property": "payload",
         "name": "",
-        "mode": "link",
-        "links": [
-            "971801346bcfe01d"
-        ],
-        "x": 805,
-        "y": 100,
-        "wires": []
+        "x": 490,
+        "y": 180,
+        "wires": [
+            [
+                "b5004c17ff9ea408"
+            ]
+        ]
     },
     {
-        "id": "52f82eb73840e302",
-        "type": "OS",
+        "id": "218508c64f4f08dd",
+        "type": "file in",
         "z": "7c7a09edf982e2f4",
-        "name": "",
-        "x": 270,
-        "y": 100,
+        "name": "Z2M配置模板",
+        "filename": "E:\\temp\\z2m\\configuration.yaml",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 320,
+        "y": 180,
+        "wires": [
+            [
+                "c8aeafe354ddd36b"
+            ]
+        ]
+    },
+    {
+        "id": "b5004c17ff9ea408",
+        "type": "change",
+        "z": "7c7a09edf982e2f4",
+        "name": "z2m.config",
+        "rules": [
+            {
+                "t": "set",
+                "p": "z2m.configuration",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 670,
+        "y": 180,
         "wires": [
             [
                 "d6802406.a5a078"
@@ -205,8 +302,8 @@
         "closePortType": "str",
         "topic": "",
         "name": "",
-        "x": 770,
-        "y": 120,
+        "x": 690,
+        "y": 340,
         "wires": [
             [
                 "146f6d28af979aef"
@@ -221,7 +318,7 @@
         "links": [
             "500adc0994d94415"
         ],
-        "x": 85,
+        "x": 135,
         "y": 40,
         "wires": [
             [
@@ -234,14 +331,14 @@
         "type": "function",
         "z": "95aaa5b3dec11e56",
         "name": "退出TCP",
-        "func": "\nreturn {action: \"kill\"};",
+        "func": "\nreturn {\n    action: \"kill\",\n    topic: msg.topic\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 410,
-        "y": 80,
+        "x": 390,
+        "y": 300,
         "wires": [
             [
                 "2a50d92d7b1e8c5f"
@@ -253,7 +350,7 @@
         "type": "function",
         "z": "95aaa5b3dec11e56",
         "name": "Z3设备",
-        "func": "let gData = msg.payload;\nlet data = {};\nlet tcpPort = 8190;\nlet devices = gData.devices;\n\ndata.devices = {};\nlet setDevice = (device, define, tcpPort) => {\n    data.devices[device.id] = {\n        device: device,\n        tcp: {\n            port: tcpPort\n        },\n        configuration: {\n            mqtt: {\n                base_topic: device.id,\n                server: \"mqtt://push-access.sdp.101.com:1780\",\n                user: \"ioe\"\n            },\n            serial: {\n                port: \"tcp://127.0.0.1:\" + tcpPort\n            },\n            frontend: {\n                port: tcpPort - 100\n            }\n        }\n    }\n}\n\nlet keys;\nkeys = Object.keys(devices);\nkeys.forEach(key => {\n    let device = devices[key];\n    if (device.tsl && device.tsl.define) {\n        let define = device.tsl.define;\n        if (define.profile.device_type == \"z3-co\") {\n            setDevice(device, define, tcpPort);\n            tcpPort++;\n        }\n    }\n});\n\nflow.set(\"data\", data)\n\nreturn {payload: data};",
+        "func": "let gData = global.get(\"data\");\nlet os = global.get(\"os\");\nlet data = {};\nlet tcpPort = 8190;\nlet devices = gData.devices;\nlet z2mDir = os.homedir + \"/../../zigbee2mqtt\"\n\n\ndata.devices = {};\nlet setDevice = (device, define, tcpPort) => {\n    let dataDir = z2mDir + \"/data/\" + device.id; \n    let execStr = \"cd \" + z2mDir;\n    if (os.platform == \"win32\"){\n        execStr =execStr + \"&& set ZIGBEE2MQTT_DATA=\" + dataDir;\n        execStr =execStr + \"&& npm start\";\n    }\n\n    let inner = device._inner;\n    inner.tcp = {\n            port: tcpPort,\n            status: null\n        };\n    inner.z2m = {\n            configuration: {\n                mqtt: {\n                    base_topic: device.id,\n                    server: \"mqtt://push-access.sdp.101.com:1780\",\n                    user: \"ioe\"\n                },\n                serial: {\n                    port: \"tcp://127.0.0.1:\" + tcpPort\n                },\n                frontend: {\n                    port: tcpPort - 100\n                }\n            },\n            datadir: dataDir,\n            configfile: dataDir + \"/configuration.yaml\",\n            exec: execStr,\n            status: null\n        };\n        \n        \n    data.devices[device.id] = device;\n}\n\nlet keys;\nkeys = Object.keys(devices);\nkeys.forEach(key => {\n    let device = devices[key];\n    if (device.tsl && device.tsl.define) {\n        let define = device.tsl.define;\n        if (define.profile.device_type == \"z3-co\") {\n            setDevice(device, define, tcpPort);\n            tcpPort++;\n        }\n    }\n});\n\nflow.set(\"data\", data)\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -263,8 +360,8 @@
         "y": 40,
         "wires": [
             [
-                "dd1d9c395a642389",
-                "24e2bbdf06e9b037"
+                "7bd292a739fdf092",
+                "589883c5ddd06e17"
             ]
         ]
     },
@@ -273,14 +370,14 @@
         "type": "function",
         "z": "95aaa5b3dec11e56",
         "name": "启动TCP",
-        "func": "let data = msg.payload;\nlet devices = data.devices;\nlet keys;\nkeys = Object.keys(data.devices);\nkeys.forEach(key => {\n    let device = devices[key];\n    node.send({\n        action: \"listen\",\n        port: device.tcp.port,\n        topic: key\n    })\n});\n",
+        "func": "let data = flow.get(\"data\")\nlet devices = data.devices;\n\nObject.keys(devices).forEach(key => {\n    let device = devices[key];\n    node.send({\n        action: \"listen\",\n        port: device._inner.tcp.port,\n        topic: key\n    })\n});\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 410,
-        "y": 120,
+        "x": 390,
+        "y": 340,
         "wires": [
             [
                 "2a50d92d7b1e8c5f"
@@ -304,12 +401,11 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 230,
-        "y": 120,
+        "x": 210,
+        "y": 340,
         "wires": [
             [
-                "4da7e379a1c8765f",
-                "589883c5ddd06e17"
+                "4da7e379a1c8765f"
             ]
         ]
     },
@@ -320,8 +416,8 @@
         "name": "",
         "action": "",
         "property": "payload",
-        "x": 900,
-        "y": 120,
+        "x": 820,
+        "y": 340,
         "wires": [
             [
                 "7c8a25fc966a2456"
@@ -333,14 +429,14 @@
         "type": "function",
         "z": "95aaa5b3dec11e56",
         "name": "下行数据",
-        "func": "let devices = flow.get(\"data\").devices;\nlet did = msg.topic;\nlet device = devices[did];\nlet hd = {\n    cmd: 3\n}\nlet pld = {\n    code: msg.payload\n}\n\nreturn {\n    topic: device.subtopic,\n    payload:{\n        hd: hd, \n        pld: pld\n    }\n};",
+        "func": "let data = flow.get(\"data\");\nlet devices = data.devices;\nlet did = msg.topic;\nlet device = devices[did];\nlet hd = {\n    cmd: 3\n}\nlet pld = {\n    code: msg.payload\n}\n\nreturn {\n    topic: device._inner.topic.device.sub,\n    payload:{\n        hd: hd, \n        pld: pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 960,
-        "y": 200,
+        "x": 980,
+        "y": 100,
         "wires": [
             [
                 "e944094b190529e4"
@@ -351,7 +447,7 @@
         "id": "e944094b190529e4",
         "type": "mqtt out",
         "z": "95aaa5b3dec11e56",
-        "name": "",
+        "name": "mqtt发布",
         "topic": "",
         "qos": "",
         "retain": "",
@@ -361,25 +457,25 @@
         "correl": "",
         "expiry": "",
         "broker": "da35b48ff806507c",
-        "x": 1110,
-        "y": 200,
+        "x": 1120,
+        "y": 100,
         "wires": []
     },
     {
         "id": "61037682fdfa3411",
         "type": "mqtt in",
         "z": "95aaa5b3dec11e56",
-        "name": "",
+        "name": "mqtt订阅",
         "topic": "",
         "qos": "2",
-        "datatype": "auto",
+        "datatype": "json",
         "broker": "da35b48ff806507c",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 1,
-        "x": 290,
-        "y": 200,
+        "x": 360,
+        "y": 100,
         "wires": [
             [
                 "ae67f15e.3ab57"
@@ -391,17 +487,18 @@
         "type": "function",
         "z": "95aaa5b3dec11e56",
         "name": "主题订阅",
-        "func": "let data = global.get(\"data\")\nlet devices = data.devices;\n\nlet keys;\nkeys = Object.keys(data.devices);\nkeys.forEach(key => {\n    let device = devices[key];\n    node.send({\n        action: \"subscribe\",\n        topic: device.pubtopic\n    })\n});\n",
+        "func": "let data = flow.get(\"data\")\nlet devices = data.devices;\n\nlet keys;\nkeys = Object.keys(devices);\nkeys.forEach(key => {\n    let device = devices[key];\n    node.send({\n        action: \"subscribe\",\n        topic: device._inner.topic.device.pub\n    })\n});\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 160,
-        "y": 200,
+        "x": 220,
+        "y": 100,
         "wires": [
             [
-                "61037682fdfa3411"
+                "61037682fdfa3411",
+                "21d589a081c8eee8"
             ]
         ]
     },
@@ -422,8 +519,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 420,
-        "y": 200,
+        "x": 500,
+        "y": 100,
         "wires": [
             [
                 "e832c137.1576"
@@ -437,8 +534,8 @@
         "name": "",
         "action": "",
         "property": "payload.pld.code",
-        "x": 560,
-        "y": 200,
+        "x": 640,
+        "y": 100,
         "wires": [
             [
                 "6a00af3d.fcc16"
@@ -456,28 +553,12 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 700,
-        "y": 200,
+        "x": 780,
+        "y": 100,
         "wires": [
             [
                 "2a50d92d7b1e8c5f"
             ]
-        ]
-    },
-    {
-        "id": "883458eec864377d",
-        "type": "complete",
-        "z": "95aaa5b3dec11e56",
-        "name": "",
-        "scope": [
-            "4da7e379a1c8765f",
-            "589883c5ddd06e17"
-        ],
-        "uncaught": false,
-        "x": 170,
-        "y": 480,
-        "wires": [
-            []
         ]
     },
     {
@@ -492,12 +573,21 @@
         "winHide": false,
         "oldrc": false,
         "name": "",
-        "x": 530,
-        "y": 480,
+        "x": 570,
+        "y": 780,
         "wires": [
-            [],
-            [],
-            []
+            [
+                "945c62102251accf",
+                "77c694e6c464f8ce"
+            ],
+            [
+                "945c62102251accf",
+                "77c694e6c464f8ce"
+            ],
+            [
+                "945c62102251accf",
+                "77c694e6c464f8ce"
+            ]
         ]
     },
     {
@@ -505,16 +595,19 @@
         "type": "function",
         "z": "95aaa5b3dec11e56",
         "name": "启动Z2M",
-        "func": "\nreturn msg;",
+        "func": "let data = flow.get(\"data\")\nlet topic = msg.topic;\nlet devices = data.devices;\nlet device = devices[topic];\nif (device) {\n    node.send({\n        topic: topic,\n        payload: device._inner.z2m.exec\n    })\n};\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 360,
-        "y": 480,
+        "x": 400,
+        "y": 780,
         "wires": [
-            []
+            [
+                "cae5f63b49b63d67",
+                "1597ce13b80c174d"
+            ]
         ]
     },
     {
@@ -523,13 +616,10 @@
         "z": "95aaa5b3dec11e56",
         "property": "payload",
         "name": "",
-        "x": 290,
-        "y": 660,
+        "x": 530,
+        "y": 900,
         "wires": [
-            [
-                "e4a1cf79f25b7d76",
-                "3848d1b62809a168"
-            ]
+            []
         ]
     },
     {
@@ -549,8 +639,8 @@
         "topic": "",
         "payload": "homeassistant: false permit_join: false mqtt:   base_topic: CMDGATE_FZ_DEV_CC2652   server: mqtt://push-access.sdp.101.com:1780   user: ioe serial:   port: COM19 device_options:   legacy: false advanced:   channel: 15   baudrate: 115200   homeassistant_legacy_entity_attributes: false   legacy_api: false   log_level: debug frontend:   port: 8090 external_converters:   - netdragon.js   - honyar.js devices:   '0x00158d00035330f1':     friendly_name: '0x00158d00035330f1'   '0x00158d000353c53f':     friendly_name: '0x00158d000353c53f'   '0x60a423fffe348618':     friendly_name: '0x60a423fffe348618'   '0x00158d0007ee2669':     friendly_name: '0x00158d0007ee2669'   '0xa4c138d1a72aca60':     friendly_name: '0xa4c138d1a72aca60'   '0xa4c138b3897919ff':     friendly_name: '0xa4c138b3897919ff'",
         "payloadType": "str",
-        "x": 130,
-        "y": 660,
+        "x": 170,
+        "y": 1080,
         "wires": [
             [
                 "8b1d994bbdbb71db"
@@ -569,8 +659,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 510,
-        "y": 660,
+        "x": 830,
+        "y": 1000,
         "wires": []
     },
     {
@@ -584,11 +674,10 @@
         "sendError": false,
         "encoding": "none",
         "allProps": false,
-        "x": 230,
-        "y": 580,
+        "x": 310,
+        "y": 900,
         "wires": [
             [
-                "e4a1cf79f25b7d76",
                 "a4de7784c8a5b141"
             ]
         ]
@@ -599,12 +688,10 @@
         "z": "95aaa5b3dec11e56",
         "property": "payload",
         "name": "",
-        "x": 390,
-        "y": 800,
+        "x": 470,
+        "y": 1120,
         "wires": [
-            [
-                "e4a1cf79f25b7d76"
-            ]
+            []
         ]
     },
     {
@@ -612,8 +699,8 @@
         "type": "Drives",
         "z": "95aaa5b3dec11e56",
         "name": "",
-        "x": 250,
-        "y": 960,
+        "x": 310,
+        "y": 1620,
         "wires": [
             [
                 "d4697f4f2ba11e50"
@@ -625,8 +712,8 @@
         "type": "OS",
         "z": "95aaa5b3dec11e56",
         "name": "",
-        "x": 250,
-        "y": 1000,
+        "x": 310,
+        "y": 1660,
         "wires": [
             [
                 "8b4c81ae3cc89a32"
@@ -638,8 +725,8 @@
         "type": "Uptime",
         "z": "95aaa5b3dec11e56",
         "name": "",
-        "x": 260,
-        "y": 1040,
+        "x": 320,
+        "y": 1700,
         "wires": [
             [
                 "1dc036ad19c157b3"
@@ -651,8 +738,8 @@
         "type": "CPUs",
         "z": "95aaa5b3dec11e56",
         "name": "",
-        "x": 250,
-        "y": 1080,
+        "x": 310,
+        "y": 1740,
         "wires": [
             [
                 "430c1d24d6ff58bb"
@@ -664,8 +751,8 @@
         "type": "Loadavg",
         "z": "95aaa5b3dec11e56",
         "name": "",
-        "x": 260,
-        "y": 1120,
+        "x": 320,
+        "y": 1780,
         "wires": [
             [
                 "169271b9eb89b020"
@@ -678,8 +765,8 @@
         "z": "95aaa5b3dec11e56",
         "name": "",
         "scale": "Byte",
-        "x": 260,
-        "y": 1160,
+        "x": 320,
+        "y": 1820,
         "wires": [
             [
                 "5be1836ccfc9d920"
@@ -691,8 +778,8 @@
         "type": "NetworkIntf",
         "z": "95aaa5b3dec11e56",
         "name": "",
-        "x": 270,
-        "y": 1200,
+        "x": 330,
+        "y": 1860,
         "wires": [
             [
                 "66b0ef6de57a6faf"
@@ -711,8 +798,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 430,
-        "y": 960,
+        "x": 490,
+        "y": 1620,
         "wires": []
     },
     {
@@ -727,8 +814,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 430,
-        "y": 1000,
+        "x": 490,
+        "y": 1660,
         "wires": []
     },
     {
@@ -743,8 +830,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 430,
-        "y": 1040,
+        "x": 490,
+        "y": 1700,
         "wires": []
     },
     {
@@ -759,8 +846,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 430,
-        "y": 1080,
+        "x": 490,
+        "y": 1740,
         "wires": []
     },
     {
@@ -775,8 +862,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 430,
-        "y": 1120,
+        "x": 490,
+        "y": 1780,
         "wires": []
     },
     {
@@ -791,8 +878,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 430,
-        "y": 1160,
+        "x": 490,
+        "y": 1820,
         "wires": []
     },
     {
@@ -807,8 +894,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 430,
-        "y": 1200,
+        "x": 490,
+        "y": 1860,
         "wires": []
     },
     {
@@ -822,8 +909,8 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 70,
-        "y": 1060,
+        "x": 130,
+        "y": 1720,
         "wires": [
             [
                 "1b9d76d1beb414b9",
@@ -841,12 +928,396 @@
         "id": "24525891cb87bbdd",
         "type": "home-dir",
         "z": "95aaa5b3dec11e56",
-        "x": 320,
-        "y": 1460,
+        "x": 380,
+        "y": 2120,
         "wires": [
             [
                 "66b0ef6de57a6faf"
             ]
         ]
+    },
+    {
+        "id": "7bd292a739fdf092",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 410,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "945c62102251accf",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "topic",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "77c694e6c464f8ce",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "cae5f63b49b63d67",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "5ac4ad5be8835f21",
+        "type": "status",
+        "z": "95aaa5b3dec11e56",
+        "name": "TCP状态变化",
+        "scope": [
+            "2a50d92d7b1e8c5f"
+        ],
+        "x": 230,
+        "y": 440,
+        "wires": [
+            [
+                "df176e579646b29d"
+            ]
+        ]
+    },
+    {
+        "id": "df176e579646b29d",
+        "type": "json",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "property": "status.text",
+        "action": "",
+        "pretty": false,
+        "x": 370,
+        "y": 440,
+        "wires": [
+            [
+                "d76715fc2099289e"
+            ]
+        ]
+    },
+    {
+        "id": "9da107f7f7e9c412",
+        "type": "change",
+        "z": "95aaa5b3dec11e56",
+        "name": "重启TCP",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 200,
+        "y": 280,
+        "wires": [
+            [
+                "dd1d9c395a642389",
+                "24e2bbdf06e9b037"
+            ]
+        ]
+    },
+    {
+        "id": "d76715fc2099289e",
+        "type": "function",
+        "z": "95aaa5b3dec11e56",
+        "name": "刷新状态",
+        "func": "let data = flow.get(\"data\")\nlet devices = data.devices;\nlet tcp = msg.status.text;\nif (tcp) {\n    let device = devices[tcp.topic];\n    if (device)\n        device._inner.tcp.status = tcp.status;\n}\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 440,
+        "wires": [
+            [
+                "7583eae2557aaa12"
+            ]
+        ]
+    },
+    {
+        "id": "7583eae2557aaa12",
+        "type": "switch",
+        "z": "95aaa5b3dec11e56",
+        "name": "listened",
+        "property": "status.text.status",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "listened",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 660,
+        "y": 440,
+        "wires": [
+            [
+                "659bdc170dc01191"
+            ]
+        ]
+    },
+    {
+        "id": "659bdc170dc01191",
+        "type": "change",
+        "z": "95aaa5b3dec11e56",
+        "name": "设定topic",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "status.text.topic",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 440,
+        "wires": [
+            [
+                "582858202e5905ad",
+                "361bf8393749ac56"
+            ]
+        ]
+    },
+    {
+        "id": "21d589a081c8eee8",
+        "type": "function",
+        "z": "95aaa5b3dec11e56",
+        "name": "启动TCP+Z2M",
+        "func": "let data = flow.get(\"data\")\nlet devices = data.devices;\n\nObject.keys(devices).forEach(key => {\n    let device = devices[key];\n    node.send({\n        topic: key\n    })\n});",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 220,
+        "y": 180,
+        "wires": [
+            [
+                "9da107f7f7e9c412"
+            ]
+        ]
+    },
+    {
+        "id": "582858202e5905ad",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "topic",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "3e0eb582faa37b68",
+        "type": "inject",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "props": [
+            {
+                "p": "action",
+                "v": "kill",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 410,
+        "y": 400,
+        "wires": [
+            [
+                "2a50d92d7b1e8c5f"
+            ]
+        ]
+    },
+    {
+        "id": "5e896c70d2a58d17",
+        "type": "function",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "func": "let pld = msg.payload;\npld.mqtt\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 900,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6acb179b8ceea7e1",
+        "type": "function",
+        "z": "95aaa5b3dec11e56",
+        "name": "修改配置",
+        "func": "let data = flow.get(\"data\");\nlet devices = data.devices;\nlet topic = msg.topic;\nlet device = devices[topic];\nlet config = msg.z2m.configuration;\nif (device) {\n    config.mqtt = device._inner.z2m.configuration.mqtt;\n    config.serial = device._inner.z2m.configuration.serial;\n    config.frontend = device._inner.z2m.configuration.frontend;\n}\nmsg.payload = config;\nmsg.filename = device._inner.z2m.configfile;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 540,
+        "wires": [
+            [
+                "7bfa81ad9dce84cc"
+            ]
+        ]
+    },
+    {
+        "id": "361bf8393749ac56",
+        "type": "change",
+        "z": "95aaa5b3dec11e56",
+        "name": "copy config",
+        "rules": [
+            {
+                "t": "set",
+                "p": "z2m.configuration",
+                "pt": "msg",
+                "to": "z2m.configuration",
+                "tot": "global",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 290,
+        "y": 540,
+        "wires": [
+            [
+                "6acb179b8ceea7e1"
+            ]
+        ]
+    },
+    {
+        "id": "7bfa81ad9dce84cc",
+        "type": "yaml",
+        "z": "95aaa5b3dec11e56",
+        "property": "payload",
+        "name": "",
+        "x": 610,
+        "y": 540,
+        "wires": [
+            [
+                "910c26f33d91dd04"
+            ]
+        ]
+    },
+    {
+        "id": "910c26f33d91dd04",
+        "type": "file",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "filename": "",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 760,
+        "y": 540,
+        "wires": [
+            [
+                "07f20c3b16bb22aa"
+            ]
+        ]
+    },
+    {
+        "id": "b6f6e1dd2bf5ee77",
+        "type": "mqtt in",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "topic": "ndiot/device/#",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "da35b48ff806507c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 490,
+        "y": 200,
+        "wires": [
+            [
+                "aed2b49f49b0da4c"
+            ]
+        ]
+    },
+    {
+        "id": "aed2b49f49b0da4c",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 670,
+        "y": 200,
+        "wires": []
     }
 ]

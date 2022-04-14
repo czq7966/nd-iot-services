@@ -29,8 +29,18 @@
             "model": "Z3CO2652ESP8266",
             "namespace": "FZ_DEV",
             "subtopic": null,
-            "pubtopic": null,
-            "parent": "0"
+            "pubtopic": null,            
+            "parent": "0",
+            "_inner":{
+                "topic": {
+                    "device": {
+                        "sub": [],
+                        "pub": []
+                    }
+                },
+                "tcp": {},
+                "z2m": {}
+            }
         }        
     },
 

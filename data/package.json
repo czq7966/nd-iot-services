@@ -6,7 +6,7 @@
     "dependencies": {
         "@prescient-devices/node-red-contrib-home-dir": "~1.0.0",
         "node-red-contrib-os": "~0.2.1",
-        "node-red-nd-mtcp-server": "~0.0.1",
+        "node-red-nd-mtcp-server": "0.0.2",
         "node-red-node-base64": "~0.3.0"
     }
 }
