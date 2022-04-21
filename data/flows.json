@@ -302,8 +302,8 @@
         "closePortType": "str",
         "topic": "",
         "name": "",
-        "x": 690,
-        "y": 340,
+        "x": 710,
+        "y": 600,
         "wires": [
             [
                 "146f6d28af979aef"
@@ -337,8 +337,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 390,
-        "y": 300,
+        "x": 410,
+        "y": 560,
         "wires": [
             [
                 "2a50d92d7b1e8c5f"
@@ -376,8 +376,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 390,
-        "y": 340,
+        "x": 410,
+        "y": 600,
         "wires": [
             [
                 "2a50d92d7b1e8c5f"
@@ -401,8 +401,8 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 210,
-        "y": 340,
+        "x": 230,
+        "y": 600,
         "wires": [
             [
                 "4da7e379a1c8765f"
@@ -416,8 +416,8 @@
         "name": "",
         "action": "",
         "property": "payload",
-        "x": 820,
-        "y": 340,
+        "x": 840,
+        "y": 600,
         "wires": [
             [
                 "7c8a25fc966a2456"
@@ -498,7 +498,7 @@
         "wires": [
             [
                 "61037682fdfa3411",
-                "21d589a081c8eee8"
+                "112c9aa6e5a460a2"
             ]
         ]
     },
@@ -573,8 +573,8 @@
         "winHide": false,
         "oldrc": false,
         "name": "",
-        "x": 570,
-        "y": 780,
+        "x": 590,
+        "y": 1040,
         "wires": [
             [
                 "945c62102251accf",
@@ -601,97 +601,13 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 400,
-        "y": 780,
+        "x": 420,
+        "y": 1040,
         "wires": [
             [
                 "cae5f63b49b63d67",
                 "1597ce13b80c174d"
             ]
-        ]
-    },
-    {
-        "id": "a4de7784c8a5b141",
-        "type": "yaml",
-        "z": "95aaa5b3dec11e56",
-        "property": "payload",
-        "name": "",
-        "x": 530,
-        "y": 900,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "c4818ccfd1367106",
-        "type": "inject",
-        "z": "95aaa5b3dec11e56",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "homeassistant: false permit_join: false mqtt:   base_topic: CMDGATE_FZ_DEV_CC2652   server: mqtt://push-access.sdp.101.com:1780   user: ioe serial:   port: COM19 device_options:   legacy: false advanced:   channel: 15   baudrate: 115200   homeassistant_legacy_entity_attributes: false   legacy_api: false   log_level: debug frontend:   port: 8090 external_converters:   - netdragon.js   - honyar.js devices:   '0x00158d00035330f1':     friendly_name: '0x00158d00035330f1'   '0x00158d000353c53f':     friendly_name: '0x00158d000353c53f'   '0x60a423fffe348618':     friendly_name: '0x60a423fffe348618'   '0x00158d0007ee2669':     friendly_name: '0x00158d0007ee2669'   '0xa4c138d1a72aca60':     friendly_name: '0xa4c138d1a72aca60'   '0xa4c138b3897919ff':     friendly_name: '0xa4c138b3897919ff'",
-        "payloadType": "str",
-        "x": 170,
-        "y": 1080,
-        "wires": [
-            [
-                "8b1d994bbdbb71db"
-            ]
-        ]
-    },
-    {
-        "id": "e4a1cf79f25b7d76",
-        "type": "debug",
-        "z": "95aaa5b3dec11e56",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 830,
-        "y": 1000,
-        "wires": []
-    },
-    {
-        "id": "8b1d994bbdbb71db",
-        "type": "file in",
-        "z": "95aaa5b3dec11e56",
-        "name": "",
-        "filename": "E:\\temp\\z2m\\configuration.yaml",
-        "format": "utf8",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 310,
-        "y": 900,
-        "wires": [
-            [
-                "a4de7784c8a5b141"
-            ]
-        ]
-    },
-    {
-        "id": "3848d1b62809a168",
-        "type": "yaml",
-        "z": "95aaa5b3dec11e56",
-        "property": "payload",
-        "name": "",
-        "x": 470,
-        "y": 1120,
-        "wires": [
-            []
         ]
     },
     {
@@ -965,8 +881,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 800,
-        "y": 720,
+        "x": 820,
+        "y": 980,
         "wires": []
     },
     {
@@ -981,8 +897,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 810,
-        "y": 800,
+        "x": 830,
+        "y": 1060,
         "wires": []
     },
     {
@@ -998,8 +914,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 610,
-        "y": 680,
+        "x": 630,
+        "y": 940,
         "wires": []
     },
     {
@@ -1010,8 +926,8 @@
         "scope": [
             "2a50d92d7b1e8c5f"
         ],
-        "x": 230,
-        "y": 440,
+        "x": 250,
+        "y": 700,
         "wires": [
             [
                 "df176e579646b29d"
@@ -1026,8 +942,8 @@
         "property": "status.text",
         "action": "",
         "pretty": false,
-        "x": 370,
-        "y": 440,
+        "x": 390,
+        "y": 700,
         "wires": [
             [
                 "d76715fc2099289e"
@@ -1045,8 +961,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 200,
-        "y": 280,
+        "x": 220,
+        "y": 540,
         "wires": [
             [
                 "dd1d9c395a642389",
@@ -1065,8 +981,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 500,
-        "y": 440,
+        "x": 520,
+        "y": 700,
         "wires": [
             [
                 "7583eae2557aaa12"
@@ -1090,8 +1006,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 660,
-        "y": 440,
+        "x": 680,
+        "y": 700,
         "wires": [
             [
                 "659bdc170dc01191"
@@ -1117,8 +1033,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 820,
-        "y": 440,
+        "x": 840,
+        "y": 700,
         "wires": [
             [
                 "582858202e5905ad",
@@ -1137,8 +1053,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 220,
-        "y": 180,
+        "x": 240,
+        "y": 440,
         "wires": [
             [
                 "9da107f7f7e9c412"
@@ -1150,7 +1066,7 @@
         "type": "debug",
         "z": "95aaa5b3dec11e56",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1158,8 +1074,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 980,
-        "y": 500,
+        "x": 1000,
+        "y": 760,
         "wires": []
     },
     {
@@ -1179,29 +1095,12 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 410,
-        "y": 400,
+        "x": 430,
+        "y": 660,
         "wires": [
             [
                 "2a50d92d7b1e8c5f"
             ]
-        ]
-    },
-    {
-        "id": "5e896c70d2a58d17",
-        "type": "function",
-        "z": "95aaa5b3dec11e56",
-        "name": "",
-        "func": "let pld = msg.payload;\npld.mqtt\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 690,
-        "y": 900,
-        "wires": [
-            []
         ]
     },
     {
@@ -1215,8 +1114,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 460,
-        "y": 540,
+        "x": 480,
+        "y": 800,
         "wires": [
             [
                 "7bfa81ad9dce84cc"
@@ -1243,8 +1142,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 290,
-        "y": 540,
+        "x": 310,
+        "y": 800,
         "wires": [
             [
                 "6acb179b8ceea7e1"
@@ -1257,8 +1156,8 @@
         "z": "95aaa5b3dec11e56",
         "property": "payload",
         "name": "",
-        "x": 610,
-        "y": 540,
+        "x": 630,
+        "y": 800,
         "wires": [
             [
                 "910c26f33d91dd04"
@@ -1275,8 +1174,8 @@
         "createDir": true,
         "overwriteFile": "true",
         "encoding": "none",
-        "x": 760,
-        "y": 540,
+        "x": 780,
+        "y": 800,
         "wires": [
             [
                 "07f20c3b16bb22aa"
@@ -1296,8 +1195,8 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 490,
-        "y": 200,
+        "x": 510,
+        "y": 460,
         "wires": [
             [
                 "aed2b49f49b0da4c"
@@ -1309,15 +1208,198 @@
         "type": "debug",
         "z": "95aaa5b3dec11e56",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 670,
-        "y": 200,
+        "x": 690,
+        "y": 460,
         "wires": []
+    },
+    {
+        "id": "112c9aa6e5a460a2",
+        "type": "change",
+        "z": "95aaa5b3dec11e56",
+        "name": "配置模板",
+        "rules": [
+            {
+                "t": "set",
+                "p": "z2m.template.configuration",
+                "pt": "global",
+                "to": "{\"homeassistant\":false,\"permit_join\":false,\"mqtt\":{\"base_topic\":\"zigbee2mqtt\",\"server\":\"mqtt://push-access.sdp.101.com:1780\",\"user\":\"ioe\"},\"serial\":{\"port\":\"tcp://127.0.0.1:8190\"},\"device_options\":{\"legacy\":false},\"advanced\":{\"pan_id\":\"GENERATE\",\"network_key\":\"GENERATE\",\"homeassistant_legacy_entity_attributes\":false,\"legacy_api\":false,\"log_level\":\"debug\"},\"frontend\":{\"port\":8090}}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 220,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "24b3394c8075cc56",
+        "type": "http request",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 440,
+        "y": 280,
+        "wires": [
+            [
+                "0634a8f7659578b2"
+            ]
+        ]
+    },
+    {
+        "id": "01d97ad2693ba402",
+        "type": "inject",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "props": [
+            {
+                "p": "url",
+                "v": "http://127.0.0.1:8080/mongodb/find?table=test",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 210,
+        "y": 280,
+        "wires": [
+            [
+                "24b3394c8075cc56"
+            ]
+        ]
+    },
+    {
+        "id": "0634a8f7659578b2",
+        "type": "debug",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "52f3e338c6eab14b",
+        "type": "inject",
+        "z": "95aaa5b3dec11e56",
+        "name": "查",
+        "props": [
+            {
+                "p": "url",
+                "v": "http://127.0.0.1:8080/mongodb/find",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"abc\":\"123\"}",
+        "payloadType": "json",
+        "x": 170,
+        "y": 340,
+        "wires": [
+            [
+                "4ac708682bcad0fb"
+            ]
+        ]
+    },
+    {
+        "id": "4ac708682bcad0fb",
+        "type": "change",
+        "z": "95aaa5b3dec11e56",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.table",
+                "pt": "msg",
+                "to": "test",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.value",
+                "pt": "msg",
+                "to": "{\"_id\":\"62598232a120643d70c908c7\",\"type\":\"insert\",\"key1\":\"v1\",\"k2\":\"v2\",\"k3\":\"v3\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 380,
+        "y": 340,
+        "wires": [
+            [
+                "24b3394c8075cc56"
+            ]
+        ]
+    },
+    {
+        "id": "3b774c73d960a3b7",
+        "type": "inject",
+        "z": "95aaa5b3dec11e56",
+        "name": "增",
+        "props": [
+            {
+                "p": "url",
+                "v": "http://127.0.0.1:8080/mongodb/insert",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"abc\":\"123\"}",
+        "payloadType": "json",
+        "x": 170,
+        "y": 380,
+        "wires": [
+            [
+                "4ac708682bcad0fb"
+            ]
+        ]
     }
 ]

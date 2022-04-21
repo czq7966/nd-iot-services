@@ -4,21 +4,28 @@
         "name": "网龙物联网"
 
     },
-    "product": {
-        "id": "nd",
-        "name": "网龙公司"
-    },
-    "namespaces": {
-        "CL_VRTYG": {
-            "id": "",
-            "name": "",
-            "nick": "长乐VR体验馆"
+    "products": {
+        "nd": {
+            "id": "nd",
+            "name": "网龙公司",
+            "namespaces": {
+                "CL_VRTYG": {
+                    "id": "",
+                    "name": "",
+                    "nick": "长乐VR体验馆"
+                },
+                "FZ_DEV": {
+                    "id": "",
+                    "name": "",
+                    "nick": "福州开发环境"
+                }        
+            },
+            "devices": {}
         },
-        "FZ_DEV": {
-            "id": "",
-            "name": "",
-            "nick": "福州开发环境"
-        }        
+        "fr": {
+            "id": "fr",
+            "name": "福软"
+        }
     },
     "devices": {
         "ESP8266x0006dbe5" : {
@@ -28,9 +35,10 @@
             "facturer": "ND",
             "model": "Z3CO2652ESP8266",
             "namespace": "FZ_DEV",
-            "subtopic": null,
-            "pubtopic": null,            
+            "product": "nd",
             "parent": "0",
+            "props": {},
+            "tsl": {},
             "_inner":{
                 "topic": {
                     "device": {
