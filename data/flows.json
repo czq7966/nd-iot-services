@@ -1187,7 +1187,7 @@
         "type": "mqtt in",
         "z": "95aaa5b3dec11e56",
         "name": "",
-        "topic": "ndiot/device/#",
+        "topic": "ndiot/#",
         "qos": "2",
         "datatype": "json",
         "broker": "da35b48ff806507c",
@@ -1195,7 +1195,7 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 510,
+        "x": 490,
         "y": 460,
         "wires": [
             [
@@ -1208,7 +1208,7 @@
         "type": "debug",
         "z": "95aaa5b3dec11e56",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,

@@ -7,11 +7,22 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "mqtt:start": "systemctl start mqtt-broker",
     "mqtt": "npm run mqtt:start || echo",
-    "edge:update": "git reset --hard && git pull || echo",
+    "dispatcher:nd:install": "cd ./data/dispatcher/nd && npm i || echo",
+    "dispatcher:nd:start": "node ./index.js -u ./data/dispatcher/nd",
+
+    "edge:nd:install": "cd ./data/edge/nd && npm i || echo",
+    "edge:nd:start": "node ./index.js -u ./data/edge/nd",
+
+    
     "edge:install": "npm i && cd data && npm i || echo",
     "edge:start": "node ./index.js -u ./data",
+
+    "update": "git stash && git fetch && git reset --hard && git checkout nd || echo",
+    "install": "npm run dispatcher:nd:install && npm run edge:nd:install || echo",
+
+
     "edge": "npm run edge:update && npm run edge:install && npm run edge:start",
-    "start": "npm run mqtt && npm run edge"
+    "start": "echo \"npm run mqtt && npm run edge\" &&  npm run edge:start"
   },
   "author": "CZQ",
   "license": "ISC",
