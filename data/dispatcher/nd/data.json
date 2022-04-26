@@ -1,0 +1,48 @@
+{
+    "app": {
+        "id": "ndiot",
+        "name": "网龙物联网"
+
+    },
+    "domain": {
+        "id": "nd",
+        "name": "网龙公司",
+        "devices": {},
+        "topic": {
+            "subs": {
+                "edg_svc_handshake":    "{app}/{domain}/edge/service/handshake/#",
+                "edg_evt_heartbeat":    "{app}/{domain}/edge/event/heartbeat/#",
+
+                "dev_evt_heartbeat":    "{app}/{domain}/device/event/heartbeat/#",
+                "dev_evt_reboot":       "{app}/{domain}/device/event/reboot/#",
+                "dev_evt_reconnect":    "{app}/{domain}/device/event/reconnect/#",
+                "dev_evt_report":       "{app}/{domain}/device/event/report/#"
+            },
+            "services":{
+                "dsp_svc_login":        "{app}/{domain}/dispatcher/service/login/#"             
+            },
+            "pubs":{
+                "dev_svc_login":        "{app}/{domain}/device/service/login/{did}",
+                "edg_svc_login":        "{app}/{domain}/edge/service/login/{did}"
+            }
+        }        
+    },
+    "devices": {
+        "ESP8266x0006dbe5" : {
+            "realtime": {
+                "login": {
+
+                },
+                "handshake": {
+
+                },
+                "heartbeat": {
+
+                },
+                "report":{
+
+                }                
+            }
+        }
+    }
+}
