@@ -1,48 +1,64 @@
 {
     "app": {
-        "id": "ndiot",
-        "name": "网龙物联网"
-
-    },
-    "domain": {
-        "id": "nd",
-        "name": "网龙公司",
-        "devices": {},
-        "topic": {
-            "subs": {
-                "edg_svc_handshake":    "{app}/{domain}/edge/service/handshake/#",
-                "edg_evt_heartbeat":    "{app}/{domain}/edge/event/heartbeat/#",
-
-                "dev_evt_heartbeat":    "{app}/{domain}/device/event/heartbeat/#",
-                "dev_evt_reboot":       "{app}/{domain}/device/event/reboot/#",
-                "dev_evt_reconnect":    "{app}/{domain}/device/event/reconnect/#",
-                "dev_evt_report":       "{app}/{domain}/device/event/report/#"
-            },
-            "services":{
-                "dsp_svc_login":        "{app}/{domain}/dispatcher/service/login/#"             
-            },
-            "pubs":{
-                "dev_svc_login":        "{app}/{domain}/device/service/login/{did}",
-                "edg_svc_login":        "{app}/{domain}/edge/service/login/{did}"
-            }
-        }        
-    },
-    "devices": {
-        "ESP8266x0006dbe5" : {
-            "realtime": {
-                "login": {
-
-                },
-                "handshake": {
-
-                },
-                "heartbeat": {
-
-                },
-                "report":{
-
-                }                
+        "ndiot": {
+            "id": "ndiot",
+            "name": "网龙物联网",
+            "domain": {
+                "nd": {
+                    "id": "nd",
+                    "name": "网龙公司",
+                    "dispatchers": {
+                        "nd": {
+                            "name": "调度器",
+                            "edges": {
+                                "edg_nd": {
+                                    "id": "",
+                                    "name": "边缘服务",
+                                    "events": {
+                                        "login": {},
+                                        "heartbeat": {}
+                                    }          
+                                }              
+                            },
+        
+                            "devices": {
+                                "ESP8266x0006dbe5" : {
+                                    "id": "",
+                                    "name": "终端设备",
+                                    "events": {
+                                        "login": {},
+                                        "heartbeat": {}
+                                    }
+                                }                        
+                            },
+        
+                            "topics": {
+                                "subs": {
+                                    "edg_evt_heartbeat":    "{app}/{dom}/edg/+/+/+/evt/heartbeat",
+                                    "dev_evt_heartbeat":    "{app}/{dom}/dev/+/+/+/evt/heartbeat"
+                                },
+                                "services":{
+                                    "dsp_svc_login":        "{app}/{dom}/+/+/dsp/{dsp}/svc/login"
+                                },
+                                "pubs":{
+                                    "dev_svc_login":        "login",
+                                    "edg_svc_login":        "login"
+                                }
+                            }                                                 
+                        }
+                    }
+                }
             }
         }
-    }
+    },
+    "edges": {
+
+    },
+    "devices": {
+        
+    },
+    "topics" : {
+
+    },
+    "ids": {}
 }
