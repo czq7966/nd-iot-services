@@ -11,56 +11,47 @@
                         "nd": {
                             "name": "调度器",
                             "edges": {
-                                "edg_nd": {
+                                "xxxx": {
                                     "id": "",
                                     "name": "边缘服务",
-                                    "state": "offline",
                                     "events": {
                                         "login": {},
                                         "heartbeat": {}
-                                    }          
-                                }              
+                                    },
+                                    "devices":{}
+                                }
                             },
-        
                             "devices": {
-                                "ESP8266x0006dbe5" : {
+                                "ESP8266x0006dbe5": {
                                     "id": "",
                                     "name": "终端设备",
-                                    "state": "offline",
                                     "events": {
                                         "login": {},
                                         "heartbeat": {}
-                                    }
-                                }                        
+                                    },
+                                    "edge":{}
+                                }
                             },
-        
                             "topics": {
                                 "subs": {
-                                    "edg_evt_heartbeat":    "{app}/{dom}/edg/+/+/+/evt/heartbeat",
-                                    "dev_evt_heartbeat":    "{app}/{dom}/dev/+/+/+/evt/heartbeat"
+                                    "dev_evt_heartbeat": "{app}/{dom}/dev/+/+/+/evt/heartbeat"
                                 },
-                                "services":{
-                                    "dsp_svc_login":        "{app}/{dom}/+/+/dsp/{dsp}/svc/login"
+                                "services": {
+                                    "edg_svc_login": "{app}/{dom}/+/+/edg/{edg}/svc/login",
+                                    "edg_svc_handshake": "{app}/{dom}/+/+/edg/{edg}/svc/handshake"
                                 },
-                                "pubs":{
-                                    "dev_svc_login":        "login",
-                                    "edg_svc_login":        "login"
+                                "pubs": {
+                                    "dsp_svc_login": "login"
                                 }
-                            }                                                 
+                            }
                         }
                     }
                 }
             }
         }
     },
-    "edges": {
-
-    },
-    "devices": {
-        
-    },
-    "topics" : {
-
-    },
+    "edges": {},
+    "devices": {},
+    "topics": {},
     "ids": {}
 }

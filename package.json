@@ -24,7 +24,7 @@
 
 
     "edge": "npm run edge:update && npm run edge:install && npm run edge:start",
-    "start": "echo \"npm run mqtt && npm run edge\" &&  npm run edge:start"
+    "start": "echo \"npm run mqtt && npm run edge\" &&  echp \"npm run edge:start\""
   },
   "author": "CZQ",
   "license": "ISC",
