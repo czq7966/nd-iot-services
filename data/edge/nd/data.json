@@ -34,7 +34,8 @@
                             },
                             "topics": {
                                 "subs": {
-                                    "dev_evt_heartbeat": "{app}/{dom}/dev/+/+/+/evt/heartbeat"
+                                    "dev_evt_heartbeat": "{app}/{dom}/dev/+/edg/{edg}/evt/heartbeat",
+                                    "dev_evt_report": "{app}/{dom}/dev/+/edg/{edg}/evt/report"
                                 },
                                 "services": {
                                     "edg_svc_login": "{app}/{dom}/+/+/edg/{edg}/svc/login",
