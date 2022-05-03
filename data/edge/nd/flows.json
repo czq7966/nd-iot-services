@@ -568,7 +568,8 @@
         "name": "mqtt发布",
         "links": [
             "9b3a8e543bd70406",
-            "5002cb933f4b4eb5"
+            "5002cb933f4b4eb5",
+            "cb5a80219ea82576"
         ],
         "x": 125,
         "y": 320,
@@ -963,23 +964,6 @@
         ]
     },
     {
-        "id": "04caa3f2bc2fcfba",
-        "type": "debug",
-        "z": "f7e96a32e56d72eb",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 730,
-        "y": 660,
-        "wires": []
-    },
-    {
         "id": "d3b8d4ef2a9d44b5",
         "type": "switch",
         "z": "f7e96a32e56d72eb",
@@ -1044,142 +1028,6 @@
                 "d73e2680df9b4df8"
             ]
         ]
-    },
-    {
-        "id": "5999a64d148a1410",
-        "type": "function",
-        "z": "f7e96a32e56d72eb",
-        "name": "数据缓存",
-        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nif (hd.from.type == \"dev\") {\n    let dev = data.devices[hd.from.id] || {events:{}};\n    dev.events[\"login\"] = msg.payload;\n    data.devices[hd.from.id] = dev;\n    node.send([msg, null]);\n}\nif (hd.from.type == \"edg\") {\n    let edg = data.edges[hd.from.id] || {events:{}};\n    edg.events[\"login\"] = msg.payload;\n    data.edges[hd.from.id] = edg;   \n    node.send([null, msg]);\n}\n",
-        "outputs": 2,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 300,
-        "y": 440,
-        "wires": [
-            [
-                "cfbe16d927376be5"
-            ],
-            [
-                "7bad7b0521ac9633"
-            ]
-        ]
-    },
-    {
-        "id": "9b3a8e543bd70406",
-        "type": "link out",
-        "z": "f7e96a32e56d72eb",
-        "name": "发布",
-        "mode": "link",
-        "links": [
-            "f4460e5db856239e"
-        ],
-        "x": 775,
-        "y": 600,
-        "wires": []
-    },
-    {
-        "id": "cfbe16d927376be5",
-        "type": "change",
-        "z": "f7e96a32e56d72eb",
-        "name": "复制",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "payload",
-                "tot": "msg",
-                "dc": true
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 410,
-        "y": 540,
-        "wires": [
-            [
-                "c08bc84bc1125e2c"
-            ]
-        ]
-    },
-    {
-        "id": "c08bc84bc1125e2c",
-        "type": "function",
-        "z": "f7e96a32e56d72eb",
-        "name": "设备",
-        "func": "let data = global.get(\"data\");\nlet ids = data.ids;\nlet hd = msg.payload.hd;\nlet temp = hd.from;\n\nhd.from = hd.to;\nhd.to = temp;\nhd.stp = 1;\ndelete hd.tm;\ndelete hd.tms;\ndelete hd.tpc;\n\nlet pld = {\n    app: ids.app,\n    dom: ids.dom,\n    dsp: ids.dsp,\n    edg: data.edges.edg_nd.id\n}\nmsg.payload.pld = pld;\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 570,
-        "y": 540,
-        "wires": [
-            [
-                "9b3a8e543bd70406",
-                "04caa3f2bc2fcfba",
-                "7e21414c315a7661"
-            ]
-        ]
-    },
-    {
-        "id": "7bad7b0521ac9633",
-        "type": "function",
-        "z": "f7e96a32e56d72eb",
-        "name": "边缘",
-        "func": "\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 430,
-        "y": 620,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "7e21414c315a7661",
-        "type": "function",
-        "z": "f7e96a32e56d72eb",
-        "name": "",
-        "func": "\nreturn {payload: global.get(\"data\")};",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 590,
-        "y": 720,
-        "wires": [
-            [
-                "d19325e6a319e2ba"
-            ]
-        ]
-    },
-    {
-        "id": "d19325e6a319e2ba",
-        "type": "debug",
-        "z": "f7e96a32e56d72eb",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 730,
-        "y": 720,
-        "wires": []
     },
     {
         "id": "a56686e93c3108ed",
@@ -1308,7 +1156,7 @@
         "links": [
             "ea899d2e95e95576"
         ],
-        "x": 1345,
+        "x": 1305,
         "y": 80,
         "wires": []
     },
@@ -1448,27 +1296,121 @@
         "to": "",
         "reg": false,
         "x": 670,
-        "y": 160,
+        "y": 180,
         "wires": [
             [
-                "9e41e686a6e1210a"
+                "b6ae5c1210b8dc15"
             ]
         ]
     },
     {
-        "id": "9e41e686a6e1210a",
-        "type": "debug",
+        "id": "b6ae5c1210b8dc15",
+        "type": "switch",
         "z": "f7e96a32e56d72eb",
         "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 810,
+        "property": "payload.hd.stp",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 790,
+        "y": 180,
+        "wires": [
+            [
+                "c15b8a633e8fdcb5"
+            ],
+            [
+                "319947dbd8eef670"
+            ]
+        ]
+    },
+    {
+        "id": "c15b8a633e8fdcb5",
+        "type": "change",
+        "z": "f7e96a32e56d72eb",
+        "name": "请求",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 930,
         "y": 160,
+        "wires": [
+            [
+                "7fa2a4320c33a0c6"
+            ]
+        ]
+    },
+    {
+        "id": "319947dbd8eef670",
+        "type": "change",
+        "z": "f7e96a32e56d72eb",
+        "name": "响应",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 930,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7fa2a4320c33a0c6",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "响应",
+        "func": "let hd = msg.payload.hd;\nlet temp = hd.from;\nhd.from = hd.to;\nhd.to = temp;\nhd.stp = 1;\ndelete hd.tm;\ndelete hd.tms;\ndelete hd.tpc;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 160,
+        "wires": [
+            [
+                "cb5a80219ea82576"
+            ]
+        ]
+    },
+    {
+        "id": "cb5a80219ea82576",
+        "type": "link out",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "f4460e5db856239e"
+        ],
+        "x": 1215,
+        "y": 220,
         "wires": []
     }
 ]
