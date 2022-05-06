@@ -15,16 +15,19 @@
 
     "nd:install": "npm i && npm run nd:dispatcher:install && npm run nd:edge:install || echo",
 
-    
+    "test:install": "cd ./data/test && npm i || echo",
+    "test:start": "node ./index.js -u ./data/test",    
+
     "edge:install": "npm i && cd data && npm i || echo",
     "edge:start": "node ./index.js -u ./data",
+
 
     "update": "git stash && git fetch && git reset --hard && git checkout nd || echo",
     
 
 
     "edge": "npm run edge:update && npm run edge:install && npm run edge:start",
-    "start": "echo \"npm run mqtt && npm run edge\" &&  echp \"npm run edge:start\""
+    "start": "echo \"npm run mqtt && npm run edge\" &&  echo \"npm run edge:start\""
   },
   "author": "CZQ",
   "license": "ISC",
