@@ -339,7 +339,7 @@
         "type": "debug",
         "z": "e93bbc67912b9178",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -456,6 +456,35 @@
         ]
     },
     {
+        "id": "45f93ecd87f681de",
+        "type": "inject",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "props": [
+            {
+                "p": "action",
+                "v": "subscribe",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "ndiot/nd/edg/ND--20200609EVI/0/0/evt/status",
+        "x": 250,
+        "y": 240,
+        "wires": [
+            [
+                "0f989c13f4e0c1cb"
+            ]
+        ]
+    },
+    {
         "id": "2ff5101df1ab6584",
         "type": "link in",
         "z": "f7e96a32e56d72eb",
@@ -527,7 +556,7 @@
         "type": "debug",
         "z": "f7e96a32e56d72eb",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -696,8 +725,7 @@
         "y": 340,
         "wires": [
             [
-                "9b3a8e543bd70406",
-                "04caa3f2bc2fcfba"
+                "9b3a8e543bd70406"
             ]
         ]
     },
@@ -716,7 +744,8 @@
         "y": 400,
         "wires": [
             [
-                "9b3a8e543bd70406"
+                "9b3a8e543bd70406",
+                "04caa3f2bc2fcfba"
             ]
         ]
     },

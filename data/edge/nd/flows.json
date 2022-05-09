@@ -38,13 +38,14 @@
         "broker": "push-access.sdp.101.com",
         "port": "1780",
         "clientid": "",
-        "autoConnect": true,
+        "autoConnect": false,
         "usetls": false,
         "protocolVersion": "4",
         "keepalive": "60",
         "cleansession": true,
         "birthTopic": "",
-        "birthQos": "0",
+        "birthQos": "2",
+        "birthRetain": "true",
         "birthPayload": "",
         "birthMsg": {},
         "closeTopic": "",
@@ -52,7 +53,8 @@
         "closePayload": "",
         "closeMsg": {},
         "willTopic": "",
-        "willQos": "0",
+        "willQos": "2",
+        "willRetain": "true",
         "willPayload": "",
         "willMsg": {},
         "sessionExpiry": ""
@@ -86,7 +88,7 @@
                 "t": "set",
                 "p": "data",
                 "pt": "global",
-                "to": "{\"app\":{\"ndiot\":{\"id\":\"ndiot\",\"name\":\"网龙物联网\",\"domain\":{\"nd\":{\"id\":\"nd\",\"name\":\"网龙公司\",\"dispatchers\":{\"nd\":{\"name\":\"调度器\",\"edges\":{\"xxxx\":{\"id\":\"\",\"name\":\"边缘服务\",\"events\":{\"login\":{},\"heartbeat\":{}},\"devices\":{}}},\"devices\":{\"ESP8266x0006dbe5\":{\"id\":\"\",\"name\":\"终端设备\",\"events\":{\"login\":{},\"heartbeat\":{}},\"edge\":{}}},\"topics\":{\"subs\":{\"dev_evt_heartbeat\":\"{app}/{dom}/dev/+/edg/{edg}/evt/heartbeat\",\"dev_evt_report\":\"{app}/{dom}/dev/+/edg/{edg}/evt/report\"},\"services\":{\"edg_svc_login\":\"{app}/{dom}/+/+/edg/{edg}/svc/login\",\"edg_svc_handshake\":\"{app}/{dom}/+/+/edg/{edg}/svc/handshake\"},\"pubs\":{\"dsp_svc_login\":\"login\"}}}}}}}},\"edges\":{},\"devices\":{},\"topics\":{},\"ids\":{}}",
+                "to": "{\"app\":{\"ndiot\":{\"id\":\"ndiot\",\"name\":\"网龙物联网\",\"domain\":{\"nd\":{\"id\":\"nd\",\"name\":\"网龙公司\",\"dispatchers\":{\"nd\":{\"name\":\"调度器\",\"edges\":{\"xxxx\":{\"id\":\"\",\"name\":\"边缘服务\",\"events\":{\"login\":{},\"heartbeat\":{}},\"devices\":{}}},\"devices\":{\"ESP8266x0006dbe5\":{\"id\":\"\",\"name\":\"终端设备\",\"events\":{\"login\":{},\"heartbeat\":{}},\"edge\":{}}},\"topics\":{\"subs\":{\"dev_evt_heartbeat\":\"{app}/{dom}/dev/+/edg/{edg}/evt/heartbeat\",\"dev_evt_report\":\"{app}/{dom}/dev/+/edg/{edg}/evt/report\",\"dev_evt_status\":\"{app}/{dom}/dev/{did}/0/0/evt/status\"},\"services\":{\"edg_svc_login\":\"{app}/{dom}/dsp/+/edg/{edg}/svc/login\",\"edg_svc_handshake\":\"{app}/{dom}/dev/+/edg/{edg}/svc/handshake\"},\"pubs\":{\"dsp_svc_login\":\"login\",\"edg_evt_status\":\"{app}/{dom}/edg/{edg}/0/0/evt/status\"}}}}}}}},\"edges\":{},\"devices\":{},\"topics\":{},\"ids\":{}}",
                 "tot": "json"
             },
             {
@@ -100,7 +102,7 @@
                 "t": "set",
                 "p": "ids",
                 "pt": "global",
-                "to": "{\"app\":\"ndiot\",\"dom\":\"nd\",\"dsp\":\"nd\",\"edg\":\"{HOSTNAME}\"}",
+                "to": "{\"app\":\"ndiot\",\"dom\":\"nd\",\"dsp\":\"nd\",\"edg\":\"{HOSTNAME}\",\"mqtt\":\"{app}_{dom}_edg_{edg}\"}",
                 "tot": "json"
             }
         ],
@@ -110,30 +112,10 @@
         "to": "",
         "reg": false,
         "x": 230,
-        "y": 280,
+        "y": 300,
         "wires": [
             [
                 "49c8c1cb0342d9c7"
-            ]
-        ]
-    },
-    {
-        "id": "04a622cf8260f366",
-        "type": "function",
-        "z": "7c7a09edf982e2f4",
-        "name": "数据补全",
-        "func": "let data = global.get(\"data\");\nlet ids = global.get(\"ids\");\nlet host = env.get(\"HOSTNAME\") || env.get(\"COMPUTERNAME\");\nids.edg = ids.edg.replace(\"{HOSTNAME}\", host);\n\nlet app = data.app[ids.app];\nlet dom = app.domain[ids.dom];\nlet dsp = dom.dispatchers[ids.dsp];\nlet edg = dsp.edges[ids.edg] || {events: {}};\ndsp.edges[ids.edg] = edg;\n\napp.id = ids.app;\ndom.id = ids.dom;\ndsp.id = ids.dsp;\nedg.id = ids.edg;\n\ndata.edges = dsp.edges;\ndata.devices = dsp.devices;\ndata.topics = dsp.topics;\ndata.ids = ids;\n\nlet expandTopic = {\n    expandStr : function(v) {\n        if (typeof v == \"string\") {\n            v = v.replace(/\\{app\\}/g, ids.app);\n            v = v.replace(/\\{dom\\}/g, ids.dom);\n            v = v.replace(/\\{dsp\\}/g, ids.dsp);\n            v = v.replace(/\\{edg\\}/g, ids.edg);\n        }\n        return v;\n    },\n    expandArray : function(v) {\n        if (Array.isArray(v)) {\n            for(let i=0; i < v.length; i++) {\n                v[i] = this.expand(v[i]);\n            }\n        }\n        return arr;\n    },\n    expandObj : function(v) {\n        if (typeof v == \"object\") {\n            let keys = Object.keys(v);\n            keys.forEach(k => {\n                v[k] = this.expand(v[k]);\n            });\n        }\n        return v;        \n    },\n    expand : function(v) {\n        if (typeof v == \"string\")\n            v = this.expandStr(v);\n                    \n        if (Array.isArray(v)) {\n            v = expandArray(v);\n        }\n        \n        if (typeof v == \"object\") {\n            v = this.expandObj(v)\n        }\n                \n        return v\n    },\n    expandHD : function(hd) {\n        let tpc = \"\";\n        if (!hd.from) hd.from = {};\n        if (!hd.from.type) hd.from.type = \"edg\";\n        if (!hd.from.id) hd.from.id = ids.edg;\n        if (!hd.to.type) hd.to.type = \"0\";\n        if (!hd.to.id) hd.to.id = \"0\";\n        if (!hd.entry.type) hd.entry.type = \"0\";\n        if (!hd.entry.id) hd.entry.id = \"0\";\n        if (!hd.sid) hd.sid = 0;\n        if (!hd.stp) hd.stp = 0;\n    \n\n        tpc =   ids.app + \"/\" + ids.dom + \"/\" + \n                hd.from.type + \"/\" + hd.from.id + \"/\" + \n                hd.to.type + \"/\" + hd.to.id + \"/\" + \n                hd.entry.type + \"/\" + hd.entry.id;\n        return tpc;\n    },\n    keyToId: function(objs) {\n        let keys = Object.keys(objs);\n        keys.forEach(key => {\n            let obj = objs[key];\n            if (typeof obj == \"object\") \n                obj.id = key;\n        })        \n    }\n}\n    \nexpandTopic.expand(data.topics);\nexpandTopic.keyToId(data.edges);\nexpandTopic.keyToId(data.devices);\n\nlet common = {\n    expandTopic : expandTopic\n}\nglobal.set(\"common\", common)\n\nreturn {payload: data};",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 420,
-        "y": 240,
-        "wires": [
-            [
-                "f70a2bb4819417da",
-                "8b57a87f6d8a7588"
             ]
         ]
     },
@@ -217,22 +199,6 @@
         ]
     },
     {
-        "id": "8b57a87f6d8a7588",
-        "type": "debug",
-        "z": "7c7a09edf982e2f4",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 590,
-        "y": 200,
-        "wires": []
-    },
-    {
         "id": "f70a2bb4819417da",
         "type": "link out",
         "z": "7c7a09edf982e2f4",
@@ -242,8 +208,8 @@
             "906bb62a708b4c0c",
             "3fdb98726d73125a"
         ],
-        "x": 645,
-        "y": 340,
+        "x": 625,
+        "y": 680,
         "wires": []
     },
     {
@@ -349,7 +315,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据补全",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n    \ncommon.expandTopic.expand(data.topics);\ncommon.keyToObjId(data.edges);\ncommon.keyToObjId(data.devices);\n\n\nreturn {payload: data};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n    \ncommon.expandTopic.expand(data.topics);\ncommon.expandTopic.expand(data.ids);\ncommon.keyToObjId(data.edges);\ncommon.keyToObjId(data.devices);\n\n\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -451,7 +417,8 @@
         "y": 140,
         "wires": [
             [
-                "589883c5ddd06e17"
+                "589883c5ddd06e17",
+                "39ab7df981465702"
             ]
         ]
     },
@@ -470,7 +437,8 @@
         "y": 140,
         "wires": [
             [
-                "0f989c13f4e0c1cb"
+                "0f989c13f4e0c1cb",
+                "f6ce25be1914c84e"
             ]
         ]
     },
@@ -479,7 +447,7 @@
         "type": "debug",
         "z": "e93bbc67912b9178",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -534,12 +502,13 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 240,
-        "y": 320,
+        "x": 280,
+        "y": 520,
         "wires": [
             [
                 "8990876a77a537e8",
-                "d5db30b412aaf4ae"
+                "d5db30b412aaf4ae",
+                "a83fbf51e61bce78"
             ]
         ]
     },
@@ -557,8 +526,8 @@
         "correl": "",
         "expiry": "",
         "broker": "73824c52c204153b",
-        "x": 400,
-        "y": 320,
+        "x": 440,
+        "y": 520,
         "wires": []
     },
     {
@@ -571,12 +540,11 @@
             "5002cb933f4b4eb5",
             "cb5a80219ea82576"
         ],
-        "x": 125,
-        "y": 320,
+        "x": 165,
+        "y": 520,
         "wires": [
             [
-                "47f3ed4e61a01a5c",
-                "a83fbf51e61bce78"
+                "47f3ed4e61a01a5c"
             ]
         ]
     },
@@ -593,38 +561,9 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 420,
-        "y": 400,
+        "x": 460,
+        "y": 600,
         "wires": []
-    },
-    {
-        "id": "dec87f6d1b8899b5",
-        "type": "inject",
-        "z": "e93bbc67912b9178",
-        "name": "",
-        "props": [
-            {
-                "p": "action",
-                "v": "subscribe",
-                "vt": "str"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "ndiot/#",
-        "x": 230,
-        "y": 200,
-        "wires": [
-            [
-                "0f989c13f4e0c1cb"
-            ]
-        ]
     },
     {
         "id": "13403285d1db57b7",
@@ -658,9 +597,424 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 430,
-        "y": 480,
+        "x": 470,
+        "y": 680,
         "wires": []
+    },
+    {
+        "id": "1fbea7baf2a0c450",
+        "type": "link in",
+        "z": "e93bbc67912b9178",
+        "name": "动态订阅主题",
+        "links": [
+            "83c403b1c017c665"
+        ],
+        "x": 125,
+        "y": 100,
+        "wires": [
+            [
+                "0f989c13f4e0c1cb",
+                "f6ce25be1914c84e"
+            ]
+        ]
+    },
+    {
+        "id": "f6ce25be1914c84e",
+        "type": "debug",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "topic",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 380,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "04c398816ff958e8",
+        "type": "inject",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 320,
+        "wires": [
+            [
+                "39ab7df981465702"
+            ]
+        ]
+    },
+    {
+        "id": "39ab7df981465702",
+        "type": "change",
+        "z": "e93bbc67912b9178",
+        "name": "自动连接",
+        "rules": [
+            {
+                "t": "set",
+                "p": "action",
+                "pt": "msg",
+                "to": "connect",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "broker.autoConnect",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "broker.force",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "broker.clientid",
+                "pt": "msg",
+                "to": "data.ids.mqtt",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 240,
+        "y": 220,
+        "wires": [
+            [
+                "564455fd4b928ba4"
+            ]
+        ]
+    },
+    {
+        "id": "564455fd4b928ba4",
+        "type": "change",
+        "z": "e93bbc67912b9178",
+        "name": "连接消息",
+        "rules": [
+            {
+                "t": "set",
+                "p": "broker.birth.topic",
+                "pt": "msg",
+                "to": "data.topics.pubs.edg_evt_status",
+                "tot": "global"
+            },
+            {
+                "t": "set",
+                "p": "broker.birth.qos",
+                "pt": "msg",
+                "to": "2",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "broker.birth.retain",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "broker.birth.payload.hd.from.type",
+                "pt": "msg",
+                "to": "edg",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "broker.birth.payload.hd.from.id",
+                "pt": "msg",
+                "to": "data.ids.edg",
+                "tot": "global"
+            },
+            {
+                "t": "set",
+                "p": "broker.birth.payload.hd.to.type",
+                "pt": "msg",
+                "to": "0",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "broker.birth.payload.hd.to.id",
+                "pt": "msg",
+                "to": "0",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "broker.birth.payload.hd.entry.type",
+                "pt": "msg",
+                "to": "evt",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "broker.birth.payload.hd.entry.id",
+                "pt": "msg",
+                "to": "status",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "broker.birth.payload.pld.online",
+                "pt": "msg",
+                "to": "1",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "broker.birth.payload.pld.id",
+                "pt": "msg",
+                "to": "data.ids.edg",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 440,
+        "y": 220,
+        "wires": [
+            [
+                "48eb4156b393f84f"
+            ]
+        ]
+    },
+    {
+        "id": "ae609365ab6591a8",
+        "type": "change",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 930,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "48eb4156b393f84f",
+        "type": "change",
+        "z": "e93bbc67912b9178",
+        "name": "遗嘱消息",
+        "rules": [
+            {
+                "t": "set",
+                "p": "broker.will",
+                "pt": "msg",
+                "to": "broker.birth",
+                "tot": "msg",
+                "dc": true
+            },
+            {
+                "t": "set",
+                "p": "broker.will.payload.pld.online",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 600,
+        "y": 220,
+        "wires": [
+            [
+                "a74f2eeda3fa9bc1"
+            ]
+        ]
+    },
+    {
+        "id": "6b6a7c7b19998294",
+        "type": "debug",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "broker",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1030,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "dec87f6d1b8899b5",
+        "type": "inject",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "props": [
+            {
+                "p": "action",
+                "v": "subscribe",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "ndiot/#",
+        "x": 770,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "95752277bad44b2b",
+        "type": "inject",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "props": [
+            {
+                "p": "action",
+                "v": "subscribe",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "ndiot/nd/dev/ESP8266x0098b1f8/0/0/evt/status",
+        "x": 770,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "92c112b11ede74f5",
+        "type": "change",
+        "z": "e93bbc67912b9178",
+        "name": "连接消息",
+        "rules": [
+            {
+                "t": "set",
+                "p": "broker.will.topic",
+                "pt": "msg",
+                "to": "data.topics.pubs.edg_evt_status",
+                "tot": "global"
+            },
+            {
+                "t": "set",
+                "p": "broker.will.qos",
+                "pt": "msg",
+                "to": "2",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "broker.will.retain",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "broker.will.payload",
+                "pt": "msg",
+                "to": "{}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dd21821fc011efd1",
+        "type": "switch",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 770,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a74f2eeda3fa9bc1",
+        "type": "json",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "property": "broker.will.payload",
+        "action": "str",
+        "pretty": false,
+        "x": 750,
+        "y": 220,
+        "wires": [
+            [
+                "6b6a7c7b19998294",
+                "0f989c13f4e0c1cb"
+            ]
+        ]
     },
     {
         "id": "3fdb98726d73125a",
@@ -819,7 +1173,7 @@
         "type": "debug",
         "z": "46a5ba0d798d87c3",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -862,7 +1216,7 @@
         "type": "debug",
         "z": "46a5ba0d798d87c3",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1076,7 +1430,8 @@
         "y": 100,
         "wires": [
             [
-                "8bdefa0f693ad406"
+                "8bdefa0f693ad406",
+                "93f9a74c311cf971"
             ]
         ]
     },
@@ -1331,9 +1686,7 @@
             [
                 "c15b8a633e8fdcb5"
             ],
-            [
-                "319947dbd8eef670"
-            ]
+            []
         ]
     },
     {
@@ -1360,25 +1713,8 @@
         "y": 160,
         "wires": [
             [
-                "7fa2a4320c33a0c6"
+                "eddacdb42ea98435"
             ]
-        ]
-    },
-    {
-        "id": "319947dbd8eef670",
-        "type": "change",
-        "z": "f7e96a32e56d72eb",
-        "name": "响应",
-        "rules": [],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 930,
-        "y": 200,
-        "wires": [
-            []
         ]
     },
     {
@@ -1392,8 +1728,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1070,
-        "y": 160,
+        "x": 1210,
+        "y": 200,
         "wires": [
             [
                 "cb5a80219ea82576"
@@ -1409,8 +1745,76 @@
         "links": [
             "f4460e5db856239e"
         ],
-        "x": 1215,
-        "y": 220,
+        "x": 1305,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "eddacdb42ea98435",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "订阅",
+        "func": "let data = global.get(\"data\")\nlet topics = data.topics;\nlet hd = msg.payload.hd;\n\n\n\nlet topic = topics.subs.dev_evt_status;\ntopic = topic.replace();\n\ntopic = topic.replace(/\\{did\\}/g, hd.from.id);\n\nnode.send([\n    {\n        action: \"subscribe\",\n        topic: topic\n    }, \n\n    msg    \n    ])\n\n\n\n\n\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 160,
+        "wires": [
+            [
+                "83c403b1c017c665"
+            ],
+            [
+                "7fa2a4320c33a0c6"
+            ]
+        ]
+    },
+    {
+        "id": "83c403b1c017c665",
+        "type": "link out",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "1fbea7baf2a0c450"
+        ],
+        "x": 1305,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "e779ea30830cf8f6",
+        "type": "debug",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1250,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "93f9a74c311cf971",
+        "type": "debug",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1230,
+        "y": 520,
         "wires": []
     }
 ]
