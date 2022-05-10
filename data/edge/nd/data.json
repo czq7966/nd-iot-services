@@ -29,14 +29,18 @@
                                         "login": {},
                                         "heartbeat": {}
                                     },
-                                    "edge":{}
+                                    "edge":{},
+                                    "z2m":{}
                                 }
                             },
                             "topics": {
                                 "subs": {
                                     "dev_evt_heartbeat": "{app}/{dom}/dev/+/edg/{edg}/evt/heartbeat",
-                                    "dev_evt_report": "{app}/{dom}/dev/+/edg/{edg}/evt/report",
-                                    "dev_evt_status": "{app}/{dom}/dev/{did}/0/0/evt/status"
+                                    "dev_evt_report": "{app}/{dom}/dev/+/edg/{edg}/evt/report"
+                                },
+                                "dysubs": {
+                                    "dev_evt_status": "{app}/{dom}/dev/{did}/0/0/evt/status",
+                                    "dev_evt_raw": "{app}/{dom}/dev/{did}/edg/{edg}/evt/raw"
                                 },
                                 "services": {
                                     "edg_svc_login": "{app}/{dom}/dsp/+/edg/{edg}/svc/login",
@@ -44,7 +48,8 @@
                                 },
                                 "pubs": {
                                     "dsp_svc_login": "login",
-                                    "edg_evt_status": "{app}/{dom}/edg/{edg}/0/0/evt/status"
+                                    "edg_evt_status": "{app}/{dom}/edg/{edg}/0/0/evt/status",
+                                    "dev_svc_raw": "{app}/{dom}/edg/{edg}/dev/{did}/svc/raw"
                                 }
                             }
                         }
