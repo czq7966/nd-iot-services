@@ -30,7 +30,8 @@
                                     "events": {
                                         "login": {},
                                         "heartbeat": {}
-                                    }
+                                    },
+                                    "z2m": {}
                                 }                        
                             },
         
@@ -40,27 +41,57 @@
                                     "dev_evt_heartbeat":    "{app}/{dom}/dev/+/+/+/evt/heartbeat"
                                 },
                                 "services":{
-                                    "dsp_svc_login":        "{app}/{dom}/+/+/dsp/{dsp}/svc/login"
+                                    "dsp_svc_login":        "{app}/{dom}/+/+/dsp/{dsp}/svc/login",
+                                    "dsp_svc_get_z2m_datafile": "{app}/{dom}/+/+/dsp/{dsp}/svc/get_z2m_datafile",
+                                    "dsp_svc_set_z2m_datafile": "{app}/{dom}/+/+/dsp/{dsp}/svc/set_z2m_datafile"
                                 },
                                 "pubs":{
                                     "dev_svc_login":        "login",
-                                    "edg_svc_login":        "login"
+                                    "edg_svc_login":        "login",
+                                    "edg_svc_get_z2m_datafile": "get_z2m_datafile"
                                 }
-                            }                                                 
+                            },
+                            "z2m": {
+                                "defaultDatafile": {
+                                    "configuration.yaml": {
+                                        "homeassistant": false,
+                                        "permit_join": false,
+                                        "mqtt": {
+                                            "base_topic": "{mqtt_base_topic}",
+                                            "server": "{mqtt_server}",
+                                            "user": "{mqtt_user}",
+                                            "password": "{mqtt_password}"
+                                        },
+                                        "serial": {
+                                            "port": "{serial_port}"
+                                        },
+                                        "device_options": {
+                                            "legacy": false
+                                        },
+                                        "advanced": {
+                                            "pan_id": "GENARATE",                                        
+                                            "channel": 11,
+                                            "network_key": "GENARATE",
+                                            "baudrate": 115200,
+                                            "homeassistant_legacy_entity_attributes": false,
+                                            "legacy_api": false,
+                                            "log_level": "debug"
+                                        },
+                                        "frontend": {
+                                            "port": "{frontend_port}"
+                                        }
+                                    }
+                                }
+                            }                                               
                         }
                     }
                 }
             }
         }
     },
-    "edges": {
-
-    },
-    "devices": {
-        
-    },
-    "topics" : {
-
-    },
-    "ids": {}
+    "edges": {},
+    "devices": {},
+    "topics" : {},
+    "ids": {},
+    "z2m": {}
 }

@@ -51,6 +51,38 @@
                                     "edg_evt_status": "{app}/{dom}/edg/{edg}/0/0/evt/status",
                                     "dev_svc_raw": "{app}/{dom}/edg/{edg}/dev/{did}/svc/raw"
                                 }
+                            },
+                            "z2m": {
+                                "defaultDatafile": {
+                                    "configuration.yaml": {
+                                        "homeassistant": false,
+                                        "permit_join": false,
+                                        "mqtt": {
+                                            "base_topic": "{mqtt_base_topic}",
+                                            "server": "{mqtt_server}",
+                                            "user": "{mqtt_user}",
+                                            "password": "{mqtt_password}"
+                                        },
+                                        "serial": {
+                                            "port": "{serial_port}"
+                                        },
+                                        "device_options": {
+                                            "legacy": false
+                                        },
+                                        "advanced": {
+                                            "pan_id": "GENARATE",                                        
+                                            "channel": 11,
+                                            "network_key": "GENARATE",
+                                            "baudrate": 115200,
+                                            "homeassistant_legacy_entity_attributes": false,
+                                            "legacy_api": false,
+                                            "log_level": "debug"
+                                        },
+                                        "frontend": {
+                                            "port": "{frontend_port}"
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
