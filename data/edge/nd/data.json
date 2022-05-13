@@ -55,39 +55,8 @@
                                     "dsp_svc_set_z2m_datafile": "set_z2m_datafile",
                                     "edg_evt_status": "status",
                                     "dev_svc_get": "get",
-                                    "dev_svc_set": "set"
-                                }
-                            },
-                            "z2m": {
-                                "defaultDatafile": {
-                                    "configuration.yaml": {
-                                        "homeassistant": false,
-                                        "permit_join": false,
-                                        "mqtt": {
-                                            "base_topic": "{mqtt_base_topic}",
-                                            "server": "{mqtt_server}",
-                                            "user": "{mqtt_user}",
-                                            "password": "{mqtt_password}"
-                                        },
-                                        "serial": {
-                                            "port": "{serial_port}"
-                                        },
-                                        "device_options": {
-                                            "legacy": false
-                                        },
-                                        "advanced": {
-                                            "pan_id": "GENARATE",                                        
-                                            "channel": 11,
-                                            "network_key": "GENARATE",
-                                            "baudrate": 115200,
-                                            "homeassistant_legacy_entity_attributes": false,
-                                            "legacy_api": false,
-                                            "log_level": "debug"
-                                        },
-                                        "frontend": {
-                                            "port": "{frontend_port}"
-                                        }
-                                    }
+                                    "dev_svc_set": "set",
+                                    "dev_svc_raw": "raw"
                                 }
                             }
                         }

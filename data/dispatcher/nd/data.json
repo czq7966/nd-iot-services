@@ -60,9 +60,9 @@
                                             "legacy": false
                                         },
                                         "advanced": {
-                                            "pan_id": "GENARATE",                                        
+                                            "pan_id": "GENERATE",                                        
                                             "channel": 11,
-                                            "network_key": "GENARATE",
+                                            "network_key": "GENERATE",
                                             "baudrate": 115200,
                                             "homeassistant_legacy_entity_attributes": false,
                                             "legacy_api": false,
