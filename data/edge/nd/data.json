@@ -10,6 +10,7 @@
                     "dispatchers": {
                         "nd": {
                             "name": "调度器",
+                            "events": {},
                             "edges": {
                                 "xxxx": {
                                     "id": "",
@@ -35,21 +36,26 @@
                             },
                             "topics": {
                                 "subs": {
-                                    "dev_evt_heartbeat": "{app}/{dom}/dev/+/edg/{edg}/evt/heartbeat",
-                                    "dev_evt_report": "{app}/{dom}/dev/+/edg/{edg}/evt/report"
+                                    "dev_evt_report": "{app}/{dom}/dev/+/edg/{edg}/evt/report",
+                                    "dsp_evt_status": "{app}/{dom}/dsp/{dsp}/0/0/evt/status"
                                 },
                                 "dysubs": {
                                     "dev_evt_status": "{app}/{dom}/dev/{did}/0/0/evt/status",
                                     "dev_evt_raw": "{app}/{dom}/dev/{did}/edg/{edg}/evt/raw"
                                 },
                                 "services": {
-                                    "edg_svc_login": "{app}/{dom}/dsp/+/edg/{edg}/svc/login",
-                                    "edg_svc_handshake": "{app}/{dom}/dev/+/edg/{edg}/svc/handshake"
+                                    "edg_svc_login": "{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/login",
+                                    "edg_svc_handshake": "{app}/{dom}/dev/+/edg/{edg}/svc/handshake",
+                                    "edg_svc_get_z2m_datafile": "{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/get_z2m_datafile",
+                                    "edg_svc_set_z2m_datafile": "{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/set_z2m_datafile"
                                 },
                                 "pubs": {
                                     "dsp_svc_login": "login",
-                                    "edg_evt_status": "{app}/{dom}/edg/{edg}/0/0/evt/status",
-                                    "dev_svc_raw": "{app}/{dom}/edg/{edg}/dev/{did}/svc/raw"
+                                    "dsp_svc_get_z2m_datafile": "get_z2m_datafile",
+                                    "dsp_svc_set_z2m_datafile": "set_z2m_datafile",
+                                    "edg_evt_status": "status",
+                                    "dev_svc_get": "get",
+                                    "dev_svc_set": "set"
                                 }
                             },
                             "z2m": {
@@ -90,6 +96,7 @@
             }
         }
     },
+    "disps": {},
     "edges": {},
     "devices": {},
     "topics": {},
