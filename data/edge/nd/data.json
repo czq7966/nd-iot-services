@@ -41,7 +41,7 @@
                                 },
                                 "dysubs": {
                                     "dev_evt_status": "{app}/{dom}/dev/{did}/0/0/evt/status",
-                                    "dev_evt_raw": "{app}/{dom}/dev/{did}/edg/{edg}/evt/raw"
+                                    "dev_evt_penet": "{app}/{dom}/dev/{did}/edg/{edg}/evt/penet"
                                 },
                                 "services": {
                                     "edg_svc_login": "{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/login",
@@ -54,9 +54,10 @@
                                     "dsp_svc_get_z2m_datafile": "get_z2m_datafile",
                                     "dsp_svc_set_z2m_datafile": "set_z2m_datafile",
                                     "edg_evt_status": "status",
+                                    
                                     "dev_svc_get": "get",
                                     "dev_svc_set": "set",
-                                    "dev_svc_raw": "raw"
+                                    "dev_svc_penet": "penet"
                                 }
                             }
                         }

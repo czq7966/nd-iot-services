@@ -95,7 +95,7 @@
                 "t": "set",
                 "p": "data",
                 "pt": "global",
-                "to": "{\"app\":{\"ndiot\":{\"id\":\"ndiot\",\"name\":\"网龙物联网\",\"domain\":{\"nd\":{\"id\":\"nd\",\"name\":\"网龙公司\",\"dispatchers\":{\"nd\":{\"name\":\"调度器\",\"events\":{},\"edges\":{\"xxxx\":{\"id\":\"\",\"name\":\"边缘服务\",\"events\":{\"login\":{},\"heartbeat\":{}},\"devices\":{}}},\"devices\":{\"ESP8266x0006dbe5\":{\"id\":\"\",\"name\":\"终端设备\",\"events\":{\"login\":{},\"heartbeat\":{}},\"edge\":{},\"z2m\":{}}},\"topics\":{\"subs\":{\"dev_evt_report\":\"{app}/{dom}/dev/+/edg/{edg}/evt/report\",\"dsp_evt_status\":\"{app}/{dom}/dsp/{dsp}/0/0/evt/status\"},\"dysubs\":{\"dev_evt_status\":\"{app}/{dom}/dev/{did}/0/0/evt/status\",\"dev_evt_raw\":\"{app}/{dom}/dev/{did}/edg/{edg}/evt/raw\"},\"services\":{\"edg_svc_login\":\"{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/login\",\"edg_svc_handshake\":\"{app}/{dom}/dev/+/edg/{edg}/svc/handshake\",\"edg_svc_get_z2m_datafile\":\"{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/get_z2m_datafile\",\"edg_svc_set_z2m_datafile\":\"{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/set_z2m_datafile\"},\"pubs\":{\"dsp_svc_login\":\"login\",\"dsp_svc_get_z2m_datafile\":\"get_z2m_datafile\",\"dsp_svc_set_z2m_datafile\":\"set_z2m_datafile\",\"edg_evt_status\":\"status\",\"dev_svc_get\":\"get\",\"dev_svc_set\":\"set\",\"dev_svc_raw\":\"raw\"}}}}}}}},\"disps\":{},\"edges\":{},\"devices\":{},\"topics\":{},\"ids\":{}}",
+                "to": "{\"app\":{\"ndiot\":{\"id\":\"ndiot\",\"name\":\"网龙物联网\",\"domain\":{\"nd\":{\"id\":\"nd\",\"name\":\"网龙公司\",\"dispatchers\":{\"nd\":{\"name\":\"调度器\",\"events\":{},\"edges\":{\"xxxx\":{\"id\":\"\",\"name\":\"边缘服务\",\"events\":{\"login\":{},\"heartbeat\":{}},\"devices\":{}}},\"devices\":{\"ESP8266x0006dbe5\":{\"id\":\"\",\"name\":\"终端设备\",\"events\":{\"login\":{},\"heartbeat\":{}},\"edge\":{},\"z2m\":{}}},\"topics\":{\"subs\":{\"dev_evt_report\":\"{app}/{dom}/dev/+/edg/{edg}/evt/report\",\"dsp_evt_status\":\"{app}/{dom}/dsp/{dsp}/0/0/evt/status\"},\"dysubs\":{\"dev_evt_status\":\"{app}/{dom}/dev/{did}/0/0/evt/status\",\"dev_evt_penet\":\"{app}/{dom}/dev/{did}/edg/{edg}/evt/penet\"},\"services\":{\"edg_svc_login\":\"{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/login\",\"edg_svc_handshake\":\"{app}/{dom}/dev/+/edg/{edg}/svc/handshake\",\"edg_svc_get_z2m_datafile\":\"{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/get_z2m_datafile\",\"edg_svc_set_z2m_datafile\":\"{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/set_z2m_datafile\"},\"pubs\":{\"dsp_svc_login\":\"login\",\"dsp_svc_get_z2m_datafile\":\"get_z2m_datafile\",\"dsp_svc_set_z2m_datafile\":\"set_z2m_datafile\",\"edg_evt_status\":\"status\",\"dev_svc_get\":\"get\",\"dev_svc_set\":\"set\",\"dev_svc_penet\":\"penet\"}}}}}}}},\"disps\":{},\"edges\":{},\"devices\":{},\"topics\":{},\"ids\":{}}",
                 "tot": "json"
             },
             {
@@ -2110,7 +2110,7 @@
         "type": "function",
         "z": "95249172.4f419",
         "name": "下行数据",
-        "func": "\nlet hd = {\n    to: {\n        type: \"dev\",\n        id: msg.topic\n    },\n    entry: {\n        type: \"svc\",\n        id: \"raw\"\n    }\n}\nlet pld = {\n    raw: msg.payload\n}\n\nreturn {\n    payload:{\n        hd: hd, \n        pld: pld\n    }\n};",
+        "func": "\nlet hd = {\n    to: {\n        type: \"dev\",\n        id: msg.topic\n    },\n    entry: {\n        type: \"svc\",\n        id: \"penet\"\n    }\n}\nlet pld = {\n    raw: msg.payload\n}\n\nreturn {\n    payload:{\n        hd: hd, \n        pld: pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2137,11 +2137,11 @@
         "rap": true,
         "rh": 0,
         "inputs": 1,
-        "x": 400,
+        "x": 440,
         "y": 680,
         "wires": [
             [
-                "a3f08278.d1b74"
+                "52445c3.9f9dea4"
             ]
         ]
     },
@@ -2150,7 +2150,7 @@
         "type": "function",
         "z": "95249172.4f419",
         "name": "主题订阅",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet topics = data.topics;\nlet device = msg.device;\nlet topic = common.expandTopic.expand(topics.dysubs.dev_evt_raw, device.id);\n\nnode.send({\n    action: \"subscribe\",\n    topic: topic,\n    device: device\n})",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet topics = data.topics;\nlet device = msg.device;\nlet topic = common.expandTopic.expand(topics.dysubs.dev_evt_penet, device.id);\n\nnode.send({\n    action: \"subscribe\",\n    topic: topic,\n    device: device\n})",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2162,32 +2162,8 @@
             [
                 "2011f1524bc4f124",
                 "b532891899181833",
-                "c29a577.4922ba8"
-            ]
-        ]
-    },
-    {
-        "id": "a3f08278.d1b74",
-        "type": "switch",
-        "z": "95249172.4f419",
-        "name": "Z3数据",
-        "property": "payload.hd.cmd",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "3",
-                "vt": "num"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 540,
-        "y": 680,
-        "wires": [
-            [
-                "52445c3.9f9dea4"
+                "c29a577.4922ba8",
+                "d84ccae0.262b08"
             ]
         ]
     },
@@ -2197,8 +2173,8 @@
         "z": "95249172.4f419",
         "name": "",
         "action": "",
-        "property": "payload.pld.code",
-        "x": 680,
+        "property": "payload.pld.raw",
+        "x": 600,
         "y": 680,
         "wires": [
             [
@@ -2217,7 +2193,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 820,
+        "x": 760,
         "y": 680,
         "wires": [
             [
@@ -2953,7 +2929,7 @@
         "encoding": "none",
         "allProps": false,
         "x": 700,
-        "y": 860,
+        "y": 820,
         "wires": [
             [
                 "a62c3d0e9815f172"
@@ -2972,7 +2948,7 @@
         "finalize": "",
         "libs": [],
         "x": 530,
-        "y": 860,
+        "y": 820,
         "wires": [
             [
                 "7f5fec758583e328"
@@ -2997,7 +2973,7 @@
         "allowrate": false,
         "outputs": 1,
         "x": 380,
-        "y": 860,
+        "y": 820,
         "wires": [
             [
                 "7739fabb1797a8aa"
@@ -3039,7 +3015,7 @@
         ],
         "uncaught": false,
         "x": 520,
-        "y": 940,
+        "y": 900,
         "wires": [
             [
                 "0c5ad8a0c21631aa"
@@ -3053,7 +3029,7 @@
         "property": "payload",
         "name": "",
         "x": 870,
-        "y": 860,
+        "y": 820,
         "wires": [
             [
                 "3bdd43d8255bbc81"
@@ -3072,7 +3048,7 @@
         "finalize": "",
         "libs": [],
         "x": 1010,
-        "y": 860,
+        "y": 820,
         "wires": [
             [
                 "0c5ad8a0c21631aa"
@@ -3091,7 +3067,7 @@
         "finalize": "",
         "libs": [],
         "x": 690,
-        "y": 940,
+        "y": 900,
         "wires": [
             [
                 "29d7bc0ce9adf4c3"
@@ -3109,7 +3085,7 @@
         "overwriteFile": "true",
         "encoding": "none",
         "x": 1020,
-        "y": 940,
+        "y": 900,
         "wires": [
             [
                 "8f945fdc1ab78574"
@@ -3123,7 +3099,7 @@
         "property": "payload",
         "name": "",
         "x": 870,
-        "y": 940,
+        "y": 900,
         "wires": [
             [
                 "e1c7d0801e4969d2"
