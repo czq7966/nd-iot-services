@@ -54,10 +54,11 @@
                                     "dsp_svc_get_z2m_datafile": "get_z2m_datafile",
                                     "dsp_svc_set_z2m_datafile": "set_z2m_datafile",
                                     "edg_evt_status": "status",
-                                    
+
                                     "dev_svc_get": "get",
                                     "dev_svc_set": "set",
-                                    "dev_svc_penet": "penet"
+                                    "dev_svc_penet": "penet",
+                                    "dev_svc_handshake": "handshake"
                                 }
                             }
                         }

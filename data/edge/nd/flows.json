@@ -95,7 +95,7 @@
                 "t": "set",
                 "p": "data",
                 "pt": "global",
-                "to": "{\"app\":{\"ndiot\":{\"id\":\"ndiot\",\"name\":\"网龙物联网\",\"domain\":{\"nd\":{\"id\":\"nd\",\"name\":\"网龙公司\",\"dispatchers\":{\"nd\":{\"name\":\"调度器\",\"events\":{},\"edges\":{\"xxxx\":{\"id\":\"\",\"name\":\"边缘服务\",\"events\":{\"login\":{},\"heartbeat\":{}},\"devices\":{}}},\"devices\":{\"ESP8266x0006dbe5\":{\"id\":\"\",\"name\":\"终端设备\",\"events\":{\"login\":{},\"heartbeat\":{}},\"edge\":{},\"z2m\":{}}},\"topics\":{\"subs\":{\"dev_evt_report\":\"{app}/{dom}/dev/+/edg/{edg}/evt/report\",\"dsp_evt_status\":\"{app}/{dom}/dsp/{dsp}/0/0/evt/status\"},\"dysubs\":{\"dev_evt_status\":\"{app}/{dom}/dev/{did}/0/0/evt/status\",\"dev_evt_penet\":\"{app}/{dom}/dev/{did}/edg/{edg}/evt/penet\"},\"services\":{\"edg_svc_login\":\"{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/login\",\"edg_svc_handshake\":\"{app}/{dom}/dev/+/edg/{edg}/svc/handshake\",\"edg_svc_get_z2m_datafile\":\"{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/get_z2m_datafile\",\"edg_svc_set_z2m_datafile\":\"{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/set_z2m_datafile\"},\"pubs\":{\"dsp_svc_login\":\"login\",\"dsp_svc_get_z2m_datafile\":\"get_z2m_datafile\",\"dsp_svc_set_z2m_datafile\":\"set_z2m_datafile\",\"edg_evt_status\":\"status\",\"dev_svc_get\":\"get\",\"dev_svc_set\":\"set\",\"dev_svc_penet\":\"penet\"}}}}}}}},\"disps\":{},\"edges\":{},\"devices\":{},\"topics\":{},\"ids\":{}}",
+                "to": "{\"app\":{\"ndiot\":{\"id\":\"ndiot\",\"name\":\"网龙物联网\",\"domain\":{\"nd\":{\"id\":\"nd\",\"name\":\"网龙公司\",\"dispatchers\":{\"nd\":{\"name\":\"调度器\",\"events\":{},\"edges\":{\"xxxx\":{\"id\":\"\",\"name\":\"边缘服务\",\"events\":{\"login\":{},\"heartbeat\":{}},\"devices\":{}}},\"devices\":{\"ESP8266x0006dbe5\":{\"id\":\"\",\"name\":\"终端设备\",\"events\":{\"login\":{},\"heartbeat\":{}},\"edge\":{},\"z2m\":{}}},\"topics\":{\"subs\":{\"dev_evt_report\":\"{app}/{dom}/dev/+/edg/{edg}/evt/report\",\"dsp_evt_status\":\"{app}/{dom}/dsp/{dsp}/0/0/evt/status\"},\"dysubs\":{\"dev_evt_status\":\"{app}/{dom}/dev/{did}/0/0/evt/status\",\"dev_evt_penet\":\"{app}/{dom}/dev/{did}/edg/{edg}/evt/penet\"},\"services\":{\"edg_svc_login\":\"{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/login\",\"edg_svc_handshake\":\"{app}/{dom}/dev/+/edg/{edg}/svc/handshake\",\"edg_svc_get_z2m_datafile\":\"{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/get_z2m_datafile\",\"edg_svc_set_z2m_datafile\":\"{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/set_z2m_datafile\"},\"pubs\":{\"dsp_svc_login\":\"login\",\"dsp_svc_get_z2m_datafile\":\"get_z2m_datafile\",\"dsp_svc_set_z2m_datafile\":\"set_z2m_datafile\",\"edg_evt_status\":\"status\",\"dev_svc_get\":\"get\",\"dev_svc_set\":\"set\",\"dev_svc_penet\":\"penet\",\"dev_svc_handshake\":\"handshake\"}}}}}}}},\"disps\":{},\"edges\":{},\"devices\":{},\"topics\":{},\"ids\":{}}",
                 "tot": "json"
             },
             {
@@ -396,7 +396,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "Z3协调器初始化函数",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet os = global.get(\"os\");\nlet devices = data.devices;\nlet topics = data.topics;\nlet tcpPort = 18190;\nlet z2mDir = os.datadir + \"/../../../../zigbee2mqtt\"\n\nlet setDevice = (device, tcpPort) => {\n    let dataDir = z2mDir + \"/data/\" + device.id; \n    let execStr = \"cd \" + z2mDir;\n    if (os.platform == \"win32\"){\n        execStr =execStr + \"&& set ZIGBEE2MQTT_DATA=\" + dataDir;\n        execStr =execStr + \"&& npm start\";\n    }\n\n    let z2m = device.z2m || {};\n    z2m.tcp = {\n            port: tcpPort,\n            status: null\n        };\n    z2m.z2m = {\n            configuration: {\n                mqtt: {\n                    base_topic: device.id,\n                    server: \"mqtt://push-access.sdp.101.com:1780\",\n                    user: \"ioe\"\n                },\n                serial: {\n                    port: \"tcp://127.0.0.1:\" + tcpPort\n                },\n                frontend: {\n                    port: tcpPort - 100\n                }\n            },\n            topics: {\n                sub: common.expandTopic.expand(topics.dysubs.dev_evt_raw, device.id),\n                pub: common.getHDTopic({to: {type: \"dev\", id: device.id}, \n                                        entry: {type: \"svc\", id: topics.pubs.dev_svc_raw}})\n            },\n            datadir: dataDir,\n            configfile: \"configuration.yaml\",\n            configfullfile: dataDir + \"/configuration.yaml\",\n            databasefile: \"database.db\",\n            databasefullfile: dataDir + \"/database.db\",\n            exec: execStr,\n            status: null,\n            datafile: z2m.z2m && z2m.z2m.datafile\n        };\n        \n    device.z2m = z2m;\n}\n\n\nlet initZ3CoDevice = function(did) {\n    let device = devices[did];\n    if (device && (!device.z2m || !device.z2m.tcp || !device.z2m.z2m)) {\n        setDevice(device, tcpPort++);\n    }\n    \n    return device;\n}\n\n\ncommon.initZ3CoDevice = initZ3CoDevice;\n\nreturn {payload: common};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet os = global.get(\"os\");\nlet devices = data.devices;\nlet topics = data.topics;\nlet tcpPort = 18190;\nlet z2mDir = os.datadir + \"/../../../../zigbee2mqtt\"\n\nlet running = function() {\n    return  this.z2m && this.z2m.status && this.z2m.status == \"running\" &&\n            this.tcp && this.tcp.status && this.tcp.status == \"listened\"\n}\n\nlet setDevice = (device, tcpPort) => {\n    let dataDir = z2mDir + \"/data/\" + device.id; \n    let execStr = \"cd \" + z2mDir;\n    if (os.platform == \"win32\"){\n        execStr =execStr + \"&& set ZIGBEE2MQTT_DATA=\" + dataDir;\n        execStr =execStr + \"&& npm start\";\n    }\n\n    let z2m = device.z2m || {};\n    z2m.tcp = {\n            port: tcpPort,\n            status: null\n        };\n    z2m.z2m = {\n            configuration: {\n                mqtt: {\n                    base_topic: device.id,\n                    server: \"mqtt://push-access.sdp.101.com:1780\",\n                    user: \"ioe\"\n                },\n                serial: {\n                    port: \"tcp://127.0.0.1:\" + tcpPort\n                },\n                frontend: {\n                    port: tcpPort - 100\n                }\n            },\n            topics: {\n                sub: common.expandTopic.expand(topics.dysubs.dev_evt_raw, device.id),\n                pub: common.getHDTopic({to: {type: \"dev\", id: device.id}, \n                                        entry: {type: \"svc\", id: topics.pubs.dev_svc_raw}})\n            },\n            datadir: dataDir,\n            configfile: \"configuration.yaml\",\n            configfullfile: dataDir + \"/configuration.yaml\",\n            databasefile: \"database.db\",\n            databasefullfile: dataDir + \"/database.db\",\n            exec: execStr,\n            status: null,\n            datafile: z2m.z2m && z2m.z2m.datafile\n        };\n    z2m.running = running;\n    device.z2m = z2m;\n}\n\n\nlet initZ3CoDevice = function(did) {\n    let device = devices[did];\n    if (device && (!device.z2m || !device.z2m.tcp || !device.z2m.z2m)) {\n        setDevice(device, tcpPort++);\n    }\n    \n    return device;\n}\n\n\ncommon.initZ3CoDevice = initZ3CoDevice;\n\nreturn {payload: common};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1077,7 +1077,7 @@
         "id": "808567bfe13fcc45",
         "type": "trigger",
         "z": "46a5ba0d798d87c3",
-        "name": "",
+        "name": "超时5秒",
         "op1": "1",
         "op2": "0",
         "op1type": "str",
@@ -1091,32 +1091,13 @@
         "topic": "topic",
         "outputs": 2,
         "x": 380,
-        "y": 240,
+        "y": 180,
         "wires": [
+            [],
             [
-                "716b5f935054e730"
-            ],
-            [
-                "437520f4f17c551d",
                 "dbc6ca860bba37fa"
             ]
         ]
-    },
-    {
-        "id": "716b5f935054e730",
-        "type": "debug",
-        "z": "46a5ba0d798d87c3",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 610,
-        "y": 240,
-        "wires": []
     },
     {
         "id": "35f58eaf5d9015fb",
@@ -1138,7 +1119,7 @@
         "to": "",
         "reg": false,
         "x": 210,
-        "y": 240,
+        "y": 180,
         "wires": [
             [
                 "808567bfe13fcc45"
@@ -1146,31 +1127,15 @@
         ]
     },
     {
-        "id": "437520f4f17c551d",
-        "type": "debug",
-        "z": "46a5ba0d798d87c3",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 610,
-        "y": 280,
-        "wires": []
-    },
-    {
         "id": "ea899d2e95e95576",
         "type": "link in",
         "z": "46a5ba0d798d87c3",
-        "name": "重置",
+        "name": "重置登入请求",
         "links": [
             "87bda24bd97b90b7"
         ],
         "x": 105,
-        "y": 240,
+        "y": 180,
         "wires": [
             [
                 "35f58eaf5d9015fb"
@@ -1181,9 +1146,9 @@
         "id": "d99eb11998d5f458",
         "type": "comment",
         "z": "46a5ba0d798d87c3",
-        "name": "登入逻辑",
+        "name": "登入",
         "info": "",
-        "x": 120,
+        "x": 110,
         "y": 40,
         "wires": []
     },
@@ -1193,8 +1158,8 @@
         "z": "46a5ba0d798d87c3",
         "name": "获取Z2M数据文件",
         "info": "",
-        "x": 170,
-        "y": 440,
+        "x": 150,
+        "y": 580,
         "wires": []
     },
     {
@@ -1202,69 +1167,31 @@
         "type": "function",
         "z": "46a5ba0d798d87c3",
         "name": "请求Z2M数据文件",
-        "func": "let data = global.get(\"data\");\nlet topics = data.topics;\n\nlet _msg = {\n    payload: {\n        hd: {\n            to: {\n                type: \"dsp\",\n                id: data.ids.dsp\n            },\n            entry: {\n                type: \"svc\",\n                id: topics.pubs.dsp_svc_get_z2m_datafile\n            }\n        },\n        pld: {\n            id: msg.payload.id\n        }\n    }\n}\nreturn _msg;",
+        "func": "let data = global.get(\"data\");\nlet topics = data.topics;\nlet pld = msg.payload.pld\n\nlet _msg = {\n    payload: {\n        hd: {\n            to: {\n                type: \"dsp\",\n                id: data.ids.dsp\n            },\n            entry: {\n                type: \"svc\",\n                id: topics.pubs.dsp_svc_get_z2m_datafile\n            }\n        },\n        pld: {\n            id: msg.payload.id || pld && pld.id\n        }\n    }\n}\nreturn _msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 390,
-        "y": 520,
+        "x": 410,
+        "y": 660,
         "wires": [
             [
-                "5002cb933f4b4eb5"
+                "5002cb933f4b4eb5",
+                "01a7527df6414170"
             ]
         ]
-    },
-    {
-        "id": "12ceb57d7696e5b3",
-        "type": "inject",
-        "z": "46a5ba0d798d87c3",
-        "name": "",
-        "props": [
-            {
-                "p": "payload.id",
-                "v": "ESP8266x0006dbe5",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 330,
-        "y": 460,
-        "wires": [
-            [
-                "c257b644a9f3904f"
-            ]
-        ]
-    },
-    {
-        "id": "b2bb7cb0fb402e4b",
-        "type": "debug",
-        "z": "46a5ba0d798d87c3",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 810,
-        "y": 680,
-        "wires": []
     },
     {
         "id": "04d3f9487a2fb418",
         "type": "link in",
         "z": "46a5ba0d798d87c3",
         "name": "请求Z2M数据文件",
-        "links": [],
-        "x": 145,
-        "y": 520,
+        "links": [
+            "ee014620f54577ec"
+        ],
+        "x": 95,
+        "y": 660,
         "wires": [
             [
                 "c257b644a9f3904f"
@@ -1282,8 +1209,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 390,
-        "y": 620,
+        "x": 410,
+        "y": 820,
         "wires": [
             [
                 "5002cb933f4b4eb5"
@@ -1294,13 +1221,154 @@
         "id": "93b0b280ccede552",
         "type": "link in",
         "z": "46a5ba0d798d87c3",
-        "name": "请求Z2M数据文件",
+        "name": "设置Z2M数据文件",
         "links": [],
-        "x": 145,
-        "y": 620,
+        "x": 95,
+        "y": 820,
         "wires": [
             [
                 "89082bd768ce94d2"
+            ]
+        ]
+    },
+    {
+        "id": "16f80bed07a957db",
+        "type": "link in",
+        "z": "46a5ba0d798d87c3",
+        "name": "重置请求Z2M数据",
+        "links": [
+            "2eac5508a3f5feed"
+        ],
+        "x": 95,
+        "y": 700,
+        "wires": [
+            [
+                "c38ada1c4ce06636"
+            ]
+        ]
+    },
+    {
+        "id": "f240b4ecdd0b88f3",
+        "type": "debug",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 630,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "e8c6f9bd3be73a7d",
+        "type": "comment",
+        "z": "46a5ba0d798d87c3",
+        "name": "握手",
+        "info": "",
+        "x": 110,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "1873e4c1eab22fec",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "握手请求",
+        "func": "let data = global.get(\"data\");\nlet did = msg.payload.id;\nif (did) {\n    return {\n        payload: {\n            hd: {\n                to: {\n                    type: \"dev\",\n                    id: did\n                },\n                entry: {\n                    type: \"svc\",\n                    id: data.topics.pubs.dev_svc_handshake\n                }\n            },\n            pld: {\n                id: did\n            }\n        }\n    };\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 380,
+        "wires": [
+            [
+                "5002cb933f4b4eb5"
+            ]
+        ]
+    },
+    {
+        "id": "8b0eacacfd0fe129",
+        "type": "link in",
+        "z": "46a5ba0d798d87c3",
+        "name": "握手请求输入",
+        "links": [
+            "62b3ca59dea6f8fb"
+        ],
+        "x": 95,
+        "y": 380,
+        "wires": [
+            [
+                "1873e4c1eab22fec"
+            ]
+        ]
+    },
+    {
+        "id": "5191a783cec57042",
+        "type": "trigger",
+        "z": "46a5ba0d798d87c3",
+        "name": "超时5秒",
+        "op1": "1",
+        "op2": "",
+        "op1type": "str",
+        "op2type": "pay",
+        "duration": "5",
+        "extend": true,
+        "overrideDelay": true,
+        "units": "s",
+        "reset": "",
+        "bytopic": "topic",
+        "topic": "topic",
+        "outputs": 2,
+        "x": 380,
+        "y": 700,
+        "wires": [
+            [],
+            [
+                "f240b4ecdd0b88f3"
+            ]
+        ]
+    },
+    {
+        "id": "c38ada1c4ce06636",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "重置",
+        "func": "\nreturn {\n    topic: msg.payload.pld.id,\n    reset: true\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 210,
+        "y": 700,
+        "wires": [
+            [
+                "5191a783cec57042"
+            ]
+        ]
+    },
+    {
+        "id": "01a7527df6414170",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "超时数据",
+        "func": "\nreturn {\n    topic: msg.payload.pld.id,\n    payload: msg.payload\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 660,
+        "wires": [
+            [
+                "5191a783cec57042"
             ]
         ]
     },
@@ -1832,8 +1900,7 @@
         "y": 160,
         "wires": [
             [
-                "83c403b1c017c665",
-                "e779ea30830cf8f6"
+                "83c403b1c017c665"
             ],
             [
                 "7fa2a4320c33a0c6",
@@ -1852,23 +1919,6 @@
         ],
         "x": 1305,
         "y": 140,
-        "wires": []
-    },
-    {
-        "id": "e779ea30830cf8f6",
-        "type": "debug",
-        "z": "f7e96a32e56d72eb",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "topic",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1220,
-        "y": 460,
         "wires": []
     },
     {
@@ -1896,7 +1946,7 @@
         "to": "",
         "reg": false,
         "x": 640,
-        "y": 260,
+        "y": 300,
         "wires": [
             [
                 "041e768f187327a8"
@@ -1926,7 +1976,7 @@
         "repair": false,
         "outputs": 2,
         "x": 790,
-        "y": 260,
+        "y": 300,
         "wires": [
             [],
             [
@@ -1955,19 +2005,47 @@
         "type": "function",
         "z": "f7e96a32e56d72eb",
         "name": "响应处理",
-        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet device = data.devices[pld.id];\nif (pld.datafile) {\n    device.z2m = device.z2m || {};\n    device.z2m.z2m = device.z2m.z2m || {};\n    device.z2m.z2m.datafile = pld.datafile\n}\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet device = data.devices[pld.id];\nif (pld.datafile) {\n    device.z2m = device.z2m || {};\n    device.z2m.z2m = device.z2m.z2m || {};\n    device.z2m.z2m.datafile = pld.datafile\n}\nmsg.device = device;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 960,
-        "y": 260,
+        "x": 1080,
+        "y": 300,
         "wires": [
             [
-                "3aeed170dad6a201"
+                "3aeed170dad6a201",
+                "d02853ba90eee1de",
+                "2eac5508a3f5feed"
             ]
         ]
+    },
+    {
+        "id": "d02853ba90eee1de",
+        "type": "link out",
+        "z": "f7e96a32e56d72eb",
+        "name": "获取Z2M文件输出",
+        "mode": "link",
+        "links": [
+            "513b3d3f8ecdd3f3"
+        ],
+        "x": 1305,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "2eac5508a3f5feed",
+        "type": "link out",
+        "z": "f7e96a32e56d72eb",
+        "name": "重置请求Z2M数据",
+        "mode": "link",
+        "links": [
+            "16f80bed07a957db"
+        ],
+        "x": 1305,
+        "y": 320,
+        "wires": []
     },
     {
         "id": "8266808a.876a4",
@@ -2029,7 +2107,7 @@
         "id": "a7b7f33e.4f6d6",
         "type": "function",
         "z": "95249172.4f419",
-        "name": "获取设备数据",
+        "name": "初始化设备数据",
         "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet did = pld.id;\n\ncommon.initZ3CoDevice(did);\n\nreturn {device: data.devices[did]}\n",
         "outputs": 1,
         "noerr": 0,
@@ -2120,7 +2198,8 @@
         "y": 680,
         "wires": [
             [
-                "befe5b1ac4389423"
+                "befe5b1ac4389423",
+                "3aae7033fe07259c"
             ]
         ]
     },
@@ -2531,7 +2610,7 @@
         "type": "debug",
         "z": "95249172.4f419",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2632,7 +2711,7 @@
         "y": 1280,
         "wires": [
             [
-                "686414e56dbaedd2"
+                "dc8cc2b55ea3047f"
             ]
         ]
     },
@@ -2763,59 +2842,11 @@
         "links": [
             "0c75cd8a739aa826"
         ],
-        "x": 155,
+        "x": 135,
         "y": 100,
         "wires": [
             [
                 "c67b416fd4b80313"
-            ]
-        ]
-    },
-    {
-        "id": "1ebb2c0a17a53761",
-        "type": "switch",
-        "z": "95249172.4f419",
-        "name": "",
-        "property": "payload.hd.count",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "0",
-                "vt": "num"
-            },
-            {
-                "t": "else"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 510,
-        "y": 100,
-        "wires": [
-            [
-                "0d9b3949222e4265"
-            ],
-            []
-        ]
-    },
-    {
-        "id": "0d9b3949222e4265",
-        "type": "change",
-        "z": "95249172.4f419",
-        "name": "设备已重启",
-        "rules": [],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 690,
-        "y": 80,
-        "wires": [
-            [
-                "a7b7f33e.4f6d6"
             ]
         ]
     },
@@ -2843,11 +2874,9 @@
         "y": 100,
         "wires": [
             [
-                "1ebb2c0a17a53761"
+                "259011be7bbb4ede"
             ],
-            [
-                "1ebb2c0a17a53761"
-            ]
+            []
         ]
     },
     {
@@ -2866,56 +2895,6 @@
         "x": 540,
         "y": 620,
         "wires": []
-    },
-    {
-        "id": "e11495bebaa2104f",
-        "type": "file",
-        "z": "95249172.4f419",
-        "name": "",
-        "filename": "",
-        "appendNewline": true,
-        "createDir": false,
-        "overwriteFile": "false",
-        "encoding": "none",
-        "x": 300,
-        "y": 300,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "99ec693a5af0dcd6",
-        "type": "file in",
-        "z": "95249172.4f419",
-        "name": "",
-        "filename": "",
-        "format": "utf8",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 460,
-        "y": 220,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "b4cc65ea56202aa7",
-        "type": "fs-remove",
-        "z": "95249172.4f419",
-        "path": "",
-        "pathType": "str",
-        "filename": "filename",
-        "filenameType": "msg",
-        "recursive": true,
-        "exist": false,
-        "name": "",
-        "x": 190,
-        "y": 240,
-        "wires": [
-            []
-        ]
     },
     {
         "id": "7f5fec758583e328",
@@ -3131,17 +3110,17 @@
         "type": "function",
         "z": "95249172.4f419",
         "name": "更新状态",
-        "func": "msg.device.z2m.z2m.status = \"killed\";\nreturn msg;",
+        "func": "msg.device.z2m.z2m.status = \"killed\";\n\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 200,
+        "x": 780,
         "y": 1680,
         "wires": [
             [
-                "8f945fdc1ab78574"
+                "138da46316ede501"
             ]
         ]
     },
@@ -3159,26 +3138,6 @@
         "wires": []
     },
     {
-        "id": "686414e56dbaedd2",
-        "type": "function",
-        "z": "95249172.4f419",
-        "name": "Z2M未启动?",
-        "func": "let status = msg.device.z2m.z2m.status;\nif (!status || status != \"running\") {\n    msg.device.z2m.z2m.status = \"running\";\n    return msg;\n}",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 470,
-        "y": 1560,
-        "wires": [
-            [
-                "67d7f878.3c3c08",
-                "2fa53b7.d29f1c4"
-            ]
-        ]
-    },
-    {
         "id": "2dc204619dfcf5b5",
         "type": "debug",
         "z": "95249172.4f419",
@@ -3193,6 +3152,263 @@
         "statusType": "auto",
         "x": 700,
         "y": 1060,
+        "wires": []
+    },
+    {
+        "id": "7c34d2644f86076f",
+        "type": "function",
+        "z": "95249172.4f419",
+        "name": "需要重启？",
+        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet device = data.devices[pld.id];\nlet z2m = device.z2m;\nif (hd.handshake_count == 0 ||\n    !z2m || !z2m.running || !z2m.running()) {\n    msg.device = device\n    return msg;        \n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 100,
+        "wires": [
+            [
+                "f1a6eb115fd88a36"
+            ]
+        ]
+    },
+    {
+        "id": "3aae7033fe07259c",
+        "type": "debug",
+        "z": "95249172.4f419",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1190,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "dc8cc2b55ea3047f",
+        "type": "switch",
+        "z": "95249172.4f419",
+        "name": "Z2M未启动?",
+        "property": "device.z2m.z2m.status",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "neq",
+                "v": "running",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 450,
+        "y": 1520,
+        "wires": [
+            [
+                "67d7f878.3c3c08",
+                "2fa53b7.d29f1c4"
+            ]
+        ]
+    },
+    {
+        "id": "f1a6eb115fd88a36",
+        "type": "switch",
+        "z": "95249172.4f419",
+        "name": "有无配置文件？",
+        "property": "device.z2m.z2m.datafile",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "hask",
+                "v": "device.z2m.z2m.configfile",
+                "vt": "msg"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 900,
+        "y": 100,
+        "wires": [
+            [
+                "74dcdef0a677e6c5"
+            ],
+            [
+                "ee014620f54577ec"
+            ]
+        ]
+    },
+    {
+        "id": "ee014620f54577ec",
+        "type": "link out",
+        "z": "95249172.4f419",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "04d3f9487a2fb418"
+        ],
+        "x": 1175,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "513b3d3f8ecdd3f3",
+        "type": "link in",
+        "z": "95249172.4f419",
+        "name": "已获取Z2M文件",
+        "links": [
+            "d02853ba90eee1de"
+        ],
+        "x": 135,
+        "y": 160,
+        "wires": [
+            [
+                "f6e6b79444715553"
+            ]
+        ]
+    },
+    {
+        "id": "e95eb997e17b4dca",
+        "type": "switch",
+        "z": "95249172.4f419",
+        "name": "有无配置文件？",
+        "property": "device.z2m.z2m.datafile",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "hask",
+                "v": "device.z2m.z2m.configfile",
+                "vt": "msg"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 900,
+        "y": 160,
+        "wires": [
+            [
+                "74dcdef0a677e6c5"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "f6e6b79444715553",
+        "type": "function",
+        "z": "95249172.4f419",
+        "name": "需要重启？",
+        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet device = data.devices[pld.id];\nif (device) {\n    let z2m = device.z2m;\n    if (hd.handshake_count == 0 ||\n        !z2m || !z2m.running || !z2m.running()) {\n        msg.device = device\n        return msg;        \n    }\n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 160,
+        "wires": [
+            [
+                "e95eb997e17b4dca",
+                "4837b9c47424b3f2"
+            ]
+        ]
+    },
+    {
+        "id": "74dcdef0a677e6c5",
+        "type": "change",
+        "z": "95249172.4f419",
+        "name": "重启",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1210,
+        "y": 140,
+        "wires": [
+            [
+                "a7b7f33e.4f6d6"
+            ]
+        ]
+    },
+    {
+        "id": "4837b9c47424b3f2",
+        "type": "debug",
+        "z": "95249172.4f419",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "device",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "259011be7bbb4ede",
+        "type": "function",
+        "z": "95249172.4f419",
+        "name": "初始化设备数据",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet did = pld.id;\n\ncommon.initZ3CoDevice(did);\n\nmsg.device = data.devices[did];\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 100,
+        "wires": [
+            [
+                "7c34d2644f86076f"
+            ]
+        ]
+    },
+    {
+        "id": "138da46316ede501",
+        "type": "function",
+        "z": "95249172.4f419",
+        "name": "握手请求",
+        "func": "\nreturn {\n    payload: msg.device.id\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 1680,
+        "wires": [
+            [
+                "62b3ca59dea6f8fb"
+            ]
+        ]
+    },
+    {
+        "id": "62b3ca59dea6f8fb",
+        "type": "link out",
+        "z": "95249172.4f419",
+        "name": "握手请求",
+        "mode": "link",
+        "links": [
+            "8b0eacacfd0fe129"
+        ],
+        "x": 1045,
+        "y": 1680,
         "wires": []
     }
 ]
