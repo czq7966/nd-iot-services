@@ -12,23 +12,13 @@
                             "name": "调度器",
                             "edges": {},
         
-                            "devices": {
-                                "ESP8266x0006dbe5" : {
-                                    "id": "",
-                                    "name": "终端设备",
-                                    "state": "offline",
-                                    "events": {
-                                        "login": {},
-                                        "heartbeat": {}
-                                    },
-                                    "z2m": {}
-                                }                        
-                            },
+                            "devices": {},
         
                             "topics": {
                                 "subs": {
                                     "edg_evt_status":    "{app}/{dom}/edg/+/+/+/evt/status",
-                                    "dev_evt_status":    "{app}/{dom}/dev/+/+/+/evt/status"
+                                    "dev_evt_status":    "{app}/{dom}/dev/+/+/+/evt/status",
+                                    "dev_evt_report":    "{app}/{dom}/dev/+/+/+/evt/report"
                                 },
                                 "services":{
                                     "dsp_svc_login":        "{app}/{dom}/+/+/dsp/{dsp}/svc/login",
