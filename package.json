@@ -13,6 +13,9 @@
     "nd:edge:install": "cd ./data/edge/nd && npm i || echo",
     "nd:edge:start": "node ./index.js -u ./data/edge/nd",
 
+    "nd:platform:install": "cd ./data/platform/nd && npm i || echo",
+    "nd:platform:start": "node ./index.js -u ./data/platform/nd",
+
     "nd:install": "npm i && npm run nd:dispatcher:install && npm run nd:edge:install || echo",
 
     "test:install": "cd ./data/test && npm i || echo",
