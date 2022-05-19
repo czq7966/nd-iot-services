@@ -22,18 +22,7 @@
                                     "devices":{}
                                 }
                             },
-                            "devices": {
-                                "ESP8266x0006dbe5": {
-                                    "id": "",
-                                    "name": "终端设备",
-                                    "events": {
-                                        "login": {},
-                                        "heartbeat": {}
-                                    },
-                                    "edge":{},
-                                    "z2m":{}
-                                }
-                            },
+                            "devices": {},
                             "topics": {
                                 "subs": {
                                     "dev_evt_report": "{app}/{dom}/dev/+/edg/{edg}/evt/report",
