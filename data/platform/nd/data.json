@@ -1,0 +1,41 @@
+{
+    "app": {
+        "ndiot": {
+            "id": "ndiot",
+            "name": "网龙物联网",
+            "domain": {
+                "nd": {
+                    "id": "nd",
+                    "name": "网龙公司",
+                    "platforms": {
+                        "nd": {
+                            "id": "nd",
+                            "name": "网龙集控平台",
+                            "domain": "nd",
+                            "dispatcher": "nd",
+                            "organization": "nd",
+                            "topics": {
+                                "subs": {
+                                    "device": {
+                                        "dev_evt_report": "{app}/{dom}/dev/+/+/+/evt/report",
+                                        "dev_evt_status": "{app}/{dom}/dev/+/+/+/evt/status",
+                                        "dev_svc_login":  "{app}/0/dev/+/0/0/svc/login"
+                                    },
+                                    "platform": {
+                                        "plf_svc_heartbeat":    "ndiot/client/{org}/+/+/heartbeat",
+                                        "plf_svc_dev_ctrl":     "ndiot/client/{org}/+/+/dev_ctrl",
+                                        "plf_svc_dev_prop":     "ndiot/client/{org}/+/+/dev_prop",
+                                        "plf_svc_dev_srv":      "ndiot/client/{org}/+/+/dev_srv"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+
+    "topics": {},
+    "ids": {}
+}
