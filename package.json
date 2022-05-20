@@ -6,7 +6,7 @@
   "scripts": {
     "env": "cross-env IOT_CONFIG_FILE=\"E:/data/nd-iot-edge-gateway/docker/config.json\" IOT_APP_ID=ndiot IOT_DOM_ID=nd IOT_DSP_ID=nd IOT_PLF_ID=\"nd,xiaomi\" IOT_ENABLE_DSP=1 IOT_ENABLE_EDG=1 IOT_ENABLE_PLF=1",
     "test": "npm run env && node ./test/test.js",
-    "mqtt:service:start": "systemctl start mqtt-broker",
+    "mqtt:service:start": "systemctl start nd-iot-mqtt-broker",
     "mqtt": "npm run mqtt:start || echo",
     "nd:dispatcher:install": "cd ./data/dispatcher/nd && npm i || echo",
     "nd:dispatcher:start": "node ./index.js -u ./data/dispatcher/nd || echo",
@@ -25,7 +25,7 @@
     "update": "git stash && git fetch && git reset --hard && git checkout nd || echo",
     "edge": "npm run edge:update && npm run edge:install && npm run edge:start",
     "start": "echo \"npm run mqtt && npm run edge\" &&  echo \"npm run edge:start\"",
-    "services:start": "npm run mqtt:service:start && nd:dispatcher:service:start && nd:edge:service:start && node ./src/http-server.js"
+    "services:start": "npm run mqtt:service:start && npm run nd:dispatcher:service:start && npm run nd:edge:service:start && node ./src/http-server.js"
   },
   "author": "CZQ",
   "license": "ISC",
