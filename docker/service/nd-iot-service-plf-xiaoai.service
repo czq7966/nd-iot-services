@@ -1,8 +1,8 @@
 [Unit]
-Description=MQTT Broker
+Description=nd-iot-service-plf-xiaoai
 
 [Service]
-WorkingDirectory=/data/nd-iot-services
+WorkingDirectory=/services/nd-iot-services
 ExecStart=/usr/local/bin/npm run nd:platform:xiaoai:start
 KillMode=process
 Restart=on-failure

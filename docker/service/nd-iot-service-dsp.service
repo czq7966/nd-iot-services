@@ -1,8 +1,8 @@
 [Unit]
-Description=MQTT Broker
+Description=nd-iot-service-dsp
 
 [Service]
-WorkingDirectory=/data/nd-iot-services
+WorkingDirectory=/services/nd-iot-services
 ExecStart=/usr/local/bin/npm run nd:dispatcher:start
 KillMode=process
 Restart=on-failure

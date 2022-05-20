@@ -2,7 +2,7 @@
 Description=MQTT Broker
 
 [Service]
-WorkingDirectory=/data/nd-iot-mqtt-broker
+WorkingDirectory=/services/nd-iot-mqtt-broker
 ExecStart=/usr/local/bin/npm start
 KillMode=process
 Restart=on-failure

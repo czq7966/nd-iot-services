@@ -77,6 +77,11 @@
                             },                
                             "devices": {},   
                             "mqtt": {
+                                "broker" : {
+                                    "url": "mqtt://push-access.sdp.101.com:1780",
+                                    "username": "ioe",
+                                    "password": ""
+                                },
                                 "topics": {
                                     "subs": {
                                         "edg_evt_status":    "{app}/{dom}/edg/+/+/+/evt/status",
@@ -170,6 +175,11 @@
                                 "events": {},
                                 "devices":{},
                                 "mqtt": {
+                                    "broker" : {
+                                        "url": "mqtt://push-access.sdp.101.com:1780",
+                                        "username": "ioe",
+                                        "password": ""
+                                    },
                                     "topics": {
                                         "subs": {
                                             "dev_evt_report": "{app}/{dom}/dev/+/edg/{edg}/evt/report",
@@ -218,6 +228,87 @@
                 "edg": "{HOSTNAME}",
                 "mqtt": "{app}_{dom}_dsp_{dsp}_edg_{edg}"
             }   
+        }
+    },
+    "dataio": {
+        "global": {
+            "data": {
+                "app": {
+                    "id": "{app}",
+                    "name": "网龙物联网",
+                    "domains": {
+                        "nd":{
+                            "id": "{dom}",
+                            "name": "网龙公司",
+                            "dispatchers": {
+                                "ND--20200609EVI": {
+                                    "id": "{dsp}",
+                                    "name": "调度服务",
+                                    "enabled": 1,
+                                    "edges": {
+                                        "ND--20200609EVI" : {
+                                            "id": "{edg}",
+                                            "name": "边缘服务",
+                                            "enabled": 1,
+                                            "wifi_max": 0,
+                                            "z2m_max": 0
+                                        }
+                                    },
+                                    "devices": {}
+                                }                                                                              
+                            }
+                        },
+                        "fr": {},
+                        "xa": {}
+                    },
+                    "mqtt": {
+                        "broker" : {
+                            "url": "mqtt://push-access.sdp.101.com:1780",
+                            "username": "ioe",
+                            "password": ""
+                        },
+                        "topics":{}                    
+                    },
+                    "z2m": {
+                        "defaultDatafile": {
+                            "configuration.yaml": {
+                                "homeassistant": false,
+                                "permit_join": false,
+                                "mqtt": {
+                                    "base_topic": "{mqtt_base_topic}",
+                                    "server": "{mqtt_server}",
+                                    "user": "{mqtt_user}",
+                                    "password": "{mqtt_password}"
+                                },
+                                "serial": {
+                                    "port": "{serial_port}"
+                                },
+                                "device_options": {
+                                    "legacy": false
+                                },
+                                "advanced": {
+                                    "pan_id": "GENERATE",                                        
+                                    "channel": 11,
+                                    "network_key": "GENERATE",
+                                    "baudrate": 115200,
+                                    "homeassistant_legacy_entity_attributes": false,
+                                    "legacy_api": false,
+                                    "log_level": "debug"
+                                },
+                                "frontend": {
+                                    "port": "{frontend_port}"
+                                }
+                            }
+                        }
+                    } 
+                }                            
+            },
+            "common": {},
+            "ids": {
+                "app": "{APP_ID}",
+                "dio": "{DIO_ID}",
+                "mqtt": "{app}_dio_{dio}"
+            }
         }
     }
 }

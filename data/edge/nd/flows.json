@@ -1003,7 +1003,7 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "自动连接",
-        "func": "let data = global.get(\"data\");\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: true,\n    clientid: data.ids.mqtt\n}\n\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: true,\n    clientid: data.ids.mqtt\n}\nObject.assign(msg.broker, data.mqtt.broker);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -3163,11 +3163,7 @@
         "y": 1680,
         "wires": [
             [
-                "138da46316ede501",
-                "df665939fdb9b11d",
-                "c0cce3f78190ac27",
-                "b0965b72cf6dc5f3",
-                "ce99770cdf7a9abf"
+                "138da46316ede501"
             ]
         ]
     },
@@ -3452,110 +3448,6 @@
         ],
         "x": 545,
         "y": 40,
-        "wires": []
-    },
-    {
-        "id": "df665939fdb9b11d",
-        "type": "debug",
-        "z": "95249172.4f419",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 930,
-        "y": 1760,
-        "wires": []
-    },
-    {
-        "id": "c0cce3f78190ac27",
-        "type": "debug",
-        "z": "95249172.4f419",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "device",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 930,
-        "y": 1820,
-        "wires": []
-    },
-    {
-        "id": "b0965b72cf6dc5f3",
-        "type": "debug",
-        "z": "95249172.4f419",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "device.z2m.z2m.status",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 980,
-        "y": 1860,
-        "wires": []
-    },
-    {
-        "id": "ce99770cdf7a9abf",
-        "type": "function",
-        "z": "95249172.4f419",
-        "name": "",
-        "func": "let data = global.get(\"data\");\nlet device = data.devices[msg.device.id]\nreturn {\n    device: device\n};",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 730,
-        "y": 1940,
-        "wires": [
-            [
-                "802224a955b8194b",
-                "f2a897602f110f60"
-            ]
-        ]
-    },
-    {
-        "id": "802224a955b8194b",
-        "type": "debug",
-        "z": "95249172.4f419",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "device",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 890,
-        "y": 1960,
-        "wires": []
-    },
-    {
-        "id": "f2a897602f110f60",
-        "type": "debug",
-        "z": "95249172.4f419",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "device.z2m.z2m.status",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 940,
-        "y": 2000,
         "wires": []
     },
     {

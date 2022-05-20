@@ -1,0 +1,44 @@
+{
+    "app": {
+        "id": "ndiot",
+        "name": "网龙物联网",
+        "platform": {
+            "id": "nd",
+            "name": "网龙集控平台",
+            "devices": {},
+            "topics": {
+                "subs": {
+                    "device": {
+                        "dev_evt_report":   "{app}/+/dev/+/+/+/evt/report",
+                        "dev_evt_status":   "{app}/+/dev/+/+/+/evt/status",
+                        "dev_svc_get":      "{app}/+/dev/+/+/+/svc/get",
+                        "dev_svc_set":      "{app}/+/dev/+/+/+/svc/set",
+                        "dev_svc_login":    "{app}/0/dev/+/0/0/svc/login",                        
+                        "dev_svc_handshake":"{app}/+/dev/+/+/+/svc/handshake"
+                    },
+                    "platform": {
+                        "plf_heartbeat":    "ndiot/client/+/+/+/heartbeat",
+                        "plf_dev_ctrl":     "ndiot/client/+/+/+/dev_ctrl",
+                        "plf_dev_prop":     "ndiot/client/+/+/+/dev_prop",
+                        "plf_dev_srv":      "ndiot/client/+/+/+/dev_srv"
+                    }
+                },
+                "pubs": {
+                    "platform":{
+                        "plf_heartbeat":    "ndiot/server/{dom}/{pdev}/{dev}/heartbeat",
+                        "plf_dev_ctrl":     "ndiot/server/{dom}/{pdev}/{dev}/dev_ctrl",                        
+                        "plf_dev_prop":     "ndiot/server/{dom}/{pdev}/{dev}/dev_prop",
+                        "plf_dev_evt":      "ndiot/server/{dom}/{pdev}/{dev}/dev_evt",
+                        "plf_dev_srv":      "ndiot/server/{dom}/{pdev}/{dev}/dev_srv"
+                    }
+                }
+            }
+
+        }
+
+    },
+    "platform": {},
+    "devices": {},
+    "topics": {},
+    "ids": {}
+}
