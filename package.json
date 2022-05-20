@@ -4,37 +4,32 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "mqtt:start": "systemctl start mqtt-broker",
+    "env": "cross-env IOT_CONFIG_FILE=\"E:/data/nd-iot-edge-gateway/docker/config.json\" IOT_APP_ID=ndiot IOT_DOM_ID=nd IOT_DSP_ID=nd IOT_PLF_ID=\"nd,xiaomi\" IOT_ENABLE_DSP=1 IOT_ENABLE_EDG=1 IOT_ENABLE_PLF=1",
+    "test": "npm run env && node ./test/test.js",
+    "mqtt:service:start": "systemctl start mqtt-broker",
     "mqtt": "npm run mqtt:start || echo",
     "nd:dispatcher:install": "cd ./data/dispatcher/nd && npm i || echo",
-    "nd:dispatcher:start": "node ./index.js -u ./data/dispatcher/nd",
-
+    "nd:dispatcher:start": "node ./index.js -u ./data/dispatcher/nd || echo",
+    "nd:dispatcher:service:start": "systemctl start nd-iot-service-dsp",
     "nd:edge:install": "cd ./data/edge/nd && npm i || echo",
     "nd:edge:start": "node ./index.js -u ./data/edge/nd",
-
+    "nd:edge:service:start": "systemctl start nd-iot-service-edg",
     "nd:platform:install": "cd ./data/platform/nd && npm i || echo",
     "nd:platform:start": "node ./index.js -u ./data/platform/nd",
-
     "nd:install": "npm i && npm run nd:dispatcher:install && npm run nd:edge:install || echo",
-
     "test:install": "cd ./data/test && npm i || echo",
-    "test:start": "node ./index.js -u ./data/test",    
-
+    "test:start": "node ./index.js -u ./data/test",
     "edge:install": "npm i && cd data && npm i || echo",
     "edge:start": "node ./index.js -u ./data",
-
-
     "update": "git stash && git fetch && git reset --hard && git checkout nd || echo",
-    
-
-
     "edge": "npm run edge:update && npm run edge:install && npm run edge:start",
-    "start": "echo \"npm run mqtt && npm run edge\" &&  echo \"npm run edge:start\""
+    "start": "echo \"npm run mqtt && npm run edge\" &&  echo \"npm run edge:start\"",
+    "services:start": "npm run mqtt:service:start && nd:dispatcher:service:start && nd:edge:service:start"
   },
   "author": "CZQ",
   "license": "ISC",
   "dependencies": {
+    "cross-env": "^7.0.3",
     "node-red": "2.2.2"
   }
 }

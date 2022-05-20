@@ -112,7 +112,7 @@
                 "t": "set",
                 "p": "data",
                 "pt": "global",
-                "to": "{\"app\":{\"ndiot\":{\"id\":\"ndiot\",\"name\":\"网龙物联网\",\"domain\":{\"nd\":{\"id\":\"nd\",\"name\":\"网龙公司\",\"platform\":{\"nd\":{\"id\":\"nd\",\"name\":\"网龙集控平台\",\"domain\":\"nd\",\"dispatcher\":\"nd\",\"organization\":\"nd\",\"topics\":{\"subs\":{\"device\":{\"dev_evt_report\":\"{app}/{dom}/dev/+/+/+/evt/report\",\"dev_evt_status\":\"{app}/{dom}/dev/+/+/+/evt/status\",\"dev_svc_login\":\"{app}/0/dev/+/0/0/svc/login\"},\"platform\":{\"plf_svc_heartbeat\":\"ndiot/client/{org}/+/+/heartbeat\",\"plf_svc_dev_ctrl\":\"ndiot/client/{org}/+/+/dev_ctrl\",\"plf_svc_dev_prop\":\"ndiot/client/{org}/+/+/dev_prop\",\"plf_svc_dev_srv\":\"ndiot/client/{org}/+/+/dev_srv\"}}}}}}}}},\"topics\":{},\"ids\":{}}",
+                "to": "{\"app\":{\"id\":\"ndiot\",\"name\":\"网龙物联网\",\"platform\":{\"id\":\"nd\",\"name\":\"网龙集控平台\",\"devices\":{},\"topics\":{\"subs\":{\"device\":{\"dev_evt_report\":\"{app}/+/dev/+/+/+/evt/report\",\"dev_evt_status\":\"{app}/+/dev/+/+/+/evt/status\",\"dev_svc_get\":\"{app}/+/dev/+/+/+/svc/get\",\"dev_svc_set\":\"{app}/+/dev/+/+/+/svc/set\",\"dev_svc_login\":\"{app}/0/dev/+/0/0/svc/login\",\"dev_svc_handshake\":\"{app}/+/dev/+/+/+/svc/handshake\"},\"platform\":{\"plf_heartbeat\":\"ndiot/client/+/+/+/heartbeat\",\"plf_dev_ctrl\":\"ndiot/client/+/+/+/dev_ctrl\",\"plf_dev_prop\":\"ndiot/client/+/+/+/dev_prop\",\"plf_dev_srv\":\"ndiot/client/+/+/+/dev_srv\"}},\"pubs\":{\"platform\":{\"plf_heartbeat\":\"ndiot/server/{dom}/{pdev}/{dev}/heartbeat\",\"plf_dev_ctrl\":\"ndiot/server/{dom}/{pdev}/{dev}/dev_ctrl\",\"plf_dev_prop\":\"ndiot/server/{dom}/{pdev}/{dev}/dev_prop\",\"plf_dev_evt\":\"ndiot/server/{dom}/{pdev}/{dev}/dev_evt\",\"plf_dev_srv\":\"ndiot/server/{dom}/{pdev}/{dev}/dev_srv\"}}}}},\"platform\":{},\"devices\":{},\"topics\":{},\"ids\":{}}",
                 "tot": "json"
             },
             {
@@ -126,7 +126,7 @@
                 "t": "set",
                 "p": "ids",
                 "pt": "global",
-                "to": "{\"app\":\"ndiot\",\"dom\":\"nd\",\"dsp\":\"nd\",\"edg\":\"{HOSTNAME}\",\"mqtt\":\"{app}_{dom}_edg_{edg}\"}",
+                "to": "{\"app\":\"ndiot\",\"plf\":\"nd\",\"mqtt\":\"{app}_plf_{plf}\"}",
                 "tot": "json"
             }
         ],
@@ -283,7 +283,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "缓存数据函数",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet online = function(){\n    let events = this.events;\n    if (events && events.status)\n        return events.status.pld.online;\n    return 0;\n}\n\nlet cachePayload = function(payload) {\n    let hd = payload.hd;\n    if (hd.from.type == \"dev\") {\n        let dev = data.devices[hd.from.id] || {events:{}};\n        dev.id = hd.from.id;\n        dev.events[hd.entry.id] = payload;\n        dev.online = online;\n        data.devices[hd.from.id] = dev;\n    }\n    \n    if (hd.from.type == \"dsp\" ) {\n        if (hd.entry.type == \"evt\"){\n            let dsp = data.disps[hd.from.id];\n            dsp.events = dsp.events || {};\n            dsp.events[hd.entry.id] = payload;\n            dsp.online = online;\n        }\n    }\n}\n\ncommon.cachePayload = cachePayload;\n\nreturn {payload: data};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet online = function(){\n    let events = this.events;\n    if (events && events.status)\n        return events.status.pld.online;\n    return 0;\n}\n\nlet cachePayload = function(payload) {\n    let hd = payload.hd;\n    if (hd.from.type == \"dev\") {\n        let dev = data.devices[hd.from.id] || {events:{}};\n        dev.id = hd.from.id;\n        dev.events[hd.entry.id] = payload;\n        dev.online = online;\n        data.devices[hd.from.id] = dev;\n    }\n\n}\n\ncommon.cachePayload = cachePayload;\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -302,7 +302,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "展开主题函数",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = global.get(\"ids\");\n\n\nlet expandTopic = {\n    expandStr : function(v, did) {\n        if (typeof v == \"string\") {\n            v = v.replace(/\\{app\\}/g, ids.app);\n            v = v.replace(/\\{dom\\}/g, ids.dom);\n            v = v.replace(/\\{dsp\\}/g, ids.dsp);\n            v = v.replace(/\\{edg\\}/g, ids.edg);\n            if (did)\n                v = v.replace(/\\{did\\}/g, did);\n        }\n        return v;\n    },\n    expandArray : function(v, did) {\n        if (Array.isArray(v)) {\n            for(let i=0; i < v.length; i++) {\n                v[i] = this.expand(v[i]);\n            }\n        }\n        return arr;\n    },\n    expandObj : function(v, did) {\n        if (typeof v == \"object\") {\n            let keys = Object.keys(v);\n            keys.forEach(k => {\n                v[k] = this.expand(v[k]);\n            });\n        }\n        return v;        \n    },\n    expand : function(v, did) {\n        if (typeof v == \"string\")\n            v = this.expandStr(v, did);\n                    \n        if (Array.isArray(v)) {\n            v = expandArray(v, did);\n        }\n        \n        if (typeof v == \"object\") {\n            v = this.expandObj(v, did)\n        }\n                \n        return v\n    }\n}\n    \n\n\ncommon.expandTopic = expandTopic;\n\nreturn {payload: data};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = global.get(\"ids\");\n\n\nlet expandTopic = {\n    expandStr : function(v, domId, pdevId, devId) {\n        if (typeof v == \"string\") {\n            v = v.replace(/\\{app\\}/g, ids.app);\n            v = v.replace(/\\{plf\\}/g, ids.plf);\n            if (domId)\n                v = v.replace(/\\{dom\\}/g, domId);\n            if (pdevId)\n                v = v.replace(/\\{pdev\\}/g, pdevId);\n            if (devId)\n                v = v.replace(/\\{dev\\}/g, devId);\n        }\n        return v;\n    },\n    expandArray : function(v, domId, pdevId, devId) {\n        if (Array.isArray(v)) {\n            for(let i=0; i < v.length; i++) {\n                v[i] = this.expand(v[i], domId, pdevId, devId);\n            }\n        }\n        return arr;\n    },\n    expandObj : function(v, domId, pdevId, devId) {\n        if (typeof v == \"object\") {\n            let keys = Object.keys(v);\n            keys.forEach(k => {\n                v[k] = this.expand(v[k], domId, pdevId, devId);\n            });\n        }\n        return v;        \n    },\n    expand : function(v, domId, pdevId, devId) {\n        if (typeof v == \"string\")\n            v = this.expandStr(v, domId, pdevId, devId);\n                    \n        if (Array.isArray(v)) {\n            v = expandArray(v, domId, pdevId, devId);\n        }\n        \n        if (typeof v == \"object\") {\n            v = this.expandObj(v, domId, pdevId, devId)\n        }\n                \n        return v\n    }\n}\n    \n\n\ncommon.expandTopic = expandTopic;\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -321,7 +321,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据初始化",
-        "func": "let data = global.get(\"data\");\nlet ids = global.get(\"ids\");\n\nlet app = data.app[ids.app];\nlet dom = app.domain[ids.dom];\nlet plf = dom.platforms[ids.plf];\n\napp.id = ids.app;\ndom.id = ids.dom;\ndsp.id = ids.dsp;\nplf.id = ids.plf;\norg.id = ids.org;\n\ndata.platform = plf;\ndata.topics = dsp.topics;\ndata.ids = ids;\n\n\nreturn {payload: data};",
+        "func": "let data = global.get(\"data\");\nlet ids = global.get(\"ids\");\n\nlet app = data.app;\nlet plf = app.platform;\n\napp.id = ids.app;\nplf.id = ids.plf;\n\n\ndata.platform = plf;\ndata.topics = plf.topics;\ndata.ids = ids;\ndata.devices = plf.devices;\n\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -340,7 +340,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据补全",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n    \ncommon.expandTopic.expand(data.topics);\ncommon.expandTopic.expand(data.ids);\ncommon.keyToObjId(data.edges);\ncommon.keyToObjId(data.devices);\n\n\n\nreturn {payload: data};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n    \ncommon.expandTopic.expand(data.topics);\ncommon.expandTopic.expand(data.ids);\n\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -379,7 +379,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "获取HD主题函数",
-        "func": "let common = global.get(\"common\");\nlet ids = global.get(\"data\").ids;\n\nlet getHDTopic = function(hd) {\n    let tpc = \"\";\n    if (!hd.from) hd.from = {};\n    if (!hd.from.type) hd.from.type = \"edg\";\n    if (!hd.from.id) hd.from.id = ids.edg;\n    if (!hd.to.type) hd.to.type = \"0\";\n    if (!hd.to.id) hd.to.id = \"0\";\n    if (!hd.entry.type) hd.entry.type = \"0\";\n    if (!hd.entry.id) hd.entry.id = \"0\";\n    if (!hd.sid) hd.sid = 0;\n    if (!hd.stp) hd.stp = 0;\n\n\n    tpc =   ids.app + \"/\" + ids.dom + \"/\" + \n            hd.from.type + \"/\" + hd.from.id + \"/\" + \n            hd.to.type + \"/\" + hd.to.id + \"/\" + \n            hd.entry.type + \"/\" + hd.entry.id;\n    return tpc;\n}\n\n\ncommon.getHDTopic = getHDTopic;\n\nreturn {payload: common};",
+        "func": "let common = global.get(\"common\");\nlet ids = global.get(\"data\").ids;\n\nlet getHDTopic = function(hd) {\n    let tpc = \"\";\n    if (!hd.from) hd.from = {};\n    if (!hd.from.type) hd.from.type = \"edg\";\n    if (!hd.from.id) hd.from.id = ids.edg;\n    if (!hd.to.type) hd.to.type = \"0\";\n    if (!hd.to.id) hd.to.id = \"0\";\n    if (!hd.entry.type) hd.entry.type = \"0\";\n    if (!hd.entry.id) hd.entry.id = \"0\";\n    if (!hd.sid) hd.sid = \"0\";\n    if (!hd.stp) hd.stp = 0;\n\n\n    tpc =   ids.app + \"/\" + ids.dom + \"/\" + \n            hd.from.type + \"/\" + hd.from.id + \"/\" + \n            hd.to.type + \"/\" + hd.to.id + \"/\" + \n            hd.entry.type + \"/\" + hd.entry.id;\n    return tpc;\n}\n\n\ncommon.getHDTopic = getHDTopic;\n\nreturn {payload: common};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -540,6 +540,7 @@
         "id": "47f3ed4e61a01a5c",
         "type": "function",
         "z": "e93bbc67912b9178",
+        "d": true,
         "name": "发布主题",
         "func": "let common = global.get(\"common\")\nmsg.topic = common.getHDTopic(msg.payload.hd);\n\nreturn msg;",
         "outputs": 1,
@@ -927,7 +928,8 @@
         "y": 400,
         "wires": [
             [
-                "fd9142a5a09379ce"
+                "fd9142a5a09379ce",
+                "ef9ae27a95c89e0a"
             ]
         ]
     },
@@ -997,6 +999,22 @@
                 "91bc7c05ad52a442"
             ]
         ]
+    },
+    {
+        "id": "ef9ae27a95c89e0a",
+        "type": "debug",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 390,
+        "y": 340,
+        "wires": []
     },
     {
         "id": "3fdb98726d73125a",

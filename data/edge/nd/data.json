@@ -29,8 +29,8 @@
                                     "dsp_evt_status": "{app}/{dom}/dsp/{dsp}/0/0/evt/status"
                                 },
                                 "dysubs": {
-                                    "dev_evt_status": "{app}/{dom}/dev/{did}/0/0/evt/status",
-                                    "dev_evt_penet": "{app}/{dom}/dev/{did}/edg/{edg}/evt/penet"
+                                    "dev_evt_status": "{app}/{dom}/dev/{dev}/0/0/evt/status",
+                                    "dev_evt_penet": "{app}/{dom}/dev/{dev}/edg/{edg}/evt/penet"
                                 },
                                 "services": {
                                     "edg_svc_login": "{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/login",

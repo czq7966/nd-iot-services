@@ -1,0 +1,11 @@
+[Unit]
+Description=MQTT Broker
+
+[Service]
+WorkingDirectory=/data/nd-iot-services
+ExecStart=/usr/local/bin/npm run nd:dispatcher:start
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

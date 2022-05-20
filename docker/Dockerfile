@@ -6,18 +6,18 @@ RUN apt-get update \
     && apt-get install vim -y \
     && apt-get install nano
 
-RUN mkdir /data \
-    &&  cd /data \
-    &&  git clone https://github.com/czq7966/nd-iot-mqtt-broker.git mqtt-broker -b dev \
-    &&  cd /data/mqtt-broker \
+RUN mkdir -p /services \
+    &&  cd /services \
+    &&  git clone https://github.com/czq7966/nd-iot-mqtt-broker.git nd-iot-mqtt-broker -b dev \
+    &&  cd /services/nd-iot-mqtt-broker \
     &&  npm install   
 
-COPY ./service/mqtt-broker.service /lib/systemd/system/mqtt-broker.service
-RUN systemctl enable mqtt-broker
+COPY ./service/nd-iot-mqtt-broker.service /lib/systemd/system/nd-iot-mqtt-broker.service
+RUN systemctl enable nd-iot-mqtt-broker
 
-RUN mkdir -p /data \
-    &&  cd /data \
-    &&  git clone https://github.com/czq7966/nd-iot-edge-gateway.git edge-gateway -b dev \
+RUN mkdir -p /services \
+    &&  cd /services \
+    &&  git clone https://github.com/czq7966/nd-iot-services.git nd-iot-services -b dev \
     &&  cd /data/edge-gateway \
     &&  npm install \
     &&  cd /data/edge-gateway/data \
@@ -26,5 +26,5 @@ RUN mkdir -p /data \
 
 WORKDIR /data/edge-gateway 
 
-EXPOSE 1880-1884 8080 8090-8099
+EXPOSE 1880-1884 8080 18090-18199 11880-11889
 CMD ["npm","start"]    
