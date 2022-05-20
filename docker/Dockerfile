@@ -22,6 +22,12 @@ RUN mkdir -p /services \
     &&  npm run nd:install \
     &&  cd /services/nd-iot-services    
 
+COPY ./service/nd-iot-service-dsp.service /lib/systemd/system/nd-iot-service-dsp.service
+RUN systemctl enable nd-iot-service-dsp   
+
+COPY ./service/nd-iot-service-edg.service /lib/systemd/system/nd-iot-service-edg.service
+RUN systemctl enable nd-iot-service-edg 
+
 WORKDIR /services/nd-iot-services
 
 EXPOSE 1880-1884 8080-8090 18090-18199 11880-11889
