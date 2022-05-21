@@ -89,7 +89,7 @@
                                         "dev_evt_report":    "{app}/{dom}/dev/+/+/+/evt/report"
                                     },
                                     "services":{
-                                        "dsp_svc_login":        "{app}/{dom}/+/+/dsp/{dsp}/svc/login",
+                                        "dsp_svc_login":        "+/+/+/+/dsp/{dsp}/svc/login",
                                         "dsp_svc_get_z2m_datafile": "{app}/{dom}/+/+/dsp/{dsp}/svc/get_z2m_datafile",
                                         "dsp_svc_set_z2m_datafile": "{app}/{dom}/+/+/dsp/{dsp}/svc/set_z2m_datafile"
                                     },
@@ -151,7 +151,7 @@
             "ids": {
                 "app": "{APP_ID}",
                 "dom": "{DOM_ID}",
-                "dsp": "{DSP_ID}",
+                "dsp": "{HOSTNAME}",
                 "mqtt": "{app}_{dom}_dsp_{dsp}"
             }
         }
@@ -190,7 +190,7 @@
                                             "dev_evt_penet": "{app}/{dom}/dev/{dev}/edg/{edg}/evt/penet"
                                         },
                                         "services": {
-                                            "edg_svc_login": "{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/login",
+                                            "edg_svc_login": "{app}/{dom}/+/+/edg/{edg}/svc/login",
                                             "edg_svc_handshake": "{app}/{dom}/dev/+/edg/{edg}/svc/handshake",
                                             "edg_svc_get_z2m_datafile": "{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/get_z2m_datafile",
                                             "edg_svc_set_z2m_datafile": "{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/set_z2m_datafile"
@@ -248,6 +248,7 @@
                         "nd":{
                             "id": "{dom}",
                             "name": "网龙公司",
+                            "enabled": 1,
                             "dispatchers": {
                                 "ND--20200609EVI": {
                                     "id": "{dsp}",
@@ -275,7 +276,19 @@
                             "username": "ioe",
                             "password": ""
                         },
-                        "topics":{}                    
+                        "topics":{
+                            "subs": {
+                                "dev_evt_report": "{app}/+/dev/+/+/+/evt/report",
+                                "dev_evt_status": "{app}/+/dev/+/+/+/evt/status",
+                                "dsp_evt_status": "{app}/+/dsp/+/+/+/evt/status",
+                                "edg_evt_status": "{app}/+/edg/+/+/+/evt/status"
+                            },
+                            "services":{
+                                "dio_svc_login": "+/+/+/+/0/0/svc/login",
+                                "dio_svc_get_z2m_datafile": "{app}/+/+/+/edg/+/svc/get_z2m_datafile",                                        
+                                "dio_svc_set_z2m_datafile": "{app}/+/+/+/edg/+/svc/set_z2m_datafile"
+                            }
+                        }                    
                     },
                     "z2m": {
                         "defaultDatafile": {
@@ -314,7 +327,7 @@
             "common": {},
             "ids": {
                 "app": "{APP_ID}",
-                "dio": "{DIO_ID}",
+                "dio": "{HOSTNAME}",
                 "mqtt": "{app}_dio_{dio}"
             }
         }

@@ -15,6 +15,24 @@ docker: -e IOT_CONFIG_FILE="/services/nd-iot-services/docker/config.json" -e IOT
 node: cross-env IOT_CONFIG_FILE=\"E:/data/nd-iot-edge-gateway/docker/config.json\" IOT_APP_ID=ndiot IOT_DOM_ID=nd IOT_DSP_ID=nd IOT_PLF_ID=\"nd,xiaomi\" IOT_ENABLE_DSP=1 IOT_ENABLE_EDG=1 IOT_ENABLE_PLF=1
 win: set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_APP_ID=ndiot&& set IOT_DOM_ID=nd&& set IOT_DSP_ID=nd&& set IOT_PLF_ID=nd,xiaomi&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& set IOT_ENABLE_PLF=1
 
+win:
+set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& set IOT_ENABLE_PLF=1 && npm run nd:dispatcher:start
 
-
-docker run -d -v "e:/iotdata/":/data  -p 11880:11880 -p 11881:11881 -p 11882:11882 -e IOT_CONFIG_FILE="/data/config.json" -e IOT_APP_ID=ndiot -e IOT_DOM_ID=nd -e IOT_DSP_ID=nd -e IOT_PLF_ND_ID=nd -e IOT_PLF_XIAOAI_ID=xiaoai -e IOT_ENABLE_DSP=1 -e IOT_ENABLE_EDG=1 -e IOT_ENABLE_PLF=1 -e IOT_ENABLE_PLF_ND=0  -e IOT_ENABLE_PLF_XIAOAI=0 registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.2 
+docker run -d \
+-v /e/iotdata:/data  \
+-p 11880:11880 \
+-p 11881:11881 \
+-p 11882:11882 \
+-e IOT_CONFIG_FILE="/data/config.json" \
+-e IOT_APP_ID=ndiot \
+-e IOT_DOM_ID=nd \
+-e IOT_DSP_ID=nd \
+-e IOT_PLF_ND_ID=nd \
+-e IOT_PLF_XIAOAI_ID=xiaoai \
+-e IOT_ENABLE_DSP=1 \
+-e IOT_ENABLE_EDG=1 \
+-e IOT_ENABLE_PLF=1 \
+-e IOT_ENABLE_PLF_ND=0  \
+-e IOT_ENABLE_PLF_XIAOAI=0 \
+registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.2 \
+/bin/bash

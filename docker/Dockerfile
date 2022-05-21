@@ -18,6 +18,12 @@ RUN mkdir -p /services \
     &&  cd /services/zigbee2mqtt \
     &&  npm install  
 
+COPY ./service/. /lib/systemd/system/.
+RUN systemctl enable nd-iot-mqtt-broker
+RUN systemctl enable nd-iot-service-dio
+RUN systemctl enable nd-iot-service-dsp
+RUN systemctl enable nd-iot-service-edg
+
 RUN mkdir -p /services \
     &&  cd /services \
     &&  git clone https://github.com/czq7966/nd-iot-services.git nd-iot-services -b dev \
@@ -31,11 +37,7 @@ RUN mkdir -p /services \
 # RUN systemctl enable nd-iot-service-dsp 
 # COPY ./service/nd-iot-service-edg.service /lib/systemd/system/nd-iot-service-edg.service
 # RUN systemctl enable nd-iot-service-edg 
-COPY ./service/. /lib/systemd/system/.
-RUN systemctl enable nd-iot-mqtt-broker
-RUN systemctl enable nd-iot-service-dio
-RUN systemctl enable nd-iot-service-dsp
-RUN systemctl enable nd-iot-service-edg
+
 
 
 WORKDIR /services/nd-iot-services
