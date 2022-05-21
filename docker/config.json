@@ -207,6 +207,14 @@
                                             "dev_svc_handshake": "handshake"
                                         }
                                     }
+                                },
+                                "z2m": {
+                                    "tcpPort": 18190,
+                                    "frontendPort": 18090,
+                                    "z2mDir": "/services/zigbee2mqtt",
+                                    "dataDir": "/data/zigbee2mqtt/data",
+                                    "z2mDir_win": "E:/data/zigbee2mqtt",
+                                    "dataDir_win": "E:/iotdata/zigbee2mqtt/data"
                                 }     
                             }
                         }                        
