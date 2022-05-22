@@ -24,6 +24,14 @@
         "env": []
     },
     {
+        "id": "25fe735d371c65bb",
+        "type": "tab",
+        "label": "MongDB",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "4f298837cfcb1b75",
         "type": "mqtt-broker",
         "name": "push",
@@ -48,6 +56,16 @@
         "willPayload": "",
         "willMsg": {},
         "sessionExpiry": ""
+    },
+    {
+        "id": "1156755863b3897c",
+        "type": "mongodb",
+        "hostname": "m1.all.dev2.mongod3.sdp",
+        "topology": "direct",
+        "connectOptions": "autoConnectRetry=true",
+        "port": "34004",
+        "db": "dev_mdb_iot_data",
+        "name": "dev_mdb_iot_data"
     },
     {
         "id": "f544f205.d51a7",
@@ -261,7 +279,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "缓存数据函数",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet online = function(){\n    let events = this.events;\n    if (events && events.status)\n        return events.status.pld.online;\n    return 0;\n}\n\nlet cachePayload = function(payload) {\n    let hd = payload.hd;\n    let pld = payload.pld;\n    if (hd.from.type == \"dev\") {\n        let dev = data.devices[hd.from.id] || {events:{}};\n        dev.id = hd.from.id;\n        dev.events = dev.events || {};\n        if (hd.from.pid)\n            dev.pid = hd.from.pid;\n        dev.events[hd.entry.id] = payload;\n        dev.online = online;\n        data.devices[hd.from.id] = dev;\n        let edgId = hd.ids && hd.ids.edg_id || pld.edg_id\n        if (edgId) {\n            let edg = data.edges[edgId];\n            if (edg) {\n                dev.edge = edg;\n                edg.devices[dev.id] = dev;\n                edg.dispatcher.devices[dev.id] = dev;\n            }\n        }\n    }\n    \n    if (hd.from.type == \"edg\") {\n        let edg = data.edges[hd.from.id];\n        edg.events = edg.events || {};\n        edg.id = hd.from.id;\n        edg.events[hd.entry.id] = payload;\n        edg.online = online;\n        data.edges[hd.from.id] = edg;\n    }\n}\n\ncommon.cachePayload = cachePayload;\n\nreturn {payload: data};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet online = function(){\n    let events = this.events;\n    if (events && events.status)\n        return events.status.pld.online;\n    return 0;\n}\n\nlet cachePayload = function(payload) {\n    let hd = payload.hd;\n    let pld = payload.pld;\n    if (hd.from.type == \"dev\") {\n        let dev = data.devices[hd.from.id] || {events:{}};\n        dev.id = hd.from.id;\n        dev.events = dev.events || {};\n        if (hd.from.pid)\n            dev.pid = hd.from.pid;\n        dev.events[hd.entry.id] = payload;\n        dev.online = online;\n        data.devices[hd.from.id] = dev;\n        let edgId = hd.ids && hd.ids.edg_id || pld.edg_id\n        if (edgId) {\n            let edg = data.edges[edgId];\n            if (edg) {\n                dev.edge = edg;\n                edg.devices[dev.id] = dev;;\n            }\n        }\n    }\n    \n    if (hd.from.type == \"edg\") {\n        let edg = data.edges[hd.from.id] || {};\n        edg.events = edg.events || {};\n        edg.id = hd.from.id;\n        edg.events[hd.entry.id] = payload;\n        edg.online = online;\n        data.edges[hd.from.id] = edg;\n    }\n}\n\ncommon.cachePayload = cachePayload;\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -280,7 +298,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "获取HD主题函数",
-        "func": "let common = global.get(\"common\");\n\n\nlet getHDTopic = function(hd) {\n    let tpc = \"\";\n    let ids = hd.ids || global.get(\"data\").ids;\n    if (!hd.from) hd.from = {};\n    if (!hd.from.type) hd.from.type = \"dio\";\n    if (!hd.from.id) hd.from.id = ids.dio;\n    if (!hd.to.type) hd.to.type = \"0\";\n    if (!hd.to.id) hd.to.id = \"0\";\n    if (!hd.entry.type) hd.entry.type = \"0\";\n    if (!hd.entry.id) hd.entry.id = \"0\";\n    if (!hd.sid) hd.sid = \"0\";\n    if (!hd.stp) hd.stp = 0;\n\n\n    tpc =   (ids.app ? ids.app : \"0\") + \"/\" + \n            (ids.dom ? ids.dom : \"0\") + \"/\" + \n            hd.from.type + \"/\" + hd.from.id + \"/\" + \n            hd.to.type + \"/\" + hd.to.id + \"/\" + \n            hd.entry.type + \"/\" + hd.entry.id;\n    return tpc;\n}\n\n\ncommon.getHDTopic = getHDTopic;\n\nreturn {payload: common};",
+        "func": "let common = global.get(\"common\");\n\n\nlet getHDTopic = function(hd) {\n    let tpc = \"\";\n    let ids = hd.ids || global.get(\"data\").ids;\n    if (!hd.from) hd.from = {};\n    if (!hd.from.type) hd.from.type = \"dio\";\n    if (!hd.from.id) hd.from.id = ids.dio;\n    if (!hd.to) hd.to = {};\n    if (!hd.to.type) hd.to.type = \"0\";\n    if (!hd.to.id) hd.to.id = \"0\";\n    if (!hd.entry) hd.entry = {};\n    if (!hd.entry.type) hd.entry.type = \"0\";\n    if (!hd.entry.id) hd.entry.id = \"0\";\n    if (!hd.sid) hd.sid = \"0\";\n    if (!hd.stp) hd.stp = 0;\n\n\n    tpc =   (ids.app ? ids.app : \"0\") + \"/\" + \n            (ids.dom ? ids.dom : \"0\") + \"/\" + \n            hd.from.type + \"/\" + hd.from.id + \"/\" + \n            hd.to.type + \"/\" + hd.to.id + \"/\" + \n            hd.entry.type + \"/\" + hd.entry.id;\n    return tpc;\n}\n\n\ncommon.getHDTopic = getHDTopic;\n\nreturn {payload: common};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -556,7 +574,7 @@
         "type": "debug",
         "z": "e93bbc67912b9178",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -649,7 +667,8 @@
             "5002cb933f4b4eb5",
             "cb5a80219ea82576",
             "befe5b1ac4389423",
-            "8f5000be83384a7a"
+            "8f5000be83384a7a",
+            "a6df7d880adde7dd"
         ],
         "x": 225,
         "y": 420,
@@ -701,7 +720,7 @@
         "type": "debug",
         "z": "e93bbc67912b9178",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -734,7 +753,7 @@
         "type": "debug",
         "z": "e93bbc67912b9178",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -945,7 +964,7 @@
         "type": "debug",
         "z": "e93bbc67912b9178",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -968,10 +987,64 @@
         "finalize": "",
         "libs": [],
         "x": 240,
-        "y": 200,
+        "y": 220,
+        "wires": [
+            [
+                "b920e31b90166791"
+            ]
+        ]
+    },
+    {
+        "id": "1d38d82fd22fa3b5",
+        "type": "json",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "property": "broker.will.payload",
+        "action": "str",
+        "pretty": false,
+        "x": 710,
+        "y": 220,
         "wires": [
             [
                 "0f989c13f4e0c1cb"
+            ]
+        ]
+    },
+    {
+        "id": "b920e31b90166791",
+        "type": "function",
+        "z": "e93bbc67912b9178",
+        "name": "出生消息",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    from: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    }\n};\n\nlet pld = {\n    id: data.ids.dio,\n    online: 1\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet birth = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\nmsg.broker = msg.broker || {};\nmsg.broker.birth = birth;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 220,
+        "wires": [
+            [
+                "45838fa67f1ea02a"
+            ]
+        ]
+    },
+    {
+        "id": "45838fa67f1ea02a",
+        "type": "function",
+        "z": "e93bbc67912b9178",
+        "name": "遗嘱消息",
+        "func": "let birth = msg.broker.birth;\n\nlet pld = {\n    id: birth.payload.pld.id,\n    online: 0\n};\n\n\n\nlet will = {\n    topic: birth.topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: birth.payload.hd,\n        pld: pld\n    }\n}\n\n\nmsg.broker.will = will;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 220,
+        "wires": [
+            [
+                "1d38d82fd22fa3b5"
             ]
         ]
     },
@@ -1071,7 +1144,7 @@
         "type": "function",
         "z": "f7e96a32e56d72eb",
         "name": "边缘",
-        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet edg = data.edges[hd.from.id];\nif (edg && edg.enabled) {\n    let _hd = Object.assign({}, hd);\n    delete _hd.from;\n    _hd.to = hd.from;\n    _hd.stp = 1;\n    let _pld = {\n        app_id : edg.dispatcher.domain.app.id,\n        dom_id : edg.dispatcher.domain.id,\n        dsp_id : edg.dispatcher.id,\n        edg_id : edg.id\n    }\n    return {\n        payload: {\n            hd: _hd,\n            pld: _pld\n        }\n    }\n    \n}\n    ",
+        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet edg = data.edges[hd.from.id];\nlet dsp = edg.dispatcher;\nif (edg && edg.enabled && dsp && dsp.enabled) {\n    let topics = hd.tpc.split(\"/\");\n    let _hd = Object.assign({}, hd);\n    _hd.ids = _hd.ids || {};\n    _hd.ids.app = topics[0];\n    _hd.ids.dom = topics[1];\n    _hd.ids.dsp = dsp.id;\n    _hd.ids.edg = edg.id;\n    _hd.ids.dio = data.ids.dio;\n    \n    \n    delete _hd.from;\n    _hd.to = hd.from;\n    _hd.stp = 1;\n    \n    let _pld = {\n        app_id : dsp.domain.app.id,\n        dom_id : dsp.domain.id,\n        dsp_id : dsp.id,\n        edg_id : edg.id\n    }\n    return {\n        payload: {\n            hd: _hd,\n            pld: _pld\n        }\n    }\n    \n}\n    ",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1102,23 +1175,6 @@
             [
                 "8f5000be83384a7a"
             ]
-        ]
-    },
-    {
-        "id": "39d23f241114409e",
-        "type": "function",
-        "z": "f7e96a32e56d72eb",
-        "name": "Z2M获取请求",
-        "func": "\n    return msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 720,
-        "y": 340,
-        "wires": [
-            []
         ]
     },
     {
@@ -1174,7 +1230,7 @@
                 "0539b819bad42aa7"
             ],
             [
-                "39d23f241114409e"
+                "e51a89d4f3470cfa"
             ],
             [
                 "58a17b926cb4d96d"
@@ -1192,8 +1248,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 720,
-        "y": 420,
+        "x": 760,
+        "y": 620,
         "wires": [
             []
         ]
@@ -1203,7 +1259,7 @@
         "type": "debug",
         "z": "f7e96a32e56d72eb",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1212,6 +1268,387 @@
         "statusType": "auto",
         "x": 1110,
         "y": 160,
+        "wires": []
+    },
+    {
+        "id": "d466ad43414d7ef2",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "有无缓存",
+        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\n\nlet device = data.devices[pld.id];\nif (!device) {\n    device = {events:{}};\n    device.id = pld.id;\n    data.devices[pld.id] = device;\n}\n\nlet z2m = device.z2m ;\n//有缓存\nif (z2m && z2m.datafile || msg.result == 0) {\n    let _msg = {\n        payload: {\n            hd: {\n                // from: hd.to,\n                to: hd.from,\n                entry: hd.entry,\n                sid: hd.sid,\n                stp: 1\n            },\n            pld: {\n                id: pld.id,\n                datafile: z2m.datafile,\n                defaultDatafile: z2m.defaultDatafile\n            }\n        }\n    };\n    \n    return [_msg, null];\n}\n\n\n\nreturn [null, msg];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 400,
+        "wires": [
+            [
+                "104148958a127a27",
+                "465228e80c5165c6"
+            ],
+            [
+                "f0fb7cb724e8b603",
+                "20cdd20af2ac157d"
+            ]
+        ]
+    },
+    {
+        "id": "104148958a127a27",
+        "type": "change",
+        "z": "f7e96a32e56d72eb",
+        "name": "有缓存",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1130,
+        "y": 380,
+        "wires": [
+            [
+                "a6df7d880adde7dd"
+            ]
+        ]
+    },
+    {
+        "id": "f0fb7cb724e8b603",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "MG查询",
+        "func": "let hd = msg.payload.hd;\nlet pld = msg.payload.pld;\n\nreturn {\n    _payload: msg.payload,\n    payload: {\n        id: pld.id\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1140,
+        "y": 440,
+        "wires": [
+            [
+                "fc30693de61f70ea"
+            ]
+        ]
+    },
+    {
+        "id": "e51a89d4f3470cfa",
+        "type": "change",
+        "z": "f7e96a32e56d72eb",
+        "name": "Z2M获取请求",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 740,
+        "y": 400,
+        "wires": [
+            [
+                "d466ad43414d7ef2"
+            ]
+        ]
+    },
+    {
+        "id": "a6df7d880adde7dd",
+        "type": "link out",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "f4460e5db856239e"
+        ],
+        "x": 1295,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "fc30693de61f70ea",
+        "type": "link out",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "a5949574ea550511"
+        ],
+        "x": 1295,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "ea899d2e95e95576",
+        "type": "link in",
+        "z": "f7e96a32e56d72eb",
+        "name": "重置",
+        "links": [
+            "02292d5e159ec26a"
+        ],
+        "x": 665,
+        "y": 460,
+        "wires": [
+            [
+                "ada4b9868b069c4d"
+            ]
+        ]
+    },
+    {
+        "id": "ada4b9868b069c4d",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "查询返回",
+        "func": "let data = global.get(\"data\");\nlet _payload = msg._payload;\nlet _hd = _payload.hd;\nlet _pld = _payload.pld;\n\n\nlet device = data.devices[_pld.id];\nlet z2m = device.z2m || {};\ndevice.z2m = z2m;\nlet _msg = {};\n\nif (msg.payload) {\n    if (msg.payload[0]) {\n        let pld = msg.payload[0];\n        z2m.datafile = pld.datafile;\n        _msg.result = 1;\n    } else {\n        z2m.defaultDatafile = data.z2m.defaultDatafile;\n        _msg.result = 0;\n    }\n    _msg.payload = msg._payload;\n    return _msg;\n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 460,
+        "wires": [
+            [
+                "d466ad43414d7ef2",
+                "c6e1604bf9b4a0ae"
+            ]
+        ]
+    },
+    {
+        "id": "c6e1604bf9b4a0ae",
+        "type": "debug",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 930,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "465228e80c5165c6",
+        "type": "debug",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1150,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "20cdd20af2ac157d",
+        "type": "debug",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1170,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "847eb4a013500880",
+        "type": "mongodb in",
+        "z": "25fe735d371c65bb",
+        "mongodb": "1156755863b3897c",
+        "name": "find_z2m_datafile",
+        "collection": "z2m_datafile",
+        "operation": "find",
+        "x": 510,
+        "y": 260,
+        "wires": [
+            [
+                "1f3983c9ed549d23",
+                "02292d5e159ec26a"
+            ]
+        ]
+    },
+    {
+        "id": "d002c1f54df9f2a0",
+        "type": "mongodb out",
+        "z": "25fe735d371c65bb",
+        "mongodb": "1156755863b3897c",
+        "name": "update_z2m_datafile",
+        "collection": "z2m_datafile",
+        "payonly": true,
+        "upsert": true,
+        "multi": false,
+        "operation": "update",
+        "x": 520,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "60d5ffbdcc3f5924",
+        "type": "inject",
+        "z": "25fe735d371c65bb",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"id\":\"ESP8266x0006dbe5\"}",
+        "payloadType": "json",
+        "x": 470,
+        "y": 160,
+        "wires": [
+            [
+                "847eb4a013500880"
+            ]
+        ]
+    },
+    {
+        "id": "ce41dab77dd6eb61",
+        "type": "inject",
+        "z": "25fe735d371c65bb",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "query",
+                "v": "{\"id\":\"ESP8266x0006dbe5\"}",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"id\":\"ESP8266x0006dbe5\",\"datafile\":{}}",
+        "payloadType": "json",
+        "x": 470,
+        "y": 340,
+        "wires": [
+            [
+                "d002c1f54df9f2a0"
+            ]
+        ]
+    },
+    {
+        "id": "6db4ba09c3795f14",
+        "type": "mongodb out",
+        "z": "25fe735d371c65bb",
+        "mongodb": "1156755863b3897c",
+        "name": "remove_z2m_datafile",
+        "collection": "z2m_datafile",
+        "payonly": true,
+        "upsert": false,
+        "multi": false,
+        "operation": "delete",
+        "x": 500,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "ae486705b2bf82fc",
+        "type": "inject",
+        "z": "25fe735d371c65bb",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"id\":\"ESP8266x0006dbe5\"}",
+        "payloadType": "json",
+        "x": 210,
+        "y": 680,
+        "wires": [
+            [
+                "6db4ba09c3795f14"
+            ]
+        ]
+    },
+    {
+        "id": "73cdfebded74d723",
+        "type": "link in",
+        "z": "25fe735d371c65bb",
+        "name": "更新Z2M数据文件",
+        "links": [
+            "18399b569376b6f6"
+        ],
+        "x": 205,
+        "y": 420,
+        "wires": [
+            [
+                "d002c1f54df9f2a0"
+            ]
+        ]
+    },
+    {
+        "id": "a5949574ea550511",
+        "type": "link in",
+        "z": "25fe735d371c65bb",
+        "name": "查询Z2M数据文件",
+        "links": [
+            "01a86933fee50dae",
+            "fc30693de61f70ea"
+        ],
+        "x": 195,
+        "y": 260,
+        "wires": [
+            [
+                "847eb4a013500880"
+            ]
+        ]
+    },
+    {
+        "id": "02292d5e159ec26a",
+        "type": "link out",
+        "z": "25fe735d371c65bb",
+        "name": "返回Z2M数据文件",
+        "mode": "link",
+        "links": [
+            "ea899d2e95e95576"
+        ],
+        "x": 755,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "1f3983c9ed549d23",
+        "type": "debug",
+        "z": "25fe735d371c65bb",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 120,
         "wires": []
     }
 ]

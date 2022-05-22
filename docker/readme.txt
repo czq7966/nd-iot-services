@@ -18,6 +18,9 @@ win: set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IO
 win:
 set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& set IOT_ENABLE_PLF=1 && npm run nd:dispatcher:start
 
+set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& set IOT_ENABLE_PLF=1 && npm run nd:edge:start
+
+
 docker run -d \
 -v /e/iotdata:/data  \
 -p 11880:11880 \

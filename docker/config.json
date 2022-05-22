@@ -69,12 +69,7 @@
                         "dispatcher": {
                             "id": "{dsp}",
                             "name": "调度器",
-                            "edges": {
-                                "ND--20200609EVI" : {
-                                    "id": "{edg}",
-                                    "enabled": 1
-                                }
-                            },                
+                            "edges": {},                
                             "devices": {},   
                             "mqtt": {
                                 "broker" : {
@@ -84,6 +79,7 @@
                                 },
                                 "topics": {
                                     "subs": {
+                                        "dio_evt_status":    "{app}/+/dio/+/+/+/evt/status",
                                         "edg_evt_status":    "{app}/{dom}/edg/+/+/+/evt/status",
                                         "dev_evt_status":    "{app}/{dom}/dev/+/+/+/evt/status",
                                         "dev_evt_report":    "{app}/{dom}/dev/+/+/+/evt/report"
@@ -172,6 +168,8 @@
                             "edge": {
                                 "id": "{edg}",
                                 "name": "边缘服务",
+                                "device_max": 0,
+                                "z2m_max": 0,
                                 "events": {},
                                 "devices":{},
                                 "mqtt": {
@@ -190,15 +188,15 @@
                                             "dev_evt_penet": "{app}/{dom}/dev/{dev}/edg/{edg}/evt/penet"
                                         },
                                         "services": {
-                                            "edg_svc_login": "{app}/{dom}/+/+/edg/{edg}/svc/login",
+                                            "edg_svc_login": "+/+/+/+/edg/{edg}/svc/login",
                                             "edg_svc_handshake": "{app}/{dom}/dev/+/edg/{edg}/svc/handshake",
-                                            "edg_svc_get_z2m_datafile": "{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/get_z2m_datafile",
-                                            "edg_svc_set_z2m_datafile": "{app}/{dom}/dsp/{dsp}/edg/{edg}/svc/set_z2m_datafile"
+                                            "edg_svc_get_z2m_datafile": "{app}/+/+/+/edg/{edg}/svc/get_z2m_datafile",
+                                            "edg_svc_set_z2m_datafile": "{app}/+/+/+/edg/{edg}/svc/set_z2m_datafile"
                                         },
                                         "pubs": {
                                             "dsp_svc_login": "login",
-                                            "dsp_svc_get_z2m_datafile": "get_z2m_datafile",
-                                            "dsp_svc_set_z2m_datafile": "set_z2m_datafile",
+                                            "dio_svc_get_z2m_datafile": "{app}/{dom}/dio/0/edg/{edg}/svc/get_z2m_datafile",
+                                            "dio_svc_set_z2m_datafile": "{app}/{dom}/dio/0/edg/{edg}/svc/set_z2m_datafile",
                                             "edg_evt_status": "status",
         
                                             "dev_svc_get": "get",
@@ -233,8 +231,7 @@
                 "app": "{APP_ID}",
                 "dom": "{DOM_ID}",
                 "dsp": "{DSP_ID}",
-                "edg": "{HOSTNAME}",
-                "mqtt": "{app}_{dom}_dsp_{dsp}_edg_{edg}"
+                "edg": "{HOSTNAME}"
             }   
         }
     },
@@ -285,8 +282,8 @@
                             },
                             "services":{
                                 "dio_svc_login": "+/+/+/+/0/0/svc/login",
-                                "dio_svc_get_z2m_datafile": "{app}/+/+/+/edg/+/svc/get_z2m_datafile",                                        
-                                "dio_svc_set_z2m_datafile": "{app}/+/+/+/edg/+/svc/set_z2m_datafile"
+                                "edg_svc_get_z2m_datafile": "{app}/+/edg/+/+/+/svc/get_z2m_datafile",                                        
+                                "edg_svc_set_z2m_datafile": "{app}/+/edg/+/+/+/svc/set_z2m_datafile"
                             }
                         }                    
                     },
