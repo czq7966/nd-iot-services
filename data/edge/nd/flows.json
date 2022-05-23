@@ -638,7 +638,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "Z3协调器初始化函数",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet os = global.get(\"os\");\nlet devices = data.devices;\nlet topics = data.topics;\nlet edgz2m =  data.edge.z2m;\nlet tcpPort = edgz2m.tcpPort;\nlet frontendPort = edgz2m.frontendPort;\nlet z2mDir = edgz2m.z2mDir;\nlet dataDir = edgz2m.dataDir;\nif (os.platform == \"win32\") {\n    z2mDir = edgz2m.z2mDir_win;\n    dataDir = edgz2m.dataDir_win;   \n}\n\nlet running = function() {\n    return  this.z2m && this.z2m.status && \n            (this.z2m.status == \"running\" || this.z2m.status == \"online\")\n}\n\nlet setDevice = (device) => {\n    let devDataDir = dataDir + \"/\" + device.id; \n    let execStr = \"cd \" + z2mDir;\n    if (os.platform == \"win32\"){\n        execStr =execStr + \"&& set ZIGBEE2MQTT_DATA=\" + devDataDir;\n        execStr =execStr + \"&& npm start\";\n    } else {\n        execStr =execStr + \"&& ZIGBEE2MQTT_DATA=\" + devDataDir;\n        execStr =execStr + \" npm start\";\n    }\n\n    let z2m = device.z2m || {};\n    z2m.tcp = {\n            port: tcpPort,\n            status: null\n        };\n    z2m.z2m = {\n            configuration: {\n                mqtt: {\n                    base_topic: device.id,\n                    server: \"mqtt://127.0.0.1:1883\",\n                    user: \"device\"\n                },\n                serial: {\n                    port: \"tcp://127.0.0.1:\" + (tcpPort++)\n                },\n                frontend: {\n                    port: (frontendPort++)\n                }\n            },\n\n            datadir: devDataDir,\n            configfile: \"configuration.yaml\",\n            configfullfile: devDataDir + \"/configuration.yaml\",\n            databasefile: \"database.db\",\n            databasefullfile: devDataDir + \"/database.db\",\n            exec: execStr,\n            status: null,\n            datafile: z2m.z2m && z2m.z2m.datafile\n        };\n    z2m.running = running;\n    device.z2m = z2m;\n}\n\n\nlet initZ2MDevice = function(did) {\n    let device = devices[did];\n    if (device && (!device.z2m || !device.z2m.tcp || !device.z2m.z2m)) {\n        setDevice(device);\n    }\n    \n    return device;\n}\n\n\nlet getZ2MStatus = function(did, status) {\n    let device = devices[did];\n    if (device && device.z2m && device.z2m.z2m) {\n        return device.z2m.z2m.status\n    }\n}\n\nlet setZ2MStatus = function(did, status) {\n    let device = devices[did];\n    if (device && device.z2m && device.z2m.z2m) {\n        device.z2m.z2m.status = status\n    }\n    \n    return device;\n}\n\n\ncommon.initZ2MDevice = initZ2MDevice;\ncommon.setZ2MStatus = setZ2MStatus;\ncommon.getZ2MStatus = getZ2MStatus;\n\nreturn {payload: common};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet os = global.get(\"os\");\nlet devices = data.devices;\nlet topics = data.topics;\nlet edgz2m =  data.edge.z2m;\nlet tcpPort = edgz2m.tcpPort;\nlet frontendPort = edgz2m.frontendPort;\nlet z2mDir = edgz2m.z2mDir;\nlet dataDir = edgz2m.dataDir;\nif (os.platform == \"win32\") {\n    z2mDir = edgz2m.z2mDir_win;\n    dataDir = edgz2m.dataDir_win;   \n}\n\nlet running = function() {\n    return  this.z2m && this.z2m.status && \n            (this.z2m.status == \"running\" || this.z2m.status == \"online\")\n}\n\nlet setDevice = (device) => {\n    let devDataDir = dataDir + \"/\" + device.id; \n    let execStr = \"cd \" + z2mDir;\n    if (os.platform == \"win32\"){\n        execStr =execStr + \"&& set ZIGBEE2MQTT_DATA=\" + devDataDir;\n        execStr =execStr + \"&& npm start\";\n    } else {\n        execStr =execStr + \"&& ZIGBEE2MQTT_DATA=\" + devDataDir;\n        execStr =execStr + \" npm start\";\n    }\n\n    let z2m = device.z2m || {};\n    z2m.tcp = {\n            port: tcpPort,\n            status: null\n        };\n    z2m.z2m = {\n            configuration: {\n                mqtt: {\n                    base_topic: device.id,\n                    server: \"mqtt://127.0.0.1:1883\",\n                    user: \"device\"\n                },\n                serial: {\n                    port: \"tcp://127.0.0.1:\" + (tcpPort++)\n                },\n                frontend: {\n                    port: (frontendPort++)\n                }\n            },\n\n            datadir: devDataDir,\n            configfile: \"configuration.yaml\",\n            configfullfile: devDataDir + \"/configuration.yaml\",\n            databasefile: \"database.db\",\n            databasefullfile: devDataDir + \"/database.db\",\n            backfilenames:[\"configuration.yaml\",\"database.db\", \"coordinator_backup.json\"],\n            backfiles: {},\n            exec: execStr,\n            status: null,\n            datafile: z2m.z2m && z2m.z2m.datafile\n        };\n    z2m.running = running;\n    device.z2m = z2m;\n}\n\n\nlet initZ2MDevice = function(did) {\n    let device = devices[did];\n    if (device && (!device.z2m || !device.z2m.tcp || !device.z2m.z2m)) {\n        setDevice(device);\n    }\n    \n    return device;\n}\n\n\nlet getZ2MStatus = function(did, status) {\n    let device = devices[did];\n    if (device && device.z2m && device.z2m.z2m) {\n        return device.z2m.z2m.status\n    }\n}\n\nlet setZ2MStatus = function(did, status) {\n    let device = devices[did];\n    if (device && device.z2m && device.z2m.z2m) {\n        device.z2m.z2m.status = status\n    }\n    \n    return device;\n}\n\n\ncommon.initZ2MDevice = initZ2MDevice;\ncommon.setZ2MStatus = setZ2MStatus;\ncommon.getZ2MStatus = getZ2MStatus;\n\nreturn {payload: common};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -733,7 +733,8 @@
         "y": 200,
         "wires": [
             [
-                "85b2a20bb5e50604"
+                "85b2a20bb5e50604",
+                "a6a4ebf94a8b8924"
             ]
         ]
     },
@@ -1569,18 +1570,19 @@
         "id": "89082bd768ce94d2",
         "type": "function",
         "z": "46a5ba0d798d87c3",
-        "name": "设置Z2M数据文件",
-        "func": "let data = global.get(\"data\");\nlet topics = data.topics;\n\nlet _msg = {\n    payload: {\n        hd: {\n            to: {\n                type: \"dsp\",\n                id: data.ids.dsp\n            },\n            entry: {\n                type: \"svc\",\n                id: topics.pubs.dsp_svc_set_z2m_datafile\n            }\n        },\n        pld: msg.payload\n    }\n}\nreturn _msg;",
+        "name": "获取设备数据",
+        "func": "let data = global.get(\"data\");\nlet device = msg.device;\nif (!device) {\n    let pld = msg.payload.pld;\n    let did = msg.payload.id || pld && pld.id\n    let device = data.devices[did];\n}\nif (device && device.z2m && device.z2m.z2m) {\n    device.z2m.z2m.backfiles = {};\n    return {\n        device: device\n    }\n}\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 410,
-        "y": 1040,
+        "x": 400,
+        "y": 1100,
         "wires": [
             [
-                "5002cb933f4b4eb5"
+                "4f9e50c2f35544be",
+                "f22d03acc6b5a368"
             ]
         ]
     },
@@ -1589,12 +1591,14 @@
         "type": "link in",
         "z": "46a5ba0d798d87c3",
         "name": "设置Z2M数据文件",
-        "links": [],
-        "x": 95,
-        "y": 1040,
+        "links": [
+            "8ffe717629a8bf5f"
+        ],
+        "x": 75,
+        "y": 1100,
         "wires": [
             [
-                "89082bd768ce94d2"
+                "8e1a98b3ed335a36"
             ]
         ]
     },
@@ -1825,6 +1829,416 @@
                 "6daf1af57e46df30"
             ]
         ]
+    },
+    {
+        "id": "782751952a79926b",
+        "type": "file in",
+        "z": "46a5ba0d798d87c3",
+        "name": "读取配置文件",
+        "filename": "",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 600,
+        "y": 1740,
+        "wires": [
+            [
+                "9f24a5aa47351c9d",
+                "f0bcb6ec54c32b86"
+            ]
+        ]
+    },
+    {
+        "id": "589a6d62e1c4fbea",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "设置配置文件名",
+        "func": "let device = msg.device;\nlet z2m = device.z2m.z2m;\nmsg.filename = z2m.configfullfile;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 1740,
+        "wires": [
+            [
+                "782751952a79926b"
+            ]
+        ]
+    },
+    {
+        "id": "9f24a5aa47351c9d",
+        "type": "yaml",
+        "z": "46a5ba0d798d87c3",
+        "property": "payload",
+        "name": "",
+        "x": 770,
+        "y": 1740,
+        "wires": [
+            [
+                "bfe1b042c44c232d"
+            ]
+        ]
+    },
+    {
+        "id": "bfe1b042c44c232d",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "缓存配置数据",
+        "func": "let device = msg.device;\nlet z2m = device.z2m.z2m;\nz2m.datafile = z2m.datafile || {};\nz2m.datafile[z2m.configfile] = msg.payload;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 1740,
+        "wires": [
+            [
+                "07541d6c5a038634"
+            ]
+        ]
+    },
+    {
+        "id": "77e4c9a44a37668d",
+        "type": "file in",
+        "z": "46a5ba0d798d87c3",
+        "name": "读取数据库文件",
+        "filename": "",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 600,
+        "y": 1800,
+        "wires": [
+            [
+                "9f815d9df98488fb",
+                "52587f04bc98091d"
+            ]
+        ]
+    },
+    {
+        "id": "07541d6c5a038634",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "设置数据库文件名",
+        "func": "let device = msg.device;\nlet z2m = device.z2m.z2m;\nmsg.filename = z2m.databasefullfile;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 1800,
+        "wires": [
+            [
+                "77e4c9a44a37668d"
+            ]
+        ]
+    },
+    {
+        "id": "52587f04bc98091d",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "缓存数据库数据",
+        "func": "let device = msg.device;\nlet z2m = device.z2m.z2m;\nz2m.datafile = z2m.datafile || {};\nz2m.datafile[z2m.databasefile] = msg.payload;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 1800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8e1a98b3ed335a36",
+        "type": "change",
+        "z": "46a5ba0d798d87c3",
+        "name": "设置Z2M数据",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 200,
+        "y": 1100,
+        "wires": [
+            [
+                "89082bd768ce94d2"
+            ]
+        ]
+    },
+    {
+        "id": "0204d733c674f307",
+        "type": "comment",
+        "z": "46a5ba0d798d87c3",
+        "name": "设置Z2M数据",
+        "info": "",
+        "x": 130,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "ab0fc8457f064674",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "Z2M数据设置请求",
+        "func": "let device = msg.device;\nlet z2m = device.z2m.z2m;\nif (z2m.datafile) {\n    let _msg = {\n        payload: {\n            hd: {\n                to: {\n                    type: \"0\",\n                    id: \"0\"\n                },\n                entry: {\n                    type: \"svc\",\n                    id: \"set_z2m_datafile\"\n                }\n            },\n            pld: {\n                id: device.id,\n                datafile: z2m.datafile\n            }\n        }\n    }\n    return _msg;    \n}\n\n\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 1100,
+        "wires": [
+            [
+                "5002cb933f4b4eb5"
+            ]
+        ]
+    },
+    {
+        "id": "4f9e50c2f35544be",
+        "type": "debug",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "2dcbae4fab13b66c",
+        "type": "inject",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "props": [
+            {
+                "p": "payload.id",
+                "v": "ESP8266x0006dbe5",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 290,
+        "y": 1000,
+        "wires": [
+            [
+                "8e1a98b3ed335a36"
+            ]
+        ]
+    },
+    {
+        "id": "f0bcb6ec54c32b86",
+        "type": "debug",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 670,
+        "y": 1660,
+        "wires": []
+    },
+    {
+        "id": "9f815d9df98488fb",
+        "type": "debug",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 1860,
+        "wires": []
+    },
+    {
+        "id": "f22d03acc6b5a368",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "初始化",
+        "func": "msg.device.z2m.z2m.backfiles = {};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 1160,
+        "wires": [
+            [
+                "1e1f30ec5d2902d9"
+            ]
+        ]
+    },
+    {
+        "id": "1e1f30ec5d2902d9",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "加载文件",
+        "func": "let device = msg.device;\nlet z2m = device.z2m.z2m;\nlet result = true;\nz2m.backfilenames.every(key => {\n    if (!z2m.backfiles.hasOwnProperty(key)) {\n        //未加载\n        z2m.backfiles[key] = null;\n        result = false;\n        let _msg = {\n            filename: z2m.datadir + \"/\" + key,\n            shortfilename: key,\n            device: device\n        }\n        node.send([_msg, null])\n        return false;\n    } else {\n        //已加载\n        return true;\n    }\n})\n\nif (result) {\n    //加载完成\n    return [null, msg]\n    \n}\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 1160,
+        "wires": [
+            [
+                "27ed73508891fc20"
+            ],
+            [
+                "6117b05e55432005"
+            ]
+        ]
+    },
+    {
+        "id": "27ed73508891fc20",
+        "type": "file in",
+        "z": "46a5ba0d798d87c3",
+        "name": "读取数据库文件",
+        "filename": "",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 720,
+        "y": 1160,
+        "wires": [
+            [
+                "46431bed0a3886ae"
+            ]
+        ]
+    },
+    {
+        "id": "fd1fa304ccdf643d",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "缓存数据",
+        "func": "let device = msg.device;\nlet z2m = device.z2m.z2m;\nz2m.backfiles[msg.shortfilename] = msg.payload;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 1160,
+        "wires": [
+            [
+                "1e1f30ec5d2902d9"
+            ]
+        ]
+    },
+    {
+        "id": "6117b05e55432005",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "加载完成",
+        "func": "let device = msg.device;\nlet z2m = device.z2m.z2m;\nz2m.datafile = Object.assign({}, z2m.backfiles);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 1100,
+        "wires": [
+            [
+                "084eb193c1d18615",
+                "ab0fc8457f064674"
+            ]
+        ]
+    },
+    {
+        "id": "46431bed0a3886ae",
+        "type": "switch",
+        "z": "46a5ba0d798d87c3",
+        "name": "是否配置文件？",
+        "property": "shortfilename",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "device.z2m.z2m.configfile",
+                "vt": "msg"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 920,
+        "y": 1160,
+        "wires": [
+            [
+                "f70c37ada7d64d84"
+            ],
+            [
+                "fd1fa304ccdf643d"
+            ]
+        ]
+    },
+    {
+        "id": "f70c37ada7d64d84",
+        "type": "yaml",
+        "z": "46a5ba0d798d87c3",
+        "property": "payload",
+        "name": "",
+        "x": 1050,
+        "y": 1220,
+        "wires": [
+            [
+                "fd1fa304ccdf643d"
+            ]
+        ]
+    },
+    {
+        "id": "084eb193c1d18615",
+        "type": "debug",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "device",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 1040,
+        "wires": []
     },
     {
         "id": "2ff5101df1ab6584",
@@ -3052,7 +3466,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 460,
+        "x": 560,
         "y": 1120,
         "wires": [
             [
@@ -3091,36 +3505,11 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 450,
+        "x": 560,
         "y": 1180,
         "wires": [
             [
                 "8266808a.876a4"
-            ]
-        ]
-    },
-    {
-        "id": "a9b41f4c.9d5f",
-        "type": "delay",
-        "z": "95249172.4f419",
-        "name": "",
-        "pauseType": "delay",
-        "timeout": "3",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "5",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": true,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 270,
-        "y": 1180,
-        "wires": [
-            [
-                "a8206207.d4a2f"
             ]
         ]
     },
@@ -3425,7 +3814,8 @@
         "y": 1280,
         "wires": [
             [
-                "dc8cc2b55ea3047f"
+                "dc8cc2b55ea3047f",
+                "221a6fa46f68d798"
             ]
         ]
     },
@@ -3558,18 +3948,21 @@
         "id": "7739fabb1797a8aa",
         "type": "function",
         "z": "95249172.4f419",
-        "name": "设置文件名",
-        "func": "let device = msg.device;\nlet z2m = device.z2m.z2m;\nmsg.filename = z2m.configfullfile;\n\nreturn msg;",
-        "outputs": 1,
+        "name": "有无缓存配置？",
+        "func": "let z2m = msg.device.z2m.z2m;\nlet datafile = msg.device.z2m.z2m.datafile;\nlet filename = z2m.configfile;\nif (!datafile || !datafile[filename]) {\n    //无缓存配置\n    msg.filename = z2m.configfullfile;\n    return [msg, null];  \n} else {\n    //有缓存配置\n    return [null, msg];  \n}\n",
+        "outputs": 2,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 530,
+        "x": 500,
         "y": 820,
         "wires": [
             [
                 "7f5fec758583e328"
+            ],
+            [
+                "0c5ad8a0c21631aa"
             ]
         ]
     },
@@ -3590,7 +3983,7 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 380,
+        "x": 320,
         "y": 820,
         "wires": [
             [
@@ -3633,7 +4026,7 @@
         ],
         "uncaught": false,
         "x": 520,
-        "y": 900,
+        "y": 860,
         "wires": [
             [
                 "0c5ad8a0c21631aa"
@@ -3678,14 +4071,14 @@
         "type": "function",
         "z": "95249172.4f419",
         "name": "写配置文件",
-        "func": "let z2m = msg.device.z2m.z2m;\nlet datafile = msg.device.z2m.z2m.datafile || msg.device.z2m.z2m.defaultDatafile;\nlet filename = z2m.configfile;\nif (datafile && datafile[filename]) {\n    let config = datafile[filename];\n    config.mqtt = z2m.configuration.mqtt;\n    config.serial = z2m.configuration.serial;\n    config.frontend = z2m.configuration.frontend;\n\n    msg.payload = datafile[filename];\n    return msg;  \n}\n",
+        "func": "let z2m = msg.device.z2m.z2m;\nlet datafile = msg.device.z2m.z2m.datafile || msg.device.z2m.z2m.defaultDatafile;\nlet filename = z2m.configfile;\nif (datafile && datafile[filename]) {\n    let config = datafile[filename];\n    config.mqtt = z2m.configuration.mqtt;\n    config.serial = z2m.configuration.serial;\n    config.frontend = z2m.configuration.frontend;\n    \n    msg.filename = z2m.configfullfile;\n    msg.payload = datafile[filename];\n    return msg;  \n}\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 690,
-        "y": 900,
+        "y": 860,
         "wires": [
             [
                 "29d7bc0ce9adf4c3"
@@ -3703,10 +4096,10 @@
         "overwriteFile": "true",
         "encoding": "none",
         "x": 1020,
-        "y": 900,
+        "y": 860,
         "wires": [
             [
-                "8f945fdc1ab78574"
+                "f811af1c9437ea6d"
             ]
         ]
     },
@@ -3717,7 +4110,7 @@
         "property": "payload",
         "name": "",
         "x": 870,
-        "y": 900,
+        "y": 860,
         "wires": [
             [
                 "e1c7d0801e4969d2"
@@ -3728,19 +4121,19 @@
         "id": "8f945fdc1ab78574",
         "type": "function",
         "z": "95249172.4f419",
-        "name": "重启TCP",
-        "func": "\nreturn msg;",
+        "name": "缓存至队列",
+        "func": "let queue = flow.get(\"z2mWaitQueue\") || {};\nqueue[msg.device.id] = msg;\nflow.set(\"z2mWaitQueue\", queue)\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 260,
+        "x": 270,
         "y": 1120,
         "wires": [
             [
                 "c29a577.4922ba8",
-                "a9b41f4c.9d5f"
+                "221a6fa46f68d798"
             ]
         ]
     },
@@ -4080,6 +4473,133 @@
         ]
     },
     {
+        "id": "ee2bd2515d7bd294",
+        "type": "function",
+        "z": "95249172.4f419",
+        "name": "写备份文件",
+        "func": "let z2m = msg.device.z2m.z2m;\nlet datafile = msg.device.z2m.z2m.datafile || msg.device.z2m.z2m.defaultDatafile;\nlet filename = z2m.databasefile;\nif (datafile && datafile[filename]) {\n    //有数据库缓存\n    msg.filename = z2m.databasefullfile;\n    msg.payload = datafile[filename];\n    return [msg, null];  \n} else {\n    //无数据库缓存\n    return [null, msg]\n}\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 170,
+        "y": 960,
+        "wires": [
+            [],
+            [
+                "8f945fdc1ab78574"
+            ]
+        ]
+    },
+    {
+        "id": "c46dc8ef2e104b76",
+        "type": "file",
+        "z": "95249172.4f419",
+        "name": "",
+        "filename": "",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1020,
+        "y": 920,
+        "wires": [
+            [
+                "fc08116e70d8f40f"
+            ]
+        ]
+    },
+    {
+        "id": "221a6fa46f68d798",
+        "type": "trigger",
+        "z": "95249172.4f419",
+        "name": "",
+        "op1": "0",
+        "op2": "1",
+        "op1type": "str",
+        "op2type": "str",
+        "duration": "3",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 2,
+        "x": 260,
+        "y": 1180,
+        "wires": [
+            [],
+            [
+                "748851f3c3edba06"
+            ]
+        ]
+    },
+    {
+        "id": "748851f3c3edba06",
+        "type": "function",
+        "z": "95249172.4f419",
+        "name": "取队列",
+        "func": "let queue = flow.get(\"z2mWaitQueue\") || {};\nlet keys = Object.keys(queue);\n\nlet _msg;\nkeys.every(key => {\n    _msg = queue[key];\n    let device = _msg.device;\n    let z2m = device.z2m.z2m;    \n    if (!z2m.status || z2m.status == \"killed\" ) {\n        //Z2M已停止\n        delete queue[key];\n        return false;\n    } else {\n        //Z2M未停止\n        _msg = null;\n        return true;\n    }\n})\n\nif (_msg) {\n    return [null, _msg];\n} else {\n    return [_msg, null]\n}\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 1180,
+        "wires": [
+            [
+                "8f945fdc1ab78574"
+            ],
+            [
+                "a8206207.d4a2f"
+            ]
+        ]
+    },
+    {
+        "id": "f811af1c9437ea6d",
+        "type": "function",
+        "z": "95249172.4f419",
+        "name": "初始化",
+        "func": "msg.device.z2m.z2m.backfiles = {};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 920,
+        "wires": [
+            [
+                "fc08116e70d8f40f"
+            ]
+        ]
+    },
+    {
+        "id": "fc08116e70d8f40f",
+        "type": "function",
+        "z": "95249172.4f419",
+        "name": "写备份文件",
+        "func": "let device = msg.device;\nlet z2m = device.z2m.z2m;\nlet result = true;\nObject.keys(z2m.datafile).every(key => {\n    if (key != z2m.configfile && (!z2m.backfiles.hasOwnProperty(key))) {\n        let pld = z2m.datafile[key];\n        z2m.backfiles[key] = pld;\n        if (pld) {\n            result = false;\n            let _msg = {\n                filename: z2m.datadir + \"/\" + key,\n                payload: pld,\n                shortfilename: key,\n                device: device\n            }\n            node.send([_msg, null])\n            return false;\n        }\n    }\n    \n    return true;\n    \n})\n\nif (result) {\n    //加载完成\n    return [null, msg]\n    \n}\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 920,
+        "wires": [
+            [
+                "c46dc8ef2e104b76"
+            ],
+            [
+                "8f945fdc1ab78574"
+            ]
+        ]
+    },
+    {
         "id": "17a6d87202b7967e",
         "type": "comment",
         "z": "02363c72749a98be",
@@ -4145,7 +4665,7 @@
         "repair": false,
         "outputs": 2,
         "x": 150,
-        "y": 400,
+        "y": 580,
         "wires": [
             [
                 "292188c3915691f6"
@@ -4170,38 +4690,49 @@
             },
             {
                 "t": "eq",
-                "v": "",
+                "v": "event",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "response",
                 "vt": "str"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 2,
+        "outputs": 3,
         "x": 310,
-        "y": 380,
+        "y": 460,
         "wires": [
             [
                 "ae5c8f54ba488d8e"
             ],
-            []
+            [
+                "39026b74247d659f"
+            ],
+            [
+                "bc35260b44f4813e"
+            ]
         ]
     },
     {
         "id": "ae5c8f54ba488d8e",
         "type": "function",
         "z": "02363c72749a98be",
-        "name": "更新在线状态",
-        "func": "let data = global.get(\"data\");\nlet did = msg.topics[0];\nlet device = data.devices[did];\nif (device) {\n    let z2m = device.z2m && device.z2m.z2m;\n    if (z2m) {\n        z2m.online = msg.payload == \"online\" ? 1 : 0;\n    }\n}\nreturn msg;",
+        "name": "状态",
+        "func": "let data = global.get(\"data\");\nlet did = msg.topics[0];\nlet device = data.devices[did];\nif (device) {\n    let z2m = device.z2m && device.z2m.z2m;\n    if (z2m) {\n        z2m.online = msg.payload == \"online\" ? 1 : 0;\n    }\n}\nmsg.device = device;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 500,
+        "x": 490,
         "y": 380,
         "wires": [
             [
-                "d30874e085dcd69d"
+                "d30874e085dcd69d",
+                "fb44d80efd918ade"
             ]
         ]
     },
@@ -4217,8 +4748,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 710,
-        "y": 380,
+        "x": 750,
+        "y": 260,
         "wires": []
     },
     {
@@ -4232,8 +4763,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 480,
-        "y": 440,
+        "x": 500,
+        "y": 760,
         "wires": [
             [
                 "030bc786674d7e65",
@@ -4249,8 +4780,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 310,
-        "y": 440,
+        "x": 330,
+        "y": 760,
         "wires": [
             [
                 "6a6d241273101adb"
@@ -4269,8 +4800,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 710,
-        "y": 500,
+        "x": 730,
+        "y": 820,
         "wires": []
     },
     {
@@ -4282,8 +4813,185 @@
         "links": [
             "f4460e5db856239e"
         ],
-        "x": 655,
-        "y": 440,
+        "x": 675,
+        "y": 760,
         "wires": []
+    },
+    {
+        "id": "fb44d80efd918ade",
+        "type": "switch",
+        "z": "02363c72749a98be",
+        "name": "上线",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "online",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 750,
+        "y": 360,
+        "wires": [
+            [
+                "8ffe717629a8bf5f"
+            ]
+        ]
+    },
+    {
+        "id": "8ffe717629a8bf5f",
+        "type": "link out",
+        "z": "02363c72749a98be",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "93b0b280ccede552"
+        ],
+        "x": 925,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "39026b74247d659f",
+        "type": "switch",
+        "z": "02363c72749a98be",
+        "name": "事件",
+        "property": "payload.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "device_interview",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "device_announce",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "device_leave",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 490,
+        "y": 460,
+        "wires": [
+            [
+                "44a3aabb8131a15b"
+            ],
+            [
+                "106e892cd5b15369"
+            ],
+            [
+                "04a70e960eff791a"
+            ]
+        ]
+    },
+    {
+        "id": "44a3aabb8131a15b",
+        "type": "switch",
+        "z": "02363c72749a98be",
+        "name": "device_interview",
+        "property": "payload.data.status",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "started",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "successful",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 690,
+        "y": 420,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "04a70e960eff791a",
+        "type": "change",
+        "z": "02363c72749a98be",
+        "name": "device_leave",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 670,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "106e892cd5b15369",
+        "type": "change",
+        "z": "02363c72749a98be",
+        "name": "device_announce",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 690,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bc35260b44f4813e",
+        "type": "switch",
+        "z": "02363c72749a98be",
+        "name": "响应",
+        "property": "payload.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "device_interview",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "device_announce",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "device_leave",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 490,
+        "y": 540,
+        "wires": [
+            [],
+            [],
+            []
+        ]
     }
 ]
