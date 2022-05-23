@@ -98,7 +98,7 @@
         "y": 120,
         "wires": [
             [
-                "27d8633f9cab1b6a"
+                "683f9c514d3dc3f8"
             ]
         ]
     },
@@ -107,7 +107,7 @@
         "type": "OS",
         "z": "a2231b8bf9e5da49",
         "name": "",
-        "x": 310,
+        "x": 450,
         "y": 120,
         "wires": [
             [
@@ -134,7 +134,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 450,
+        "x": 570,
         "y": 120,
         "wires": [
             [
@@ -146,7 +146,7 @@
         "id": "d1bcd2a97c869bd9",
         "type": "home-dir",
         "z": "a2231b8bf9e5da49",
-        "x": 600,
+        "x": 720,
         "y": 120,
         "wires": [
             [
@@ -173,7 +173,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 750,
+        "x": 870,
         "y": 120,
         "wires": [
             [
@@ -585,7 +585,7 @@
         "type": "function",
         "z": "a2231b8bf9e5da49",
         "name": "获取HD主题函数",
-        "func": "let common = global.get(\"common\");\nlet ids = global.get(\"data\").ids;\n\nlet getHDTopic = function(hd) {\n    let tpc = \"\";\n    if (!hd.from) hd.from = {};\n    if (!hd.from.type) hd.from.type = \"dsp\";\n    if (!hd.from.id) hd.from.id = ids.dsp;\n    if (!hd.to) hd.to = {};\n    if (!hd.to.type) hd.to.type = \"0\";\n    if (!hd.to.id) hd.to.id = \"0\";\n    if (!hd.entry) hd.entry = {};\n    if (!hd.entry.type) hd.entry.type = \"0\";\n    if (!hd.entry.id) hd.entry.id = \"0\";\n    if (!hd.sid) hd.sid = \"0\";\n    if (!hd.stp) hd.stp = 0;\n\n    tpc =   (ids.app ? ids.app : \"0\") + \"/\" + \n            (ids.dom ? ids.dom : \"0\") + \"/\" + \n            hd.from.type + \"/\" + hd.from.id + \"/\" + \n            hd.to.type + \"/\" + hd.to.id + \"/\" + \n            hd.entry.type + \"/\" + hd.entry.id;\n    return tpc;\n}\n\n\ncommon.getHDTopic = getHDTopic;\n\nreturn {payload: common};",
+        "func": "let common = global.get(\"common\");\nlet ids = global.get(\"data\").ids;\n\nlet getHDTopic = function(hd) {\n    let tpc = \"\";\n    if (!hd.from) hd.from = {};\n    if (!hd.from.type) hd.from.type = \"dsp\";\n    if (!hd.from.id) hd.from.id = ids.dsp;\n    if (!hd.to) hd.to = {};\n    if (!hd.to.type) hd.to.type = \"0\";\n    if (!hd.to.id) hd.to.id = \"0\";\n    if (!hd.entry) hd.entry = {};\n    if (!hd.entry.type) hd.entry.type = \"0\";\n    if (!hd.entry.id) hd.entry.id = \"0\";\n    if (!hd.sid) hd.sid = \"0\";\n    if (!hd.stp) hd.stp = 0;\n    if (!hd.version) hd.version = global.get(\"version\")\n\n    tpc =   (ids.app ? ids.app : \"0\") + \"/\" + \n            (ids.dom ? ids.dom : \"0\") + \"/\" + \n            hd.from.type + \"/\" + hd.from.id + \"/\" + \n            hd.to.type + \"/\" + hd.to.id + \"/\" + \n            hd.entry.type + \"/\" + hd.entry.id;\n    return tpc;\n}\n\n\ncommon.getHDTopic = getHDTopic;\n\nreturn {payload: common};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -727,6 +727,33 @@
         ]
     },
     {
+        "id": "683f9c514d3dc3f8",
+        "type": "change",
+        "z": "a2231b8bf9e5da49",
+        "name": "version",
+        "rules": [
+            {
+                "t": "set",
+                "p": "version",
+                "pt": "global",
+                "to": "0.0.1",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 320,
+        "y": 120,
+        "wires": [
+            [
+                "27d8633f9cab1b6a"
+            ]
+        ]
+    },
+    {
         "id": "7890d1121e8c800a",
         "type": "mqtt in",
         "z": "bbc788f5f9e280ee",
@@ -789,7 +816,7 @@
         "type": "debug",
         "z": "bbc788f5f9e280ee",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1197,7 +1224,7 @@
         "type": "function",
         "z": "bbc788f5f9e280ee",
         "name": "出生消息",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    from: {\n        type: \"dsp\",\n        id: data.ids.dsp\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: data.topics.pubs.dsp_evt_status\n    }\n};\n\nlet pld = {\n    id: data.ids.dsp,\n    online: 1\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet birth = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\nmsg.broker = msg.broker || {};\nmsg.broker.birth = birth;\n\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    from: {\n        type: \"dsp\",\n        id: data.ids.dsp\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: data.topics.pubs.dsp_evt_status\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dsp,\n    online: 1\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet birth = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\nmsg.broker = msg.broker || {};\nmsg.broker.birth = birth;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1880,7 +1907,7 @@
         "type": "debug",
         "z": "d080623d467caf8f",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,

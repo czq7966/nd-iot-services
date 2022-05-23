@@ -147,8 +147,7 @@
             "ids": {
                 "app": "{APP_ID}",
                 "dom": "{DOM_ID}",
-                "dsp": "{HOSTNAME}",
-                "mqtt": "{app}_{dom}_dsp_{dsp}"
+                "dsp": "{HOSTNAME}"
             }
         }
     },
@@ -239,7 +238,7 @@
         "global": {
             "data": {
                 "app": {
-                    "id": "{app}",
+                    "id": "ndiot",
                     "name": "网龙物联网",
                     "domains": {
                         "nd":{
@@ -324,8 +323,7 @@
             "common": {},
             "ids": {
                 "app": "{APP_ID}",
-                "dio": "{HOSTNAME}",
-                "mqtt": "{app}_dio_{dio}"
+                "dio": "{HOSTNAME}"
             }
         }
     }
