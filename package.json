@@ -4,31 +4,27 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "env": "cross-env IOT_CONFIG_FILE=\"E:/data/nd-iot-edge-gateway/docker/config.json\" IOT_APP_ID=ndiot IOT_DOM_ID=nd IOT_DSP_ID=nd IOT_PLF_ID=\"nd,xiaomi\" IOT_ENABLE_DSP=1 IOT_ENABLE_EDG=1 IOT_ENABLE_PLF=1",
-    "test": "npm run env && node ./test/test.js",
-    "mqtt:service:start": "systemctl start nd-iot-mqtt-broker",
-    "mqtt": "npm run mqtt:start || echo",
-    "nd:dispatcher:install": "cd ./data/dispatcher/nd && npm i || echo",
-    "nd:dispatcher:start": "node ./index.js -u ./data/dispatcher/nd || echo",
-    "nd:dispatcher:service:start": "systemctl start nd-iot-service-dsp",
-    "nd:edge:install": "cd ./data/edge/nd && npm i || echo",
-    "nd:edge:start": "node ./index.js -u ./data/edge/nd",
-    "nd:edge:service:start": "systemctl start nd-iot-service-edg",
+    "nd:mqtt:start": "node E:/data/mqtt-server/src/index.js",
+    "nd:mqtt:service:start": "systemctl start nd-iot-mqtt-broker",
+    
     "nd:dataio:install": "cd ./data/dataio/nd && npm i || echo",
     "nd:dataio:start": "node ./index.js -u ./data/dataio/nd",
     "nd:dataio:service:start": "systemctl start nd-iot-service-dio",
-    "nd:platform:install": "cd ./data/platform/nd && npm i || echo",
-    "nd:platform:start": "node ./index.js -u ./data/platform/nd",
-    "nd:install": "npm i && npm run nd:dispatcher:install && npm run nd:edge:install || echo",
-    "nd:update": "git stash && git fetch && git reset --hard && git checkout nd || echo",
-    "test:install": "cd ./data/test && npm i || echo",
-    "test:start": "node ./index.js -u ./data/test",
-    "edge:install": "npm i && cd data && npm i || echo",
-    "edge:start": "node ./index.js -u ./data",
-    "update": "git stash && git fetch && git reset --hard && git checkout nd || echo",
-    "edge": "npm run edge:update && npm run edge:install && npm run edge:start",
-    "start": "echo \"npm run mqtt && npm run edge\" &&  echo \"npm run edge:start\"",
-    "services:start": "npm run mqtt:service:start && npm run nd:dispatcher:service:start && npm run nd:edge:service:start && node ./src/http-server.js"
+
+    "nd:dispatcher:install": "cd ./data/dispatcher/nd && npm i || echo",
+    "nd:dispatcher:start": "node ./index.js -u ./data/dispatcher/nd || echo",
+    "nd:dispatcher:service:start": "systemctl start nd-iot-service-dsp",
+    
+    "nd:edge:install": "cd ./data/edge/nd && npm i || echo",
+    "nd:edge:start": "node ./index.js -u ./data/edge/nd",
+    "nd:edge:service:start": "systemctl start nd-iot-service-edg",
+    
+    "nd:platform:nd:install": "cd ./data/platform/nd && npm i || echo",
+    "nd:platform:nd:start": "node ./index.js -u ./data/platform/nd",
+    "nd:platform:nd:service:start": "systemctl start nd-iot-service-plf-nd",
+
+    "start": "node ./start.js"
+
   },
   "author": "CZQ",
   "license": "ISC",

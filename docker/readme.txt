@@ -27,6 +27,28 @@ EDG:
 set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& set IOT_ENABLE_PLF=1 && npm run nd:edge:start
 
 
+set IOT_APP_ID=ndiot&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& npm start
+
+
+set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_ENABLE_MQTT=1&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& npm start
+
+
+
+//环境变量
+IOT_CONFIG_FILE：配置文件
+IOT_CONFIG_FILE_FIRST：配置文件优先(1：优先)，仅DIO有效
+IOT_APP_ID：应用ID，例如：ndiot
+IOT_DOM_ID：租户ID，由配置文件决定
+IOT_DIO_ID：数据服务ID，默认: {HOSTNAME}
+IOT_DSP_ID：调度服务ID，默认: {HOSTNAME}
+IOT_EDG_ID：边缘服务ID，默认: {HOSTNAME}
+IOT_PLF_ND_ID：ND平台ID，默认: {HOSTNAME}
+IOT_ENABLE_DIO：启用数据服务，1：启用
+IOT_ENABLE_DSP：启用调度服务，1：启用
+IOT_ENABLE_EDG：启用边缘服务，1：启用
+IOT_ENABLE_PLF_ND：启用边缘服务，1：启用
+
+
 docker run -d \
 -v /e/iotdata:/data  \
 -p 11880:11880 \
@@ -43,5 +65,6 @@ docker run -d \
 -e IOT_ENABLE_PLF=1 \
 -e IOT_ENABLE_PLF_ND=0  \
 -e IOT_ENABLE_PLF_XIAOAI=0 \
+
 registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.2 \
 /bin/bash

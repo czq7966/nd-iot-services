@@ -585,7 +585,7 @@
         "type": "function",
         "z": "a2231b8bf9e5da49",
         "name": "获取HD主题函数",
-        "func": "let common = global.get(\"common\");\nlet ids = global.get(\"data\").ids;\n\nlet getHDTopic = function(hd) {\n    let tpc = \"\";\n    if (!hd.from) hd.from = {};\n    if (!hd.from.type) hd.from.type = \"dsp\";\n    if (!hd.from.id) hd.from.id = ids.dsp;\n    if (!hd.to) hd.to = {};\n    if (!hd.to.type) hd.to.type = \"0\";\n    if (!hd.to.id) hd.to.id = \"0\";\n    if (!hd.entry) hd.entry = {};\n    if (!hd.entry.type) hd.entry.type = \"0\";\n    if (!hd.entry.id) hd.entry.id = \"0\";\n    if (!hd.sid) hd.sid = \"0\";\n    if (!hd.stp) hd.stp = 0;\n    if (!hd.version) hd.version = global.get(\"version\")\n\n    tpc =   (ids.app ? ids.app : \"0\") + \"/\" + \n            (ids.dom ? ids.dom : \"0\") + \"/\" + \n            hd.from.type + \"/\" + hd.from.id + \"/\" + \n            hd.to.type + \"/\" + hd.to.id + \"/\" + \n            hd.entry.type + \"/\" + hd.entry.id;\n    return tpc;\n}\n\n\ncommon.getHDTopic = getHDTopic;\n\nreturn {payload: common};",
+        "func": "let common = global.get(\"common\");\nlet ids = global.get(\"data\").ids;\n\nlet getHDTopic = function(hd) {\n    let tpc = \"\";\n    if (!hd.from) hd.from = {};\n    if (!hd.from.type) hd.from.type = \"dsp\";\n    if (!hd.from.id) hd.from.id = ids.dsp;\n    if (!hd.to) hd.to = {};\n    if (!hd.to.type) hd.to.type = \"0\";\n    if (!hd.to.id) hd.to.id = \"0\";\n    if (!hd.entry) hd.entry = {};\n    if (!hd.entry.type) hd.entry.type = \"0\";\n    if (!hd.entry.id) hd.entry.id = \"0\";\n    if (!hd.sid) hd.sid = \"0\";\n    if (!hd.stp) hd.stp = 0;\n    if (!hd.version) hd.version = global.get(\"version\");\n    \n    let app_id = hd.ids && hd.ids.app_id || ids.app;\n    let dom_id = hd.ids && hd.ids.dom_id || ids.dom;\n\n    tpc =   (app_id ? app_id : \"0\") + \"/\" + \n            (dom_id ? dom_id : \"0\") + \"/\" + \n            hd.from.type + \"/\" + hd.from.id + \"/\" + \n            hd.to.type + \"/\" + hd.to.id + \"/\" + \n            hd.entry.type + \"/\" + hd.entry.id;\n    return tpc;\n}\n\n\ncommon.getHDTopic = getHDTopic;\n\nreturn {payload: common};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -783,10 +783,9 @@
             "1188b78d61e6e2a8"
         ],
         "x": 125,
-        "y": 140,
+        "y": 200,
         "wires": [
             [
-                "50a434e93c6b95ba",
                 "8f351621757399ad"
             ]
         ]
@@ -796,7 +795,7 @@
         "type": "function",
         "z": "bbc788f5f9e280ee",
         "name": "订阅主题",
-        "func": "let data = global.get(\"data\")\nlet topics = data.topics;\nlet ids = data.ids;\nif (ids.app && ids.dom) {\n    node.send({\n            action: \"subscribe\",\n            topic: Object.values(topics.subs)\n    })\n    \n    node.send({\n            action: \"subscribe\",\n            topic: Object.values(topics.services)\n    })    \n} else {\n    node.send({\n            action: \"subscribe\",\n            topic: topics.services.dsp_svc_login\n    })      \n}\n\n\n\n",
+        "func": "let data = global.get(\"data\")\nlet topics = data.topics;\nlet ids = data.ids;\nif (ids.app && ids.dom) {\n    node.send({\n            action: \"unsubscribe\",\n            topic: Object.values(topics.subs)\n    })\n    \n    node.send({\n            action: \"unsubscribe\",\n            topic: Object.values(topics.services)\n    })  \n    \n    node.send({\n            action: \"subscribe\",\n            topic: Object.values(topics.subs)\n    })\n    \n    node.send({\n            action: \"subscribe\",\n            topic: Object.values(topics.services)\n    })    \n} else {\n    node.send({\n            action: \"unsubscribe\",\n            topic: topics.services.dsp_svc_login\n    })  \n    \n    node.send({\n            action: \"subscribe\",\n            topic: topics.services.dsp_svc_login\n    })      \n}\n\n\n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -995,7 +994,7 @@
         "type": "debug",
         "z": "bbc788f5f9e280ee",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1215,7 +1214,8 @@
         "wires": [
             [
                 "4135b0363341ce52",
-                "7890d1121e8c800a"
+                "7890d1121e8c800a",
+                "50a434e93c6b95ba"
             ]
         ]
     },
@@ -1734,7 +1734,9 @@
         "x": 300,
         "y": 460,
         "wires": [
-            []
+            [
+                "b33c8592f583637c"
+            ]
         ]
     },
     {
@@ -1821,8 +1823,8 @@
         "links": [
             "488accc4124e1c0a"
         ],
-        "x": 935,
-        "y": 380,
+        "x": 945,
+        "y": 420,
         "wires": []
     },
     {
@@ -1917,6 +1919,50 @@
         "x": 670,
         "y": 260,
         "wires": []
+    },
+    {
+        "id": "b33c8592f583637c",
+        "type": "switch",
+        "z": "d080623d467caf8f",
+        "name": "",
+        "property": "payload.hd.entry.id",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "login",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 460,
+        "wires": [
+            [
+                "5134cad4c3fec06a"
+            ]
+        ]
+    },
+    {
+        "id": "5134cad4c3fec06a",
+        "type": "function",
+        "z": "d080623d467caf8f",
+        "name": "登入请求处理",
+        "func": "let common = global.get(\"common\");\nlet data = global.get(\"data\")\nlet ids = data.ids;\nlet hd = msg.payload.hd;\n\nlet edg = common.dispatch.dispatchDevice(hd.from.id);\n\n\nlet temp = hd.from;\nhd.from = hd.to;\nhd.to = temp;\nhd.stp = 1;\ndelete hd.tm;\ndelete hd.tms;\ndelete hd.tpc;\n\nlet pld = {\n    app_id: ids.app,\n    dom_id: ids.dom,\n    dsp_id: ids.dsp,\n    edg_id: edg && edg.id\n}\nmsg.payload.pld = pld;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 460,
+        "wires": [
+            [
+                "5829f7425c50b7c0"
+            ]
+        ]
     },
     {
         "id": "2ff5101df1ab6584",
@@ -2118,7 +2164,7 @@
         "type": "function",
         "z": "f7e96a32e56d72eb",
         "name": "设备",
-        "func": "let common = global.get(\"common\");\nlet data = global.get(\"data\")\nlet ids = data.ids;\nlet hd = msg.payload.hd;\n\nlet edg = common.dispatch.dispatchDevice(hd.from.id);\n\n\nlet temp = hd.from;\nhd.from = hd.to;\nhd.to = temp;\nhd.stp = 1;\ndelete hd.tm;\ndelete hd.tms;\ndelete hd.tpc;\n\nlet pld = {\n    app: ids.app,\n    dom: ids.dom,\n    dsp: ids.dsp,\n    edg: edg && edg.id\n}\nmsg.payload.pld = pld;\n\nreturn msg;",
+        "func": "let common = global.get(\"common\");\nlet data = global.get(\"data\")\nlet ids = data.ids;\nlet hd = msg.payload.hd;\n\nlet edg = common.dispatch.dispatchDevice(hd.from.id);\n\n\nlet temp = hd.from;\nhd.from = hd.to;\nhd.to = temp;\nhd.stp = 1;\ndelete hd.tm;\ndelete hd.tms;\ndelete hd.tpc;\n\nlet pld = {\n    app_id: ids.app,\n    dom_id: ids.dom,\n    dsp_id: ids.dsp,\n    edg_id: edg && edg.id\n}\nmsg.payload.pld = pld;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",

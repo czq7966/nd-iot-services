@@ -815,7 +815,6 @@
         "y": 260,
         "wires": [
             [
-                "589883c5ddd06e17",
                 "8f351621757399ad"
             ]
         ]
@@ -825,7 +824,7 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "订阅主题",
-        "func": "let data = global.get(\"data\")\nlet topics = data.topics;\nlet ids = data.ids;\nif (ids.app && ids.dom && ids.dsp) {\n    node.send({\n            action: \"subscribe\",\n            topic: Object.values(topics.subs)\n    })\n    \n    node.send({\n            action: \"subscribe\",\n            topic: Object.values(topics.services)\n    })\n  \n} else {\n    node.send({\n            action: \"subscribe\",\n            topic: topics.services.edg_svc_login\n    })      \n}\n\n",
+        "func": "let data = global.get(\"data\")\nlet topics = data.topics;\nlet ids = data.ids;\nif (ids.app && ids.dom && ids.dsp) {\n    node.send({\n            action: \"unsubscribe\",\n            topic: Object.values(topics.subs)\n    })\n    node.send({\n            action: \"unsubscribe\",\n            topic: Object.values(topics.services)\n    })    \n    \n    node.send({\n            action: \"subscribe\",\n            topic: Object.values(topics.subs)\n    })\n    \n    node.send({\n            action: \"subscribe\",\n            topic: Object.values(topics.services)\n    })\n  \n} else {\n    node.send({\n            action: \"subscribe\",\n            topic: topics.services.edg_svc_login\n    })      \n}\n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1087,6 +1086,7 @@
         "wires": [
             [
                 "6b6a7c7b19998294",
+                "589883c5ddd06e17",
                 "0f989c13f4e0c1cb"
             ]
         ]
@@ -3301,7 +3301,8 @@
         "y": 940,
         "wires": [
             [
-                "8e73165886e9d694"
+                "8e73165886e9d694",
+                "bc052bb98a2655eb"
             ]
         ]
     },
@@ -3369,7 +3370,8 @@
         "y": 1000,
         "wires": [
             [
-                "c9eb4957d50481a9"
+                "c9eb4957d50481a9",
+                "57c2e6e63e4d9cb9"
             ]
         ]
     },
@@ -3443,6 +3445,38 @@
         ],
         "x": 985,
         "y": 780,
+        "wires": []
+    },
+    {
+        "id": "57c2e6e63e4d9cb9",
+        "type": "debug",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 970,
+        "y": 1100,
+        "wires": []
+    },
+    {
+        "id": "bc052bb98a2655eb",
+        "type": "debug",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 1060,
         "wires": []
     },
     {
@@ -4609,7 +4643,7 @@
         "type": "function",
         "z": "95249172.4f419",
         "name": "写备份文件",
-        "func": "let device = msg.device;\nlet z2m = device.z2m.z2m;\nlet result = true;\nObject.keys(z2m.datafile).every(key => {\n    if (key != z2m.configfile && (!z2m.backfiles.hasOwnProperty(key))) {\n        let pld = z2m.datafile[key];\n        z2m.backfiles[key] = pld;\n        if (pld) {\n            result = false;\n            let _msg = {\n                filename: z2m.datadir + \"/\" + key,\n                payload: pld,\n                shortfilename: key,\n                device: device\n            }\n            node.send([_msg, null])\n            return false;\n        }\n    }\n    \n    return true;\n    \n})\n\nif (result) {\n    //加载完成\n    return [null, msg]\n    \n}\n",
+        "func": "let device = msg.device;\nlet z2m = device.z2m.z2m;\nlet result = true;\nObject.keys(z2m.datafile || {}).every(key => {\n    if (key != z2m.configfile && (!z2m.backfiles.hasOwnProperty(key))) {\n        let pld = z2m.datafile[key];\n        z2m.backfiles[key] = pld;\n        if (pld) {\n            result = false;\n            let _msg = {\n                filename: z2m.datadir + \"/\" + key,\n                payload: pld,\n                shortfilename: key,\n                device: device\n            }\n            node.send([_msg, null])\n            return false;\n        }\n    }\n    \n    return true;\n    \n})\n\nif (result) {\n    //加载完成\n    return [null, msg]\n    \n}\n",
         "outputs": 2,
         "noerr": 0,
         "initialize": "",
@@ -4738,9 +4772,7 @@
             [
                 "39026b74247d659f"
             ],
-            [
-                "bc35260b44f4813e"
-            ]
+            []
         ]
     },
     {
@@ -4996,33 +5028,73 @@
         "id": "bc35260b44f4813e",
         "type": "switch",
         "z": "02363c72749a98be",
-        "name": "响应",
+        "name": "服务响应",
         "property": "payload.type",
         "propertyType": "msg",
         "rules": [
             {
                 "t": "eq",
-                "v": "device_interview",
+                "v": "response/permit_join",
                 "vt": "str"
             },
             {
                 "t": "eq",
-                "v": "device_announce",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "device_leave",
+                "v": "response/device/remove",
                 "vt": "str"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 3,
-        "x": 490,
-        "y": 540,
+        "outputs": 2,
+        "x": 500,
+        "y": 600,
         "wires": [
             [],
+            []
+        ]
+    },
+    {
+        "id": "cdc5c51826b2cc7c",
+        "type": "change",
+        "z": "02363c72749a98be",
+        "name": "device_joined",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 680,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6421c03565b2f084",
+        "type": "switch",
+        "z": "02363c72749a98be",
+        "name": "服务请求",
+        "property": "payload.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "request/permit_join",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "request/device/remove",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 500,
+        "y": 660,
+        "wires": [
             [],
             []
         ]

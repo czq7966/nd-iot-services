@@ -241,7 +241,7 @@
                     "id": "ndiot",
                     "name": "网龙物联网",
                     "domains": {
-                        "nd":{
+                        "test":{
                             "id": "{dom}",
                             "name": "网龙公司",
                             "enabled": 1,
@@ -261,6 +261,13 @@
                                     },
                                     "devices": {}
                                 }                                                                              
+                            },
+                            "reg_devices": {
+                                "ESP8266x00068a16": "ESP8266x00068a16",
+                                "ESP8266x0006dbe5": "ESP8266x0006dbe5",
+                                "ESP8266x0006cf1d": "ESP8266x0006cf1d",
+                                "ESP8266x00c17ca1": "ESP8266x00c17ca1",
+                                "ESP8266x0098b096": "ESP8266x0098b096"
                             }
                         },
                         "fr": {},
