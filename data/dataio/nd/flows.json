@@ -316,7 +316,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "获取HD主题函数",
-        "func": "let common = global.get(\"common\");\nlet gids = global.get(\"data\").ids;\n\nlet getHDTopic = function(hd) {\n    let tpc = \"\";\n    let ids = hd.ids || gids;\n    if (!hd.from) hd.from = {};\n    if (!hd.from.type) hd.from.type = \"dio\";\n    if (!hd.from.id) hd.from.id = ids.dio || gids.dio;\n    if (!hd.to) hd.to = {};\n    if (!hd.to.type) hd.to.type = \"0\";\n    if (!hd.to.id) hd.to.id = \"0\";\n    if (!hd.entry) hd.entry = {};\n    if (!hd.entry.type) hd.entry.type = \"0\";\n    if (!hd.entry.id) hd.entry.id = \"0\";\n    if (!hd.sid) hd.sid = \"0\";\n    if (!hd.stp) hd.stp = 0;\n    if (!hd.version) hd.version = global.get(\"version\")\n\n\n    tpc =   (ids.app ? ids.app : \"0\") + \"/\" + \n            (ids.dom ? ids.dom : \"0\") + \"/\" + \n            hd.from.type + \"/\" + hd.from.id + \"/\" + \n            hd.to.type + \"/\" + hd.to.id + \"/\" + \n            hd.entry.type + \"/\" + hd.entry.id;\n    return tpc;\n}\n\n\ncommon.getHDTopic = getHDTopic;\n\nreturn {payload: common};",
+        "func": "let common = global.get(\"common\");\nlet ids = global.get(\"data\").ids;\n\nlet getHDTopic = function(hd) {\n    let tpc = \"\";\n    // let ids = hd.ids || gids;\n    if (!hd.pref) hd.pref = {};\n    if (!hd.pref.app) hd.pref.app = (ids.app ? ids.app : \"0\");\n    if (!hd.pref.dom) hd.pref.dom = (ids.dom ? ids.dom : \"0\");\n    \n    if (!hd.from) hd.from = {};\n    if (!hd.from.type) hd.from.type = \"dio\";\n    if (!hd.from.id) hd.from.id = ids.dio || gids.dio;\n    if (!hd.to) hd.to = {};\n    if (!hd.to.type) hd.to.type = \"0\";\n    if (!hd.to.id) hd.to.id = \"0\";\n    if (!hd.entry) hd.entry = {};\n    if (!hd.entry.type) hd.entry.type = \"0\";\n    if (!hd.entry.id) hd.entry.id = \"0\";\n    if (!hd.sid) hd.sid = \"0\";\n    if (!hd.stp) hd.stp = 0;\n    if (!hd.version) hd.version = global.get(\"version\")\n\n\n    tpc =   hd.pref.app + \"/\" + hd.pref.dom + \"/\" + \n            hd.from.type + \"/\" + hd.from.id + \"/\" + \n            hd.to.type + \"/\" + hd.to.id + \"/\" + \n            hd.entry.type + \"/\" + hd.entry.id;\n    return tpc;\n}\n\n\ncommon.getHDTopic = getHDTopic;\n\nreturn {payload: common};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -373,7 +373,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据补全",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet fixUpData = function() {\n    let doms = data.app.domains;\n    Object.keys(doms).forEach(domKey => {\n        let dom = doms[domKey];\n        dom.id = domKey;\n        dom.app = data.app;\n        let dsps = dom.dispatchers || {};\n        dom.dispatchers = dsps;\n        dom.edges = dom.edges || {}\n        dom.devices = dom.devices || {}\n        Object.keys(dsps).forEach(dspKey => {\n            let dsp = dsps[dspKey];\n            dsp.id = dspKey;\n            dsp.domain = dom;\n\n            data.dispatchers[dspKey] = dsp;\n            let edgs = dsp.edges || {};\n            dsp.edges = edgs;\n            Object.keys(edgs).forEach(edgKey => {\n                let edg = edgs[edgKey];\n                edg.id = edgKey;\n                edg.dispatcher = dsp;\n                edg.devices = {};\n                dom.edges[edgKey] = edg;\n                data.edges[edgKey] = edg;\n                // let devs = edg.devices || {};\n                // edg.devices = devs;\n                // Object.keys(devs).forEach(devKey => {\n                //     let dev = devs[devKey];\n                //     dev.id = devKey;\n                //     dev.edge = edg;\n                //     data.devices[devKey] = dev;\n                // })\n                \n            })\n            \n        })\n        \n        //注册设备\n        let regDevs = dom.reg_devices || {};\n        dom.reg_devices = regDevs;\n        Object.keys(regDevs).forEach(devKey => {\n            let devVal = regDevs[devKey] || {};\n            if (typeof devVal == \"string\") {\n                devVal = {\n                    id: devKey,\n                    name: devVal\n                }\n            } else {\n                devVal.id = devKey\n            }\n            dom.devices[devKey] = devVal;\n            devVal.domain = dom;\n            data.reg_devices[devKey] = devVal;\n            data.devices[devKey] = devVal;\n        })\n    })\n}\n\ncommon.fixUpData = fixUpData;\n\ncommon.expandTopic.expand(data.ids);   \ncommon.expandTopic.expand(data.topics);\ndata.app.id = data.ids.app;\n\ncommon.fixUpData();\ncommon.keyToObjId(data.domains);\ncommon.keyToObjId(data.dispatchers);\ncommon.keyToObjId(data.edges);\ncommon.keyToObjId(data.devices);\n\n\n\nreturn {payload: data};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet fixUpData = function() {\n    let doms = data.app.domains;\n    Object.keys(doms).forEach(domKey => {\n        let dom = doms[domKey];\n        dom.id = domKey;\n        dom.app = data.app;\n        let dsps = dom.dispatchers || {};\n        dom.dispatchers = dsps;\n        dom.edges = dom.edges || {}\n        dom.devices = dom.devices || {}\n        Object.keys(dsps).forEach(dspKey => {\n            let dsp = dsps[dspKey];\n            dsp.id = dspKey;\n            dsp.domain = dom;\n\n            data.dispatchers[dspKey] = dsp;\n            let edgs = dsp.edges || {};\n            dsp.edges = edgs;\n            Object.keys(edgs).forEach(edgKey => {\n                let edg = edgs[edgKey];\n                edg.id = edgKey;\n                edg.dispatcher = dsp;\n                edg.devices = edg.devices || {};\n                dom.edges[edgKey] = edg;\n                data.edges[edgKey] = edg;\n                // let devs = edg.devices || {};\n                // edg.devices = devs;\n                // Object.keys(devs).forEach(devKey => {\n                //     let dev = devs[devKey];\n                //     dev.id = devKey;\n                //     dev.edge = edg;\n                //     data.devices[devKey] = dev;\n                // })\n                \n            })\n            \n        })\n        \n        //注册设备\n        let regDevs = dom.reg_devices || {};\n        dom.reg_devices = regDevs;\n        Object.keys(regDevs).forEach(devKey => {\n            let devVal = regDevs[devKey] || {};\n            if (typeof devVal == \"string\") {\n                devVal = {\n                    id: devKey,\n                    name: devVal\n                }\n            } else {\n                devVal.id = devKey\n            }\n            let dev = dom.devices[devKey] || devVal;\n            dom.devices[devKey] = dev;\n            dev.domain = dom;\n            data.reg_devices[devKey] = dev;\n            data.devices[devKey] = dev;\n        })\n    })\n}\n\ncommon.fixUpData = fixUpData;\n\ncommon.expandTopic.expand(data.ids);   \ncommon.expandTopic.expand(data.topics);\ndata.app.id = data.ids.app;\n\ncommon.fixUpData();\ncommon.keyToObjId(data.domains);\ncommon.keyToObjId(data.dispatchers);\ncommon.keyToObjId(data.edges);\ncommon.keyToObjId(data.devices);\n\n\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -752,7 +752,7 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "缓存数据",
-        "func": "let common = global.get(\"common\");\nif (common.cachePayload(msg.payload)) {\n    return [msg, null];\n} else {\n    return [null, msg];\n}",
+        "func": "msg.topics = msg.topic.split(\"/\");\nlet hd = msg.payload.hd;\nif (!hd.pref) {\n    hd.pref = {\n        app: msg.topics[0],\n        dom: msg.topics[1]\n    }\n}\n\nlet common = global.get(\"common\");\nif (common.cachePayload(msg.payload)) {\n    return [msg, null];\n} else {\n    return [null, msg];\n}",
         "outputs": 2,
         "noerr": 0,
         "initialize": "",
@@ -1305,11 +1305,16 @@
                 "t": "eq",
                 "v": "find_ndiot_z2m_datafile",
                 "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "find_ndiot_get_domain",
+                "vt": "str"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 2,
+        "outputs": 3,
         "x": 270,
         "y": 540,
         "wires": [
@@ -1318,6 +1323,9 @@
             ],
             [
                 "8f366ee3986be4d3"
+            ],
+            [
+                "ad33114774218383"
             ]
         ]
     },
@@ -1454,6 +1462,56 @@
         "wires": []
     },
     {
+        "id": "4b05f49dd8af684c",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "获取租户数据",
+        "func": "let _msg = {};\n_msg.topic = \"find_ndiot_get_domain\";\n_msg.collection = \"ndiot_config\";\n_msg.operation = \"find\";\n_msg.limit = 1;\n_msg.payload = {\n    \"dataio.global.data.app.id\": env.get(\"IOT_APP_ID\")\n}\n_msg._payload = msg.payload;\nreturn _msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 340,
+        "wires": [
+            [
+                "1d7c8bf676bfd405"
+            ]
+        ]
+    },
+    {
+        "id": "46c7be7c38c2cddc",
+        "type": "link in",
+        "z": "63bcc9db2b38df75",
+        "name": "获取租户数据",
+        "links": [],
+        "x": 115,
+        "y": 340,
+        "wires": [
+            [
+                "4b05f49dd8af684c"
+            ]
+        ]
+    },
+    {
+        "id": "ad33114774218383",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "租户数据返回",
+        "func": "if (msg.payload && msg.payload[0]) {\n    let config = msg.payload[0];\n    let dataio = config.dataio;\n    let app = dataio.global.data.app;\n    let doms = app.domain;\n    let hd = msg._payload.hd;\n    let pld = msg._payload.pld;\n    let result;\n\n    Object.keys(doms).every(domId => {\n        let dom = doms[domId] || {};\n        if (pld.type == \"dsp\" || pld.type == \"edg\") {\n            let dsps = dom.dispatchers || {};\n            Object.keys(dsps).every(dspId => {\n                if (pld.type == \"dsp\") {\n                    if (dspId == pld.id) {\n                        result = domId;\n                    }\n                } \n                \n                if (pld.type == \"edg\") {\n                    let dsp = dsps[dspId] || {};\n                    let edgs = dsp.edges || {};\n                    Object.keys(edgs).every(edgId => {\n                        if (edgId == pld.id) {\n                            result = domId;\n                        }\n                        return !result;\n                    })\n                }\n                \n                return !result;\n            })\n        }   \n        \n        if (pld.type == \"dev\") {\n            let devs = dom.reg_devices || {};\n            Object.keys(devs).every(devId => {\n                if (devId == pld.id) {\n                    result = domId;\n                }\n                return !result;\n            })\n        }        \n        return !result;\n        \n    })\n    \n    if (result) {\n        let _hd = Object.assign({}, hd);\n        let pld = Object.assign({}, pld);\n        delete _hd.from;\n        _hd.to = hd.from;\n        _hd.stp = 1;\n        _pld.dom_id = result;\n        return {\n            payload: {\n                hd: _hd,\n                pld: _pld\n            }\n        }\n    }   \n\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
         "id": "2ff5101df1ab6584",
         "type": "link in",
         "z": "f7e96a32e56d72eb",
@@ -1516,7 +1574,7 @@
         "type": "function",
         "z": "f7e96a32e56d72eb",
         "name": "调度",
-        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet dsp = data.dispatchers[hd.from.id];\nif (dsp && dsp.enabled) {\n    let topics = hd.tpc.split(\"/\");\n    let _hd = Object.assign({}, hd);\n    _hd.ids = _hd.ids || {};\n    _hd.ids.app = topics[0];\n    _hd.ids.dom = topics[1];\n    _hd.ids.dsp = dsp.id;\n    _hd.ids.dio = data.ids.dio;\n    \n    \n    delete _hd.from;\n    _hd.to = hd.from;\n    _hd.stp = 1;\n    \n    let _pld = {\n        app_id : dsp.domain.app.id,\n        dom_id : dsp.domain.id,\n        dsp_id : dsp.id\n    }\n    return {\n        payload: {\n            hd: _hd,\n            pld: _pld\n        }\n    }\n    \n}\n    ",
+        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet dsp = data.dispatchers[hd.from.id];\nif (dsp && dsp.enabled) {\n    let topics = hd.tpc.split(\"/\");\n    let _hd = Object.assign({}, hd);\n    // _hd.ids = _hd.ids || {};\n    // _hd.ids.app = topics[0];\n    // _hd.ids.dom = topics[1];\n    // _hd.ids.dsp = dsp.id;\n    // _hd.ids.dio = data.ids.dio;\n    \n    \n    delete _hd.from;\n    _hd.to = hd.from;\n    _hd.stp = 1;\n    \n    let _pld = {\n        app_id : dsp.domain.app.id,\n        dom_id : dsp.domain.id,\n        dsp_id : dsp.id\n    }\n    return {\n        payload: {\n            hd: _hd,\n            pld: _pld\n        }\n    }\n    \n}\n    ",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1549,7 +1607,7 @@
         "type": "function",
         "z": "f7e96a32e56d72eb",
         "name": "边缘",
-        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet edg = data.edges[hd.from.id];\nlet dsp = edg.dispatcher;\nif (edg && edg.enabled && dsp && dsp.enabled) {\n    let topics = hd.tpc.split(\"/\");\n    let _hd = Object.assign({}, hd);\n    _hd.ids = _hd.ids || {};\n    _hd.ids.app = topics[0];\n    _hd.ids.dom = topics[1];\n    _hd.ids.dsp = dsp.id;\n    _hd.ids.edg = edg.id;\n    _hd.ids.dio = data.ids.dio;\n    \n    \n    delete _hd.from;\n    _hd.to = hd.from;\n    _hd.stp = 1;\n    \n    let _pld = {\n        app_id : dsp.domain.app.id,\n        dom_id : dsp.domain.id,\n        dsp_id : dsp.id,\n        edg_id : edg.id\n    }\n    return {\n        payload: {\n            hd: _hd,\n            pld: _pld\n        }\n    }\n    \n}\n    ",
+        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet edg = data.edges[hd.from.id];\nlet dsp = edg.dispatcher;\nif (edg && edg.enabled && dsp && dsp.enabled) {\n    let topics = hd.tpc.split(\"/\");\n    let _hd = Object.assign({}, hd);\n    // _hd.ids = _hd.ids || {};\n    // _hd.ids.app = topics[0];\n    // _hd.ids.dom = topics[1];\n    // _hd.ids.dsp = dsp.id;\n    // _hd.ids.edg = edg.id;\n    // _hd.ids.dio = data.ids.dio;\n    \n    \n    delete _hd.from;\n    _hd.to = hd.from;\n    _hd.stp = 1;\n    \n    let _pld = {\n        app_id : dsp.domain.app.id,\n        dom_id : dsp.domain.id,\n        dsp_id : dsp.id,\n        edg_id : edg.id\n    }\n    return {\n        payload: {\n            hd: _hd,\n            pld: _pld\n        }\n    }\n    \n}\n    ",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1625,11 +1683,16 @@
                 "t": "eq",
                 "v": "set_z2m_datafile",
                 "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "dio_svc_get_domain",
+                "vt": "str"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 3,
+        "outputs": 4,
         "x": 490,
         "y": 340,
         "wires": [
@@ -1641,6 +1704,9 @@
             ],
             [
                 "58a17b926cb4d96d"
+            ],
+            [
+                "8578476a17c75431"
             ]
         ]
     },
@@ -1931,6 +1997,23 @@
         "x": 1295,
         "y": 420,
         "wires": []
+    },
+    {
+        "id": "8578476a17c75431",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "获取租户",
+        "func": "",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 700,
+        "wires": [
+            []
+        ]
     },
     {
         "id": "847eb4a013500880",

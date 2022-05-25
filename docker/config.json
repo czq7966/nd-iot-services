@@ -288,6 +288,7 @@
                             },
                             "services":{
                                 "dio_svc_login": "+/+/+/+/0/0/svc/login",
+                                "dio_svc_get_domain": "{app}/+/+/+/+/+/svc/get_domain",
                                 "edg_svc_get_z2m_datafile": "{app}/+/edg/+/+/+/svc/get_z2m_datafile",                                        
                                 "edg_svc_set_z2m_datafile": "{app}/+/edg/+/+/+/svc/set_z2m_datafile"
                             }
