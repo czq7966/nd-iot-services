@@ -23,6 +23,8 @@
     "nd:platform:nd:start": "node ./index.js -u ./data/platform/nd",
     "nd:platform:nd:service:start": "systemctl start nd-iot-service-plf-nd",
 
+    "nd:install": "npm run nd:dataio:install && nd:dispatcher:install && nd:edge:install",
+
     "start": "node ./start.js"
 
   },
