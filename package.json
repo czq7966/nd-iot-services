@@ -7,23 +7,23 @@
     "nd:mqtt:start": "node E:/data/mqtt-server/src/index.js",
     "nd:mqtt:service:start": "systemctl start nd-iot-mqtt-broker",
     
-    "nd:dataio:install": "cd ./data/dataio/nd && npm i || echo",
+    "nd:dataio:install": "cd ./data/dataio/nd && npm i",
     "nd:dataio:start": "node ./index.js -u ./data/dataio/nd",
     "nd:dataio:service:start": "systemctl start nd-iot-service-dio",
 
-    "nd:dispatcher:install": "cd ./data/dispatcher/nd && npm i || echo",
-    "nd:dispatcher:start": "node ./index.js -u ./data/dispatcher/nd || echo",
+    "nd:dispatcher:install": "cd ./data/dispatcher/nd && npm i",
+    "nd:dispatcher:start": "node ./index.js -u ./data/dispatcher/nd",
     "nd:dispatcher:service:start": "systemctl start nd-iot-service-dsp",
     
-    "nd:edge:install": "cd ./data/edge/nd && npm i || echo",
+    "nd:edge:install": "cd ./data/edge/nd && npm i",
     "nd:edge:start": "node ./index.js -u ./data/edge/nd",
     "nd:edge:service:start": "systemctl start nd-iot-service-edg",
     
-    "nd:platform:nd:install": "cd ./data/platform/nd && npm i || echo",
+    "nd:platform:nd:install": "cd ./data/platform/nd && npm i",
     "nd:platform:nd:start": "node ./index.js -u ./data/platform/nd",
     "nd:platform:nd:service:start": "systemctl start nd-iot-service-plf-nd",
 
-    "nd:install": "npm run nd:dataio:install && nd:dispatcher:install && nd:edge:install",
+    "nd:install": "npm run nd:dataio:install && npm run nd:dispatcher:install && npm run nd:edge:install",
 
     "start": "node ./start.js"
 
