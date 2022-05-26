@@ -28,12 +28,12 @@ let updateCode = (codedir, sync) => {
 }
 
 let updateZ2M = (sync) => {
-    let codeDir = path.join(path.dirname, "../zigbee2mqtt");
+    let codeDir = path.join(__dirname, "../zigbee2mqtt");
     updateCode(codeDir, sync);
 }
 
 let updateServices = (sync) => {
-    let codeDir = path.dirname;
+    let codeDir = path.join(__dirname);
     updateCode(codeDir, sync);
 }
 
