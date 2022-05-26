@@ -1,3 +1,5 @@
+const path = require("path");
+
 let exec = require("child_process").exec;
 let execSync = require("child_process").execSync;
 let spawn = require("child_process").spawn;
@@ -8,20 +10,31 @@ let isWin32 = () => {
 }
 
 //更新代码
-let updateCode = (sync) => {
+let updateCode = (codedir, sync) => {
+    console.log(codeDir);
+
     let branch = process.env.IOT_CODE_BRANCH || "dev";
-    let cmd = "git fetch && git reset --hard && git checkout origin/" + branch + " || echo";
+    let cmd = "cd " + codeDir +" && git fetch && git reset --hard && git checkout origin/" + branch + " || echo";
     if (sync) {
         execSync(cmd, {stdio: 'inherit'})
     } else {
         exec(cmd, function(error, stdout, stderr) {
             if (error || stderr)
-                console.error("mqtt service error: %s , %s!", error, stderr);
+                console.error("update code error: %s, %s , %s!", codedir, error, stderr);
             if (stdout)
                 console.log("%s", stdout );
         });         
     }
+}
 
+let updateZ2M = (sync) => {
+    let codeDir = path.join(path.dirname, "../zigbee2mqtt");
+    updateCode(codeDir, sync);
+}
+
+let updateServices = (sync) => {
+    let codeDir = path.dirname;
+    updateCode(codeDir, sync);
 }
 
 //本地MQTT服务
@@ -124,7 +137,8 @@ let startPLF_ND = () => {
 }
 
 if (process.env.IOT_ENABLE_AUTO_UPDATE == "1") {
-    updateCode(true);
+    updateZ2M(true);
+    updateServices(true);
 }
 
 if (process.env.IOT_ENABLE_MQTT == "1") {
