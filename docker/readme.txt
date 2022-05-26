@@ -1,5 +1,5 @@
 服务 docker 镜像 生成命令：
-docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.1 .
+docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.2 .
 
 本地运行测试
 docker run -d -p 11880:11880 -p 11881:11881 -p 11882:11882 registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.1 
@@ -30,7 +30,7 @@ set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_ENA
 set IOT_APP_ID=ndiot&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& npm start
 
 
-set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_ENABLE_MQTT=1&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& npm start
+set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_APP_ID=ndiot&& set IOT_ENABLE_MQTT=1&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& npm start
 
 
 

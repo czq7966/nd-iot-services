@@ -260,7 +260,24 @@
                                         }
                                     },
                                     "devices": {}
-                                }                                                                              
+                                },
+                                "ba51301e1e74": {
+                                    "id": "{dsp}",
+                                    "name": "Docker调度服务",
+                                    "enabled": 1,
+                                    "edges": {
+                                        "ba51301e1e74" : {
+                                            "id": "{edg}",
+                                            "name": "Docker边缘服务",
+                                            "enabled": 1,
+                                            "wifi_max": 0,
+                                            "z2m_max": 0
+                                        }
+                                    },
+                                    "devices": {}
+                                }
+                                
+                                
                             },
                             "reg_devices": {
                                 "ESP8266x00068a16": "ESP8266x00068a16",
