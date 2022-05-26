@@ -1,16 +1,27 @@
 服务 docker 镜像 生成命令：
-docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.2 .
+docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-amd64:0.0.2 .
+
+docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-armv7:0.0.2 .
 
 删除镜像
-docker image rm registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.2
+docker image rm registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-amd64:0.0.2
+
+docker image rm registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-armv7:0.0.2
+
+推送镜像
+docker push registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-amd64:0.0.2
+docker push registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-armv7:0.0.2
+
+拉取镜像
+docker push registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-amd64:0.0.2
+docker push registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-armv7:0.0.2
 
 本地运行测试
 docker run -d -p 11880:11880 -p 11881:11881 -p 11882:11882 registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.1 
 登入docker镜像服务器
 docker  login registry.101.com 
 
-推送镜像
-docker push registry.101.com/60b603a0d9419c00107e378d/cmd-gateway:0.0.6
+
 
 
 

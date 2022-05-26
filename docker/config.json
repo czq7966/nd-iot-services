@@ -184,8 +184,9 @@
                                         },
                                         "dysubs": {
                                             "dev_evt_status": "{app}/{dom}/dev/{dev}/0/0/evt/status",
-                                            "dev_evt_penet": "{app}/{dom}/dev/{dev}/edg/{edg}/evt/penet"
-                                        },
+                                            "dev_evt_penet": "{app}/{dom}/dev/{dev}/edg/{edg}/evt/penet",
+                                            "z3co_svc_request": "{app}/{dom}/0/0/dev/{dev}/svc/request"                                          
+                                        },                                       
                                         "services": {
                                             "edg_svc_login": "+/+/+/+/edg/{edg}/svc/login",
                                             "edg_svc_handshake": "{app}/{dom}/dev/+/edg/{edg}/svc/handshake",
@@ -261,12 +262,12 @@
                                     },
                                     "devices": {}
                                 },
-                                "ba51301e1e74": {
+                                "2cf1ba794682": {
                                     "id": "{dsp}",
                                     "name": "Docker调度服务",
                                     "enabled": 1,
                                     "edges": {
-                                        "ba51301e1e74" : {
+                                        "2cf1ba794682" : {
                                             "id": "{edg}",
                                             "name": "Docker边缘服务",
                                             "enabled": 1,

@@ -1250,10 +1250,11 @@
             "20f49d8e60d749d6"
         ],
         "x": 155,
-        "y": 1140,
+        "y": 1080,
         "wires": [
             [
-                "9d10928bc56e32f8"
+                "9d10928bc56e32f8",
+                "70ca0f52b5127c70"
             ]
         ]
     },
@@ -1283,35 +1284,16 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 710,
-        "y": 1060,
+        "x": 690,
+        "y": 1180,
         "wires": []
-    },
-    {
-        "id": "903c56eb120b27b2",
-        "type": "mqtt in",
-        "z": "e93bbc67912b9178",
-        "name": "子设备订阅",
-        "topic": "",
-        "qos": "2",
-        "datatype": "utf8",
-        "broker": "73824c52c204153b",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 1,
-        "x": 520,
-        "y": 1040,
-        "wires": [
-            []
-        ]
     },
     {
         "id": "70ca0f52b5127c70",
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "PUSH订阅",
-        "func": "\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet hd = msg.payload.hd;\nlet topic = common.expandTopic.expand(data.topics.dysubs.z3co_svc_request, hd.from.id);\n\nnode.send({\n    action: \"unsubscribe\",\n    topic: topic\n})\n\nnode.send({\n    action: \"subscribe\",\n    topic: topic\n})",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1321,7 +1303,7 @@
         "y": 1040,
         "wires": [
             [
-                "903c56eb120b27b2"
+                "01f1dbfb048fc8b1"
             ]
         ]
     },
@@ -1332,16 +1314,19 @@
         "name": "协调器订阅",
         "topic": "",
         "qos": "2",
-        "datatype": "utf8",
+        "datatype": "json",
         "broker": "73824c52c204153b",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 1,
         "x": 520,
-        "y": 980,
+        "y": 1040,
         "wires": [
-            []
+            [
+                "f307492012213297",
+                "6c4ee2bf37a492ba"
+            ]
         ]
     },
     {
@@ -1388,6 +1373,123 @@
                 "e4534314a7bcd4b3"
             ]
         ]
+    },
+    {
+        "id": "952a21e20fa16b35",
+        "type": "function",
+        "z": "e93bbc67912b9178",
+        "name": "Z2M发布",
+        "func": "return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 1320,
+        "wires": [
+            [
+                "d65f0abbb98ed75f",
+                "7468b62e9b1440a6",
+                "314d05ed4b14a006"
+            ]
+        ]
+    },
+    {
+        "id": "d65f0abbb98ed75f",
+        "type": "mqtt out",
+        "z": "e93bbc67912b9178",
+        "name": "z2m发布",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "562dca499de9d04d",
+        "x": 520,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "64ae5c8b47fafc17",
+        "type": "link in",
+        "z": "e93bbc67912b9178",
+        "name": "z2m发布输入",
+        "links": [
+            "a8a2be716f1d660d"
+        ],
+        "x": 165,
+        "y": 1320,
+        "wires": [
+            [
+                "952a21e20fa16b35"
+            ]
+        ]
+    },
+    {
+        "id": "f307492012213297",
+        "type": "debug",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "6c4ee2bf37a492ba",
+        "type": "link out",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "7e11c0dae412283f"
+        ],
+        "x": 745,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "7468b62e9b1440a6",
+        "type": "debug",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "topic",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 1380,
+        "wires": []
+    },
+    {
+        "id": "314d05ed4b14a006",
+        "type": "debug",
+        "z": "e93bbc67912b9178",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 1440,
+        "wires": []
     },
     {
         "id": "3fdb98726d73125a",
@@ -5098,5 +5200,116 @@
             [],
             []
         ]
+    },
+    {
+        "id": "35bccd8642b6162c",
+        "type": "comment",
+        "z": "02363c72749a98be",
+        "name": "PUSH消息处理",
+        "info": "",
+        "x": 160,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "7e11c0dae412283f",
+        "type": "link in",
+        "z": "02363c72749a98be",
+        "name": "PUSH消息输入",
+        "links": [
+            "6c4ee2bf37a492ba"
+        ],
+        "x": 115,
+        "y": 1240,
+        "wires": [
+            [
+                "4690f1991179454d"
+            ]
+        ]
+    },
+    {
+        "id": "4690f1991179454d",
+        "type": "function",
+        "z": "02363c72749a98be",
+        "name": "设备服务请求",
+        "func": "let hd = msg.payload.hd;\nif (hd.stp == 0 && hd.entry.type == \"svc\" && hd.to.type == \"dev\" ) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 250,
+        "y": 1240,
+        "wires": [
+            [
+                "4461487986d16c78"
+            ]
+        ]
+    },
+    {
+        "id": "4461487986d16c78",
+        "type": "function",
+        "z": "02363c72749a98be",
+        "name": "协调器",
+        "func": "let _hd = Object.assign({}, msg.payload.hd);\nlet _pld = Object.assign({}, msg.payload.pld);\n\nlet topic = _hd.to.id + \"/bridge/\" + _hd.entry.id + \"/\" + _hd.entry.name;\n_pld.transaction = _hd.sid;\nreturn {\n    topic: topic,\n    payload: _pld,\n    _payload: msg.payload\n};\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 1200,
+        "wires": [
+            [
+                "a8a2be716f1d660d",
+                "25103be1987c2f5a"
+            ]
+        ]
+    },
+    {
+        "id": "bd7434e48a772de3",
+        "type": "function",
+        "z": "02363c72749a98be",
+        "name": "子设备",
+        "func": "let hd = msg.payload.hd;\nif (hd.from.id && !hd.from.cid) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 1260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a8a2be716f1d660d",
+        "type": "link out",
+        "z": "02363c72749a98be",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "64ae5c8b47fafc17"
+        ],
+        "x": 845,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "25103be1987c2f5a",
+        "type": "debug",
+        "z": "02363c72749a98be",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 790,
+        "y": 1280,
+        "wires": []
     }
 ]
