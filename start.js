@@ -9,8 +9,8 @@ let isWin32 = () => {
 
 //更新代码
 let updateCode = (sync) => {
-    let branch = env.IOT_CODE_BRANCH || "dev";
-    let cmd = "git stash && git fetch && git reset --hard && git checkout " + branch;
+    let branch = process.env.IOT_CODE_BRANCH || "dev";
+    let cmd = "git stash && git fetch && git reset --hard && git checkout " + branch + " || echo";
     if (sync) {
         execSync(cmd, {stdio: 'inherit'})
     } else {
