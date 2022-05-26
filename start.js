@@ -1,9 +1,27 @@
 let exec = require("child_process").exec;
+let execSync = require("child_process").execSync;
 let spawn = require("child_process").spawn;
 let useSpawn = false;
 
 let isWin32 = () => {
     return process.platform == "win32";
+}
+
+//更新代码
+let updateCode = (sync) => {
+    let branch = env.IOT_CODE_BRANCH || "dev";
+    let cmd = "git stash && git fetch && git reset --hard && git checkout " + branch;
+    if (sync) {
+        execSync(cmd, {stdio: 'inherit'})
+    } else {
+        exec(cmd, function(error, stdout, stderr) {
+            if (error || stderr)
+                console.error("mqtt service error: %s , %s!", error, stderr);
+            if (stdout)
+                console.log("%s", stdout );
+        });         
+    }
+
 }
 
 //本地MQTT服务
@@ -105,6 +123,9 @@ let startPLF_ND = () => {
     // });
 }
 
+if (process.env.IOT_ENABLE_AUTO_UPDATE == "1") {
+    updateCode(true);
+}
 
 if (process.env.IOT_ENABLE_MQTT == "1") {
     startMQTT();

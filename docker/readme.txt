@@ -1,6 +1,9 @@
 服务 docker 镜像 生成命令：
 docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.2 .
 
+删除镜像
+docker image rm registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.2
+
 本地运行测试
 docker run -d -p 11880:11880 -p 11881:11881 -p 11882:11882 registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.1 
 登入docker镜像服务器
@@ -30,11 +33,12 @@ set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_ENA
 set IOT_APP_ID=ndiot&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& npm start
 
 
-set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_APP_ID=ndiot&& set IOT_ENABLE_MQTT=1&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& npm start
+set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_CODE_BRANCH=dev&& set IOT_APP_ID=ndiot&& set IOT_ENABLE_MQTT=1&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& npm start
 
 
 
 //环境变量
+IOT_CODE_BRANCH: 代码分支，默认dev
 IOT_CONFIG_FILE：配置文件
 IOT_CONFIG_FILE_FIRST：配置文件优先(1：优先)，仅DIO有效
 IOT_APP_ID：应用ID，例如：ndiot
@@ -43,6 +47,7 @@ IOT_DIO_ID：数据服务ID，默认: {HOSTNAME}
 IOT_DSP_ID：调度服务ID，默认: {HOSTNAME}
 IOT_EDG_ID：边缘服务ID，默认: {HOSTNAME}
 IOT_PLF_ND_ID：ND平台ID，默认: {HOSTNAME}
+IOT_ENABLE_AUTO_UPDATE：启用自动更新，1：启用
 IOT_ENABLE_DIO：启用数据服务，1：启用
 IOT_ENABLE_DSP：启用调度服务，1：启用
 IOT_ENABLE_EDG：启用边缘服务，1：启用
@@ -55,6 +60,7 @@ docker run -d \
 -p 11881:11881 \
 -p 11882:11882 \
 -e IOT_CONFIG_FILE="/data/config.json" \
+-e IOT_CODE_BRANCH=dev \
 -e IOT_APP_ID=ndiot \
 -e IOT_DOM_ID=nd \
 -e IOT_DSP_ID=nd \
@@ -72,7 +78,6 @@ registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.2 \
 
 docker:
 docker run -d \
--e IOT_CONFIG_FILE="/services/nd-iot-services/docker/config.json" \
 -p 11880:11880 \
 -p 11881:11881 \
 -p 11882:11882 \
@@ -84,6 +89,9 @@ docker run -d \
 -p 18094:18094 \
 -p 18095:18095 \
 -p 18096:18096 \
+-e IOT_CONFIG_FILE="/services/nd-iot-services/docker/config.json" \
+-e IOT_CODE_BRANCH=dev \
+-e IOT_ENABLE_AUTO_UPDATE=1 \
 -e IOT_APP_ID=ndiot \
 -e IOT_ENABLE_MQTT=1 \
 -e IOT_ENABLE_DIO=1 \
@@ -93,4 +101,4 @@ registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.2 \
 npm start
 
 
-docker run -d -e IOT_CONFIG_FILE="/services/nd-iot-services/docker/config.json" -p 11880:11880 -p 11881:11881 -p 11882:11882 -p 11883:11883 -p 18090:18090 -p 18091:18091 -p 18092:18092 -p 18093:18093 -p 18094:18094 -p 18095:18095 -p 18096:18096 -e IOT_APP_ID=ndiot -e IOT_ENABLE_MQTT=1 -e IOT_ENABLE_DIO=1 -e IOT_ENABLE_DSP=1 -e IOT_ENABLE_EDG=1 registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.2 npm start
+docker run -d -e IOT_CONFIG_FILE="/services/nd-iot-services/docker/config.json" -e IOT_CODE_BRANCH=dev -e IOT_ENABLE_AUTO_UPDATE=1 -p 11880:11880 -p 11881:11881 -p 11882:11882 -p 11883:11883 -p 18090:18090 -p 18091:18091 -p 18092:18092 -p 18093:18093 -p 18094:18094 -p 18095:18095 -p 18096:18096 -e IOT_APP_ID=ndiot -e IOT_ENABLE_MQTT=1 -e IOT_ENABLE_DIO=1 -e IOT_ENABLE_DSP=1 -e IOT_ENABLE_EDG=1 registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.2 npm start
