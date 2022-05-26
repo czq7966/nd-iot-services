@@ -10,7 +10,7 @@ let isWin32 = () => {
 }
 
 //更新代码
-let updateCode = (codedir, sync) => {
+let updateCode = (codeDir, sync) => {
     console.log(codeDir);
 
     let branch = process.env.IOT_CODE_BRANCH || "dev";
@@ -20,7 +20,7 @@ let updateCode = (codedir, sync) => {
     } else {
         exec(cmd, function(error, stdout, stderr) {
             if (error || stderr)
-                console.error("update code error: %s, %s , %s!", codedir, error, stderr);
+                console.error("update code error: %s, %s , %s!", codeDir, error, stderr);
             if (stdout)
                 console.log("%s", stdout );
         });         
