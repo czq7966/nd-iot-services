@@ -1,4 +1,6 @@
 let exec = require("child_process").exec;
+let spawn = require("child_process").spawn;
+let useSpawn = false;
 
 let isWin32 = () => {
     return process.platform == "win32";
@@ -11,14 +13,17 @@ let startMQTT = () => {
         cmd = "npm run nd:mqtt:start";       
     else 
         cmd = "npm run nd:mqtt:service:start";
+    if (useSpawn) {
+        spawn(cmd);
+    }else {
+        exec(cmd, function(error, stdout, stderr) {
+            if (error || stderr)
+                console.error("mqtt service error: %s , %s!", error, stderr);
 
-    exec(cmd, function(error, stdout, stderr) {
-        if (error || stderr)
-            console.error("mqtt service error: %s , %s!", error, stderr);
-
-        if (isWin32()) 
-            console.error("mqtt service stopped");
-    });  
+            if (isWin32()) 
+                console.error("mqtt service stopped");
+        });  
+    }
 }
 
 //数据服务
@@ -29,13 +34,17 @@ let startDIO = () => {
     else 
         cmd = "npm run nd:dataio:service:start";
 
-    exec(cmd, function(error, stdout, stderr) {
-        if (error || stderr)
-            console.error("dataio service error: %s , %s!", error, stderr);
+    if (useSpawn) {
+        spawn(cmd);
+    }else {
+        exec(cmd, function(error, stdout, stderr) {
+            if (error || stderr)
+                console.error("dataio service error: %s , %s!", error, stderr);
 
-        if (isWin32()) 
-            console.error("dataio service stopped");
-    });
+            if (isWin32()) 
+                console.error("dataio service stopped");
+        });
+    }
 }
 
 //调度服务
@@ -46,13 +55,17 @@ let startDSP = () => {
     else 
         cmd = "npm run nd:dispatcher:service:start";
 
-    exec(cmd, function(error, stdout, stderr) {
-        if (error || stderr)
-            console.error("dispatcher service error: %s , %s!", error, stderr);
+    if (useSpawn) {
+        spawn(cmd);
+    }else {
+        exec(cmd, function(error, stdout, stderr) {
+            if (error || stderr)
+                console.error("dispatcher service error: %s , %s!", error, stderr);
 
-        if (isWin32()) 
-            console.error("dispatcher service stopped");
-    });
+            if (isWin32()) 
+                console.error("dispatcher service stopped");
+        });
+    }
 }
 
 //边缘服务
@@ -62,14 +75,17 @@ let startEDG = () => {
         cmd = "npm run nd:edge:start";               
     else 
         cmd = "npm run nd:edge:service:start";
+    if (useSpawn) {
+        spawn(cmd);
+    }else {
+        exec(cmd, function(error, stdout, stderr) {
+            if (error || stderr)
+                console.error("edge service error: %s , %s!", error, stderr);
 
-    exec(cmd, function(error, stdout, stderr) {
-        if (error || stderr)
-            console.error("edge service error: %s , %s!", error, stderr);
-
-        if (isWin32()) 
-            console.error("edge service stopped");
-    });
+            if (isWin32()) 
+                console.error("edge service stopped");
+        });
+    }
 }
 
 //ND平台对接服务
