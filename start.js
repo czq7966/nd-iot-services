@@ -121,19 +121,36 @@ let startEDG = () => {
 
 //ND平台对接服务
 let startPLF_ND = () => {    
-    // let cmd;
-    // if (isWin32()) 
-    //     cmd = "npm run nd:edge:start";               
-    // else 
-    //     cmd = "npm run nd:edge:service:start";
+    let cmd;
+    if (isWin32()) 
+        cmd = "npm run nd:platform:nd:start";               
+    else 
+        cmd = "npm run nd:platform:nd:service:start";
 
-    // exec(cmd, function(error, stdout, stderr) {
-    //     if (error || stderr)
-    //         console.error("edge service error: %s , %s!", error, stderr);
+    exec(cmd, function(error, stdout, stderr) {
+        if (error || stderr)
+            console.error("platform nd service error: %s , %s!", error, stderr);
 
-    //     if (isWin32()) 
-    //         console.error("edge service stopped");
-    // });
+        if (isWin32()) 
+            console.error("platform nd service stopped");
+    });
+}
+
+//巴法云平台对接服务
+let startPLF_BFY = () => {    
+    let cmd;
+    if (isWin32()) 
+        cmd = "npm run nd:platform:bfy:start";               
+    else 
+        cmd = "npm run nd:platform:bfy:service:start";
+
+    exec(cmd, function(error, stdout, stderr) {
+        if (error || stderr)
+            console.error("platform bfy service error: %s , %s!", error, stderr);
+
+        if (isWin32()) 
+            console.error("platform bfy service stopped");
+    });
 }
 
 if (process.env.IOT_ENABLE_AUTO_UPDATE == "1") {
@@ -159,7 +176,11 @@ if (process.env.IOT_ENABLE_EDG == "1") {
 
 if (process.env.IOT_ENABLE_PLF_ND == "1") {
     startPLF_ND();
-}    
+}  
+
+if (process.env.IOT_ENABLE_PLF_BFY == "1") {
+    startPLF_BFY();
+} 
 
 
 

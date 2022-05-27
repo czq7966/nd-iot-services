@@ -1,9 +1,9 @@
 [Unit]
-Description=nd-iot-service-plf-xiaoai
+Description=nd-iot-service-plf-bfy
 
 [Service]
 WorkingDirectory=/services/nd-iot-services
-ExecStart=/usr/local/bin/npm run nd:platform:xiaoai:start
+ExecStart=/usr/local/bin/npm run nd:platform:bfy:start
 KillMode=process
 Restart=on-failure
 

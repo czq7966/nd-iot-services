@@ -70,7 +70,7 @@
         "type": "mongodb",
         "hostname": "m1.all.dev2.mongod3.sdp",
         "topology": "direct",
-        "connectOptions": "autoConnectRetry=true",
+        "connectOptions": "autoConnectRetry=true&useUnifiedTopology=true",
         "port": "34004",
         "db": "dev_mdb_iot_data",
         "name": "开发环境"
@@ -80,7 +80,7 @@
         "type": "mongodb",
         "hostname": "m3.edu.pre-prod.mongod.sdp",
         "topology": "direct",
-        "connectOptions": "autoConnectRetry=true",
+        "connectOptions": "autoConnectRetry=true&useUnifiedTopology=true",
         "port": "34001",
         "db": "preproduction_mdb_iot_data",
         "name": "预生产环境"
@@ -259,14 +259,14 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据初始化",
-        "func": "let config = msg.payload;\nlet glob = config.dataio.global;\nlet keys = Object.keys(glob);\nkeys.forEach(key => {\n    global.set(key, glob[key])\n})\n\nlet data = global.get(\"data\");\nlet ids = global.get(\"ids\");\n\nlet app = data.app;\n\ndata.domains = app.domains;\ndata.dispatchers = {};\ndata.edges = {};\ndata.devices = {};\ndata.reg_devices = {};\ndata.mqtt = app.mqtt;\ndata.topics = app.mqtt.topics;\ndata.z2m = app.z2m;\ndata.ids = ids;\n\nreturn {payload: data};\n",
+        "func": "let config = msg.payload;\n\n Object.keys(config).forEach(key => {\n    global.set(key, config[key])\n})\n\nlet data = global.get(\"data\");\nlet ids = global.get(\"ids\");\n\nlet app = data.app;\n\ndata.domains = app.domains;\ndata.dispatchers = {};\ndata.edges = {};\ndata.devices = {};\ndata.mqtt = app.mqtt;\ndata.topics = app.mqtt.topics;\ndata.z2m = app.z2m;\ndata.ids = ids;\n\nreturn {payload: data};\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 170,
-        "y": 360,
+        "x": 390,
+        "y": 320,
         "wires": [
             [
                 "fe1774a6b4d68308"
@@ -297,7 +297,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "缓存数据函数",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet online = function(){\n    let events = this.events;\n    if (events && events.status)\n        return events.status.pld.online;\n    return 0;\n}\n\nlet cachePayload = function(payload) {\n    let hd = payload.hd;\n    let pld = payload.pld;\n    \n    if (hd.from.type == \"dsp\") {\n        let dsp = data.dispatchers[hd.from.id];\n        if (!dsp) return;\n        \n        dsp.id = hd.from.id;\n        dsp.events = dsp.events || {};\n        dsp.events[hd.entry.id] = payload;\n        dsp.online = online;\n        data.dispatchers[hd.from.id] = dsp;\n    }\n    \n    if (hd.from.type == \"edg\") {\n        let edg = data.edges[hd.from.id];\n        if (!edg) return;\n        \n        edg.id = hd.from.id;\n        edg.events = edg.events || {};\n        edg.events[hd.entry.id] = payload;\n        edg.online = online;\n        data.edges[hd.from.id] = edg;\n    }    \n    \n    if (hd.from.type == \"dev\") {\n        let dev = data.devices[hd.from.id];\n        if (!dev) {\n            let pid = hd.from.pid;\n            let pdev = pid ? data.devices[pid] : null;\n            if (pdev){\n                dev = {};\n            } else {\n                return;\n            }\n        };\n        \n        dev.id = hd.from.id;\n        dev.events = dev.events || {};\n        if (hd.from.pid)\n            dev.pid = hd.from.pid;\n        dev.events[hd.entry.id] = payload;\n        dev.online = online;\n        data.devices[hd.from.id] = dev;\n        let edgId = hd.ids && hd.ids.edg_id || pld.edg_id\n        if (edgId) {\n            let edg = data.edges[edgId];\n            if (edg) {\n                if (dev.edge && dev.edge.id != edgId) {\n                    delete dev.edge.devices[dev.id]\n                }\n                dev.edge = edg;\n                edg.devices[dev.id] = dev;;\n            }\n        }\n    }\n    return payload;\n\n}\n\ncommon.cachePayload = cachePayload;\n\nreturn {payload: data};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet online = function(){\n    let events = this.events;\n    if (events && events.status)\n        return events.status.pld.online;\n    return 0;\n}\n\nlet cachePayload = function(payload) {\n    let hd = payload.hd;\n    let pld = payload.pld;\n    \n    if (hd.from.type == \"dsp\") {\n        let dsp = data.dispatchers[hd.from.id];\n        if (!dsp) return;\n        \n        dsp.id = hd.from.id;\n        dsp.events = dsp.events || {};\n        dsp.events[hd.entry.id] = payload;\n        dsp.online = online;\n        data.dispatchers[hd.from.id] = dsp;\n    }\n    \n    if (hd.from.type == \"edg\") {\n        let edg = data.edges[hd.from.id];\n        if (!edg) return;\n        \n        edg.id = hd.from.id;\n        edg.events = edg.events || {};\n        edg.events[hd.entry.id] = payload;\n        edg.online = online;\n        data.edges[hd.from.id] = edg;\n    }    \n    \n    if (hd.from.type == \"dev\") {\n        let dev = data.devices[hd.from.id];\n        if (!dev) {\n            let pid = hd.from.pid;\n            let pdev = pid ? data.devices[pid] : null;\n            if (pdev){\n                dev = {};\n            } else {\n                return;\n            }\n        };\n        \n        dev.id = hd.from.id;\n        dev.events = dev.events || {};\n        if (hd.from.pid)\n            dev.pid = hd.from.pid;\n        dev.events[hd.entry.id] = payload;\n        dev.online = online;\n        data.devices[hd.from.id] = dev;\n        let edgId = hd.ids && hd.ids.edg_id || pld.edg_id\n        if (edgId) {\n            let edg = data.edges[edgId];\n            if (edg) {\n                if (dev.edge && dev.edge.id != edgId) {\n                    delete dev.edge.devices[dev.id]\n                }\n                dev.edge = edg;\n                edg.devices = edg.devices || {};\n                edg.devices[dev.id] = dev;;\n            }\n        }\n    }\n    return payload;\n\n}\n\ncommon.cachePayload = cachePayload;\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -373,7 +373,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据补全",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet fixUpData = function() {\n    let doms = data.app.domains;\n    Object.keys(doms).forEach(domKey => {\n        let dom = doms[domKey];\n        dom.id = domKey;\n        dom.app = data.app;\n        let dsps = dom.dispatchers || {};\n        dom.dispatchers = dsps;\n        dom.edges = dom.edges || {}\n        dom.devices = dom.devices || {}\n        Object.keys(dsps).forEach(dspKey => {\n            let dsp = dsps[dspKey];\n            dsp.id = dspKey;\n            dsp.domain = dom;\n\n            data.dispatchers[dspKey] = dsp;\n            let edgs = dsp.edges || {};\n            dsp.edges = edgs;\n            Object.keys(edgs).forEach(edgKey => {\n                let edg = edgs[edgKey];\n                edg.id = edgKey;\n                edg.dispatcher = dsp;\n                edg.devices = edg.devices || {};\n                dom.edges[edgKey] = edg;\n                data.edges[edgKey] = edg;\n                // let devs = edg.devices || {};\n                // edg.devices = devs;\n                // Object.keys(devs).forEach(devKey => {\n                //     let dev = devs[devKey];\n                //     dev.id = devKey;\n                //     dev.edge = edg;\n                //     data.devices[devKey] = dev;\n                // })\n                \n            })\n            \n        })\n        \n        //注册设备\n        let regDevs = dom.reg_devices || {};\n        dom.reg_devices = regDevs;\n        Object.keys(regDevs).forEach(devKey => {\n            let devVal = regDevs[devKey] || {};\n            if (typeof devVal == \"string\") {\n                devVal = {\n                    id: devKey,\n                    name: devVal\n                }\n            } else {\n                devVal.id = devKey\n            }\n            let dev = dom.devices[devKey] || devVal;\n            dom.devices[devKey] = dev;\n            dev.domain = dom;\n            data.reg_devices[devKey] = dev;\n            data.devices[devKey] = dev;\n        })\n    })\n}\n\ncommon.fixUpData = fixUpData;\n\ncommon.expandTopic.expand(data.ids);   \ncommon.expandTopic.expand(data.topics);\ndata.app.id = data.ids.app;\n\ncommon.fixUpData();\ncommon.keyToObjId(data.domains);\ncommon.keyToObjId(data.dispatchers);\ncommon.keyToObjId(data.edges);\ncommon.keyToObjId(data.devices);\n\n\n\nreturn {payload: data};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet fixUpDom = function(_dom, notNewIfNotExist, recu) {\n    if (!_dom || !_dom.id) return;\n    \n    let domId = _dom.id;\n    let doms = data.app.domains;\n    \n    let dom = doms[domId];\n    if (!dom) {\n        if (notNewIfNotExist)\n            dom = _dom;\n        else\n            dom = Object.assign({}, _dom);\n    }\n\n    dom.id = domId;\n    dom.app = data.app;\n    dom.dispatchers = dom.dispatchers || {};\n    dom.edges = dom.edges || {};\n    dom.devices = dom.devices || {};\n    doms[domId] = dom;\n\n    if (recu) {\n        Object.keys(dom.dispatchers).forEach(dspId => {\n            let dsp = dom.dispatchers[dspId];\n            dsp.id = dspId;\n            dsp.app_id = dom.app.id;\n            dsp.dom_id = domId;\n            this.fixUpDsp(dsp, notNewIfNotExist, recu);\n        })\n    }\n}\n\nlet fixUpDsp = function(_dsp, notNewIfNotExist, recu) {\n    if (!_dsp || !_dsp.id || !_dsp.dom_id) return;\n\n    let domId = _dsp.dom_id;\n    let dspId = _dsp.id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let dsps = data.dispatchers;\n    let dsp = dsps[dspId];\n    \n    if (!dom) {\n        node.error(\"dsp没有租户\");\n        return;\n    };\n    \n    if (!dsp) {\n        if (notNewIfNotExist)\n            dsp = _dsp;\n        else\n            dsp = Object.assign({}, _dsp);\n    }\n    \n    \n    dsp.id = dspId;\n    dsp.domain = dom;\n    dsp.edges = dsp.edges || {};\n    dom.dispatchers[dspId] = dsp;\n    data.dispatchers[dspId] = dsp;\n    \n    if (recu) {\n        Object.keys(dsp.edges).forEach(edgId => {\n            let edg = dsp.edges[edgId];\n            edg.id =edgId;\n            edg.app_id = dom.app.id;\n            edg.dom_id = dom.id;\n            edg.dsp_id = dsp.id;\n            this.fixUpEdg(edg, notNewIfNotExist, recu);\n        })\n    }\n}\n\nlet fixUpEdg = function(_edg, notNewIfNotExist, recu) {\n    if (!_edg || !_edg.id || !_edg.dom_id || !_edg.dsp_id) return;\n\n    let domId = _edg.dom_id;\n    let dspId = _edg.dsp_id;\n    let edgId = _edg.id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let dsps = data.dispatchers;\n    let dsp = dsps[dspId];\n    let edgs = data.edges;\n    let edg = edgs[edgId];\n    \n    if (!dom || !dsp) {\n        node.error(\"edg 没有租户或DSP\");\n        return;\n    };\n    \n    if (!edg) {\n        if (notNewIfNotExist)\n            edg = _edg;\n        else\n            edg = Object.assign({}, _edg);\n    }\n    \n    edg.id = edgId;\n    edg.dispatcher = dsp;\n    edg.devices = edg.devices || {};\n    dsp.edges[edgId] = edg;\n    dom.edges[edgId] = edg;\n    data.edges[edgId] = edg;\n}\n\nlet fixUpDev = function(_dev, notNewIfNotExist) {\n    if (!_dev || !_dev.id || !_dev.dom_id) return;\n\n    let devId = _dev.id;\n    let domId = _dev.dom_id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let devs = data.devices;\n    let dev = devs[devId];\n    \n    if (!dom) {\n        node.error(\"dev没有租户\");\n        return;\n    };\n    \n    if (!dev) {\n        if (notNewIfNotExist)\n            dev = _dev;\n        else\n            dev = Object.assign({}, _dev);\n    }\n    \n    dev.id = devId;\n    dev.domain = dom;\n    dom.devices[devId] = dev;\n    data.devices[devId] = dev;\n    \n}\n\n\n\nlet fixUpData = function() {\n    let doms = data.app.domains;\n    Object.keys(doms).forEach(domId => {\n        let dom = doms[domId];\n        dom.id = domId;\n        this.fixUpDom(dom, true, true);\n        if (dom.reg_devices) {\n            Object.keys(dom.reg_devices).forEach(devId => {\n                let dev = {\n                    id: devId,\n                    app_id: dom.app.id,\n                    dom_id: dom.id,\n                    name: dom.reg_devices[devId]\n                }  \n                this.fixUpDev(dev, false)\n            })\n        }\n    });\n    \n}\n\nlet fixUpData1 = function() {\n    let doms = data.app.domains;\n    Object.keys(doms).forEach(domKey => {\n        let dom = doms[domKey];\n        dom.id = domKey;\n        dom.app = data.app;\n        let dsps = dom.dispatchers || {};\n        dom.dispatchers = dsps;\n        dom.edges = dom.edges || {}\n        dom.devices = dom.devices || {}\n        Object.keys(dsps).forEach(dspKey => {\n            let dsp = dsps[dspKey];\n            dsp.id = dspKey;\n            dsp.domain = dom;\n\n            data.dispatchers[dspKey] = dsp;\n            let edgs = dsp.edges || {};\n            dsp.edges = edgs;\n            Object.keys(edgs).forEach(edgKey => {\n                let edg = edgs[edgKey];\n                edg.id = edgKey;\n                edg.dispatcher = dsp;\n                edg.devices = edg.devices || {};\n                dom.edges[edgKey] = edg;\n                data.edges[edgKey] = edg;\n                // let devs = edg.devices || {};\n                // edg.devices = devs;\n                // Object.keys(devs).forEach(devKey => {\n                //     let dev = devs[devKey];\n                //     dev.id = devKey;\n                //     dev.edge = edg;\n                //     data.devices[devKey] = dev;\n                // })\n                \n            })\n            \n        })\n        \n        //注册设备\n        let regDevs = dom.reg_devices || {};\n        dom.reg_devices = regDevs;\n        Object.keys(regDevs).forEach(devKey => {\n            let devVal = regDevs[devKey] || {};\n            if (typeof devVal == \"string\") {\n                devVal = {\n                    id: devKey,\n                    name: devVal\n                }\n            } else {\n                devVal.id = devKey\n            }\n            let dev = dom.devices[devKey] || devVal;\n            dom.devices[devKey] = dev;\n            dev.domain = dom;\n            data.reg_devices[devKey] = dev;\n            data.devices[devKey] = dev;\n        })\n    })\n}\n\ncommon.fixUpData = fixUpData;\ncommon.fixUpDom = fixUpDom;\ncommon.fixUpDsp = fixUpDsp;\ncommon.fixUpEdg = fixUpEdg;\ncommon.fixUpDev = fixUpDev;\n\ncommon.expandTopic.expand(data.ids);   \ncommon.expandTopic.expand(data.topics);\ndata.app.id = data.ids.app;\n\ncommon.fixUpData();\ncommon.keyToObjId(data.domains);\ncommon.keyToObjId(data.dispatchers);\ncommon.keyToObjId(data.edges);\ncommon.keyToObjId(data.devices);\n\n\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -450,7 +450,7 @@
         "y": 160,
         "wires": [
             [
-                "852cabd7bf1568ea"
+                "1924f7fd90ef314c"
             ]
         ]
     },
@@ -537,7 +537,7 @@
         "y": 440,
         "wires": [
             [
-                "4754da03d64fad4b"
+                "1924f7fd90ef314c"
             ]
         ]
     },
@@ -595,7 +595,7 @@
         "y": 240,
         "wires": [
             [
-                "fcb9bbaa875f8ea9"
+                "ac13383ff111fbcf"
             ]
         ]
     },
@@ -631,14 +631,10 @@
         "repair": false,
         "outputs": 2,
         "x": 170,
-        "y": 260,
+        "y": 960,
         "wires": [
-            [
-                "82d624e156acd716"
-            ],
-            [
-                "4754da03d64fad4b"
-            ]
+            [],
+            []
         ]
     },
     {
@@ -671,6 +667,70 @@
                 "82d624e156acd716"
             ]
         ]
+    },
+    {
+        "id": "ac13383ff111fbcf",
+        "type": "delay",
+        "z": "7c7a09edf982e2f4",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "3",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 780,
+        "y": 260,
+        "wires": [
+            [
+                "fcb9bbaa875f8ea9"
+            ]
+        ]
+    },
+    {
+        "id": "1924f7fd90ef314c",
+        "type": "function",
+        "z": "7c7a09edf982e2f4",
+        "name": "获取数据节点",
+        "func": "let config = msg.payload;\nlet data = config.dataio;\nif (data && data.global) {\n    let _msg = {\n        payload: data.global\n    };\n    return [null, _msg]\n} else {\n    return [{}, null]\n}",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 160,
+        "y": 240,
+        "wires": [
+            [
+                "82d624e156acd716"
+            ],
+            [
+                "4754da03d64fad4b",
+                "fe709efeac771813"
+            ]
+        ]
+    },
+    {
+        "id": "fe709efeac771813",
+        "type": "debug",
+        "z": "7c7a09edf982e2f4",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 190,
+        "y": 320,
+        "wires": []
     },
     {
         "id": "0f989c13f4e0c1cb",
@@ -735,7 +795,7 @@
         "type": "debug",
         "z": "e93bbc67912b9178",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1751,7 +1811,7 @@
         "type": "function",
         "z": "f7e96a32e56d72eb",
         "name": "有无缓存",
-        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\n\nlet device = data.devices[pld.id];\nif (!device) {\n    device = {events:{}};\n    device.id = pld.id;\n    data.devices[pld.id] = device;\n}\n\nlet z2m = device.z2m ;\n//有缓存\nif (z2m && z2m.datafile || msg.result == 0) {\n    let _msg = {\n        payload: {\n            hd: {\n                // from: hd.to,\n                to: hd.from,\n                entry: hd.entry,\n                sid: hd.sid,\n                stp: 1\n            },\n            pld: {\n                id: pld.id,\n                datafile: z2m.datafile,\n                defaultDatafile: z2m.defaultDatafile\n            }\n        }\n    };\n    \n    return [_msg, null];\n}\n\n\n\nreturn [null, msg];",
+        "func": "let data = global.get(\"data\");\n\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\n\nif (!hd || !pld) return;\n\nlet device = data.devices[pld.id];\nif (!device) {\n    device = {events:{}};\n    device.id = pld.id;\n    data.devices[pld.id] = device;\n}\n\nlet z2m = device.z2m ;\n//有缓存\nif (z2m && z2m.datafile || msg.result == 0) {\n    let _msg = {\n        payload: {\n            hd: {\n                // from: hd.to,\n                to: hd.from,\n                entry: hd.entry,\n                sid: hd.sid,\n                stp: 1\n            },\n            pld: {\n                id: pld.id,\n                datafile: z2m.datafile,\n                defaultDatafile: z2m.defaultDatafile\n            }\n        }\n    };\n    \n    return [_msg, null];\n}\n\n\n\nreturn [null, msg];",
         "outputs": 2,
         "noerr": 0,
         "initialize": "",
@@ -1942,7 +2002,7 @@
         "type": "debug",
         "z": "f7e96a32e56d72eb",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2013,6 +2073,31 @@
         "y": 700,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "66b2db62d4dffe2a",
+        "type": "inject",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "props": [
+            {
+                "p": "payload.pld.id",
+                "v": "ESP8266x00068a16",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 970,
+        "y": 460,
+        "wires": [
+            [
+                "62f7d5be3ac0d3a8"
+            ]
         ]
     },
     {

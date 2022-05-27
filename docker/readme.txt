@@ -25,11 +25,11 @@ docker  login registry.101.com
 
 
 
+//CMD启动巴法云
+set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_APP_ID=ndiot&& set IOT_PLF_BFY_ID=bfy&& set IOT_ENABLE_PLF_BFY=1&& npm run nd:platform:bfy:start
 
-set IOT_APP_ID=ndiot&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& npm start
-
-
-set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_CODE_BRANCH=dev&& set IOT_APP_ID=ndiot&& set IOT_ENABLE_MQTT=1&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& npm start
+//启动所有平台
+set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_CODE_BRANCH=dev&& set IOT_APP_ID=ndiot&& set IOT_ENABLE_MQTT=1&& set IOT_ENABLE_DIO=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& set IOT_ENABLE_PLF_BFY=1&& npm start
 
 
 
@@ -42,12 +42,14 @@ IOT_DOM_ID：租户ID，由配置文件决定
 IOT_DIO_ID：数据服务ID，默认: {HOSTNAME}
 IOT_DSP_ID：调度服务ID，默认: {HOSTNAME}
 IOT_EDG_ID：边缘服务ID，默认: {HOSTNAME}
-IOT_PLF_ND_ID：ND平台ID，默认: {HOSTNAME}
+IOT_PLF_ND_ID：ND平台ID
+IOT_PLF_BFY_ID：巴法云平台ID
 IOT_ENABLE_AUTO_UPDATE：启用自动更新，1：启用
 IOT_ENABLE_DIO：启用数据服务，1：启用
 IOT_ENABLE_DSP：启用调度服务，1：启用
 IOT_ENABLE_EDG：启用边缘服务，1：启用
-IOT_ENABLE_PLF_ND：启用边缘服务，1：启用
+IOT_ENABLE_PLF_ND：启用ND平台服务，1：启用
+IOT_ENABLE_PLF_BFY：启用BFY平台服务，1：启用
 
 win:
 docker run -d \
