@@ -66,7 +66,6 @@
                         "platform": {
                             "id": "{plf}",
                             "name": "网龙集控平台",
-                            "domain": "+",
                             "devices": {},
                             "mqtt": {
                                 "broker" : {
@@ -75,19 +74,18 @@
                                     "password": ""
                                 },                                
                                 "topics": {
-                                    "subs": {
-                                        "device": {
-                                            "dev_evt_report":   "{app}/{dom}/dev/+/+/+/evt/report",
-                                            "dev_evt_status":   "{app}/{dom}/dev/+/+/+/evt/status",
-                                            "dev_svc_get":      "{app}/{dom}/dev/+/+/+/svc/get",
-                                            "dev_svc_set":      "{app}/{dom}/dev/+/+/+/svc/set",
-                                            "dev_svc_reboot":   "{app}/{dom}/dev/+/+/+/svc/reboot",
-                                            "dev_svc_login":    "{app}/{dom}/dev/+/0/0/svc/login",                        
-                                            "dev_svc_handshake":"{app}/{dom}/dev/+/+/+/svc/handshake"
-                                        },
-                                        "platform": {
-
-                                        }
+                                    "subs": {                                        
+                                        "dev_evt_report":   "{app}/+/dev/+/+/+/evt/report",
+                                        "dev_evt_status":   "{app}/+/dev/+/+/+/evt/status",
+                                        "dev_svc_get":      "{app}/+/dev/+/+/+/svc/get",
+                                        "dev_svc_set":      "{app}/+/dev/+/+/+/svc/set",
+                                        "dev_svc_reboot":   "{app}/+/dev/+/+/+/svc/reboot",
+                                        "dev_svc_login":    "{app}/+/dev/+/0/0/svc/login",                        
+                                        "dev_svc_handshake":"{app}/+/dev/+/+/+/svc/handshake"
+                                        
+                                    },
+                                    "services": {
+                                        "plf_svc_login": "{app}/0/+/+/plf/{plf}/svc/login"
                                     },
                                     "pubs": {
                                         "platform":{
@@ -108,8 +106,8 @@
                 "common": {},
                 "ids": {
                     "app": "{APP_ID}",
-                    "dom": "+",
-                    "plf": "bfy"
+                    "dio": "{DIO_ID}",
+                    "plf": "{HOSTNAME}"
                 }
             }
         }                  
@@ -300,6 +298,12 @@
                 "app": {
                     "id": "ndiot",
                     "name": "网龙物联网",
+                    "platforms" : {
+                        "ND--20200609EVI": {
+                            "name": "ND平台,巴法云平台",
+                            "enabled": 1
+                        }
+                    },
                     "domains": {
                         "test":{
                             "id": "{dom}",
@@ -344,7 +348,13 @@
                                 "ESP8266x0006dbe5": "ESP8266x0006dbe5",
                                 "ESP8266x0006cf1d": "ESP8266x0006cf1d",
                                 "ESP8266x00c17ca1": "ESP8266x00c17ca1",
-                                "ESP8266x0098b096": "ESP8266x0098b096"
+                                "ESP8266x0098b096": "ESP8266x0098b096",
+                                "0x00158d0003539f17": {
+                                    "pid": "ESP8266x00c17ca1"
+                                },
+                                "0x00158d000353c53f": {
+                                    
+                                }
                             }
                         },
                         "fr": {},
@@ -366,6 +376,7 @@
                             },
                             "services":{
                                 "dio_svc_login": "+/+/+/+/0/0/svc/login",
+                                "dio_svc_turn": "{app}/+/+/+/dio/{dio}/svc/turn",
                                 "dio_svc_get_domain": "{app}/+/+/+/+/+/svc/get_domain",
                                 "edg_svc_get_z2m_datafile": "{app}/+/edg/+/+/+/svc/get_z2m_datafile",                                        
                                 "edg_svc_set_z2m_datafile": "{app}/+/edg/+/+/+/svc/set_z2m_datafile"

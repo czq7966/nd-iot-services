@@ -961,7 +961,7 @@
         "type": "debug",
         "z": "bbc788f5f9e280ee",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,

@@ -699,29 +699,6 @@
         ]
     },
     {
-        "id": "d5479e126aa36af8",
-        "type": "inject",
-        "z": "7c7a09edf982e2f4",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "config",
-        "payloadType": "global",
-        "x": 190,
-        "y": 1100,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "ac60446b2e2fd797",
         "type": "link in",
         "z": "7c7a09edf982e2f4",
@@ -1779,7 +1756,7 @@
         "type": "function",
         "z": "46a5ba0d798d87c3",
         "name": "握手请求",
-        "func": "let data = global.get(\"data\");\nlet did = msg.payload.id;\nif (did) {\n    return {\n        payload: {\n            hd: {\n                to: {\n                    type: \"dev\",\n                    id: did\n                },\n                entry: {\n                    type: \"svc\",\n                    id: data.topics.pubs.dev_svc_handshake\n                }\n            },\n            pld: {\n                id: did\n            }\n        }\n    };\n}",
+        "func": "let data = global.get(\"data\");\nlet did = msg.payload.id;\nif (did) {\n    return {\n        payload: {\n            hd: {\n                to: {\n                    type: \"dev\",\n                    id: did\n                },\n                entry: {\n                    type: \"svc\",\n                    id: \"handshake\"\n                }\n            },\n            pld: {\n                id: did\n            }\n        }\n    };\n}",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1800,14 +1777,14 @@
         "z": "46a5ba0d798d87c3",
         "name": "握手请求输入",
         "links": [
-            "62b3ca59dea6f8fb"
+            "62b3ca59dea6f8fb",
+            "7491a8dc5781b402"
         ],
         "x": 95,
         "y": 380,
         "wires": [
             [
-                "1873e4c1eab22fec",
-                "1383524c0b13eb78"
+                "1873e4c1eab22fec"
             ]
         ]
     },
@@ -1880,7 +1857,7 @@
         "type": "debug",
         "z": "46a5ba0d798d87c3",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1896,7 +1873,7 @@
         "type": "debug",
         "z": "46a5ba0d798d87c3",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2416,7 +2393,6 @@
         "id": "2ff5101df1ab6584",
         "type": "link in",
         "z": "f7e96a32e56d72eb",
-        "d": true,
         "name": "",
         "links": [
             "be8cd487c69c6c5a"
@@ -3012,7 +2988,7 @@
         "type": "debug",
         "z": "f7e96a32e56d72eb",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -4071,7 +4047,7 @@
         "id": "aa6930a5c2fc2bf5",
         "type": "link in",
         "z": "95249172.4f419",
-        "name": "",
+        "name": "启动协调器输入",
         "links": [
             "0c75cd8a739aa826",
             "c9e9d547ed815f9a"
@@ -4463,7 +4439,8 @@
                 "74dcdef0a677e6c5"
             ],
             [
-                "ee014620f54577ec"
+                "ee014620f54577ec",
+                "2bfd8f403f1ee462"
             ]
         ]
     },
@@ -4581,7 +4558,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 690,
-        "y": 260,
+        "y": 200,
         "wires": []
     },
     {
@@ -4804,6 +4781,135 @@
                 "8f945fdc1ab78574"
             ]
         ]
+    },
+    {
+        "id": "1cdb31d6b687bda6",
+        "type": "switch",
+        "z": "95249172.4f419",
+        "name": "是否Z3协调器",
+        "property": "payload.pld.model",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Z3CO2652ESP8266",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 300,
+        "y": 260,
+        "wires": [
+            [
+                "7f4b947e280345b6"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "7f4b947e280345b6",
+        "type": "function",
+        "z": "95249172.4f419",
+        "name": "需要重启？",
+        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet device = data.devices[pld.id];\nlet z2m = device.z2m;\nif (pld.handshake_count == 0 ||\n    !z2m || !z2m.running || !z2m.running()) {\n    msg.device = device\n    return msg;        \n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 260,
+        "wires": [
+            [
+                "48fb2801f38009e5"
+            ]
+        ]
+    },
+    {
+        "id": "6619a733042257d7",
+        "type": "link in",
+        "z": "95249172.4f419",
+        "name": "上报检测",
+        "links": [
+            "1844f69659f40c71"
+        ],
+        "x": 135,
+        "y": 260,
+        "wires": [
+            [
+                "1cdb31d6b687bda6"
+            ]
+        ]
+    },
+    {
+        "id": "48fb2801f38009e5",
+        "type": "function",
+        "z": "95249172.4f419",
+        "name": "握手请求",
+        "func": "\nreturn {\n    payload: {\n        id:  msg.device.id\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 260,
+        "wires": [
+            [
+                "7491a8dc5781b402",
+                "6d1194edab83f92f"
+            ]
+        ]
+    },
+    {
+        "id": "7491a8dc5781b402",
+        "type": "link out",
+        "z": "95249172.4f419",
+        "name": "握手请求",
+        "mode": "link",
+        "links": [
+            "8b0eacacfd0fe129"
+        ],
+        "x": 1165,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "6d1194edab83f92f",
+        "type": "debug",
+        "z": "95249172.4f419",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 970,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "2bfd8f403f1ee462",
+        "type": "debug",
+        "z": "95249172.4f419",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1210,
+        "y": 60,
+        "wires": []
     },
     {
         "id": "17a6d87202b7967e",
