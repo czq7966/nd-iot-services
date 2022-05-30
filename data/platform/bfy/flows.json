@@ -1502,7 +1502,7 @@
         "type": "function",
         "z": "396cbecdd6c41306",
         "name": "订阅主题",
-        "func": "let topics = [\n    \"0x00158d0003539f17\",\n    \"0x00158d000353c53f\"\n    ]\n\n\nnode.send({\n        action: \"unsubscribe\",\n        topic: topics\n})\n\nnode.send({\n        action: \"subscribe\",\n        topic: topics\n})\n",
+        "func": "let topics = [\n    \"0x00158d0003539f17\",\n    \"0x00158d000353c53f\",\n    \"ESP8266x00c17ca1\"\n    ]\n\n\nnode.send({\n        action: \"unsubscribe\",\n        topic: topics\n})\n\nnode.send({\n        action: \"subscribe\",\n        topic: topics\n})\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1540,12 +1540,12 @@
         "type": "switch",
         "z": "396cbecdd6c41306",
         "name": "协调器",
-        "property": "payload",
+        "property": "topic",
         "propertyType": "msg",
         "rules": [
             {
                 "t": "eq",
-                "v": "",
+                "v": "ESP8266x00c17ca1",
                 "vt": "str"
             }
         ],
@@ -1555,7 +1555,9 @@
         "x": 290,
         "y": 400,
         "wires": [
-            []
+            [
+                "3c5c174ae97a1079"
+            ]
         ]
     },
     {
@@ -1596,7 +1598,7 @@
         "type": "function",
         "z": "396cbecdd6c41306",
         "name": "协议转换",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        name: \"set\"\n    },\n    sid: \"0\",\n    stp: 0\n}\nlet pld = {\"state\": msg.payload}\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        func: \"set\"\n    },\n    sid: \"0\",\n    stp: 0\n}\nlet pld = {\"state\": msg.payload}\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1625,7 +1627,8 @@
         "y": 420,
         "wires": [
             [
-                "f2d3874c6b2d73f3"
+                "f2d3874c6b2d73f3",
+                "f5cb5e8b4bab0cae"
             ]
         ]
     },
@@ -1640,6 +1643,41 @@
         ],
         "x": 945,
         "y": 340,
+        "wires": []
+    },
+    {
+        "id": "3c5c174ae97a1079",
+        "type": "function",
+        "z": "396cbecdd6c41306",
+        "name": "协议转换",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        func: \"permit_join\"\n    },\n    sid: \"0\",\n    stp: 0\n}\n\nlet value = msg.payload.toLowerCase() == \"on\" ? true : false;\n\nlet pld = {\"value\": value, \"time\": 254}\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 380,
+        "wires": [
+            [
+                "f782abfd31d4bf71"
+            ]
+        ]
+    },
+    {
+        "id": "f5cb5e8b4bab0cae",
+        "type": "debug",
+        "z": "396cbecdd6c41306",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 930,
+        "y": 500,
         "wires": []
     }
 ]

@@ -743,6 +743,13 @@
                 "pt": "global",
                 "to": "0.0.1",
                 "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "ids",
+                "pt": "global",
+                "to": "",
+                "tot": "str"
             }
         ],
         "action": "",
@@ -916,7 +923,8 @@
             "cb5a80219ea82576",
             "cecd0debcb823e0f",
             "005af7c67cff4282",
-            "c9eb4957d50481a9"
+            "c9eb4957d50481a9",
+            "f25dd30a6d3bf86b"
         ],
         "x": 205,
         "y": 520,
@@ -1440,7 +1448,7 @@
         "type": "debug",
         "z": "e93bbc67912b9178",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1457,7 +1465,7 @@
         "type": "debug",
         "z": "e93bbc67912b9178",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2369,15 +2377,15 @@
         "z": "46a5ba0d798d87c3",
         "name": "",
         "op1": "1",
-        "op2": "0",
+        "op2": "",
         "op1type": "str",
-        "op2type": "str",
+        "op2type": "pay",
         "duration": "10",
         "extend": true,
         "overrideDelay": true,
         "units": "s",
         "reset": "",
-        "bytopic": "all",
+        "bytopic": "topic",
         "topic": "topic",
         "outputs": 2,
         "x": 200,
@@ -2393,6 +2401,7 @@
         "id": "2ff5101df1ab6584",
         "type": "link in",
         "z": "f7e96a32e56d72eb",
+        "d": true,
         "name": "",
         "links": [
             "be8cd487c69c6c5a"
@@ -3208,7 +3217,7 @@
         "type": "function",
         "z": "f7e96a32e56d72eb",
         "name": "登入响应处理",
-        "func": "let data = global.get(\"data\");\nlet pld = msg.payload.pld;\nif (pld.app_id && pld.dom_id && pld.dsp_id && pld.edg_id) {\n    data.ids.app = pld.app_id;\n    data.ids.dom = pld.dom_id;\n    data.ids.dsp = pld.dsp_id;\n    data.ids.edg = pld.edg_id;\n    return msg;\n}",
+        "func": "let data = global.get(\"data\");\nlet pld = msg.payload.pld;\nif (pld.app_id && pld.dom_id && pld.dsp_id && pld.edg_id) {\n    data.ids.app = pld.app_id;\n    data.ids.dom = pld.dom_id;\n    data.ids.dsp = pld.dsp_id;\n    data.ids.edg = pld.edg_id;\n    data.ids.dio = pld.dio_id;\n    return msg;\n}",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -5149,7 +5158,7 @@
         "y": 240,
         "wires": [
             [
-                "8ffe717629a8bf5f"
+                "4c8296c42e885144"
             ]
         ]
     },
@@ -5162,8 +5171,8 @@
         "links": [
             "93b0b280ccede552"
         ],
-        "x": 1205,
-        "y": 240,
+        "x": 1445,
+        "y": 300,
         "wires": []
     },
     {
@@ -5230,8 +5239,9 @@
         "y": 440,
         "wires": [
             [
-                "8ffe717629a8bf5f",
-                "6fc378926c28e0bd"
+                "6fc378926c28e0bd",
+                "8c0daf9769535c9e",
+                "4c8296c42e885144"
             ]
         ]
     },
@@ -5250,8 +5260,9 @@
         "y": 400,
         "wires": [
             [
-                "8ffe717629a8bf5f",
-                "6fc378926c28e0bd"
+                "6fc378926c28e0bd",
+                "8c0daf9769535c9e",
+                "4c8296c42e885144"
             ]
         ]
     },
@@ -5299,8 +5310,9 @@
         "y": 480,
         "wires": [
             [
-                "8ffe717629a8bf5f",
-                "6fc378926c28e0bd"
+                "6fc378926c28e0bd",
+                "8c0daf9769535c9e",
+                "4c8296c42e885144"
             ]
         ]
     },
@@ -5354,7 +5366,7 @@
         "type": "function",
         "z": "02363c72749a98be",
         "name": "协调器",
-        "func": "let _hd = Object.assign({}, msg.payload.hd);\nlet _pld = Object.assign({}, msg.payload.pld);\n\nlet topic = _hd.to.id + \"/bridge/\" + \n            (_hd.entry.id ?  (\"/\" + _hd.entry.id) : \"\") +\n            (_hd.entry.name ?  (\"/\" + _hd.entry.name) : \"\");\n_pld.transaction = _hd.sid;\nreturn {\n    topic: topic,\n    payload: _pld,\n    _payload: msg.payload\n};\n",
+        "func": "let _hd = Object.assign({}, msg.payload.hd);\nlet _pld = Object.assign({}, msg.payload.pld);\n\nlet topic = _hd.to.id + \"/bridge\" + \n            (_hd.entry.id ?  (\"/\" + _hd.entry.id) : \"\") +\n            (_hd.entry.func ?  (\"/\" + _hd.entry.func) : \"\");\n_pld.transaction = _hd.sid;\nreturn {\n    topic: topic,\n    payload: _pld,\n    _payload: msg.payload\n};\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -5375,7 +5387,7 @@
         "type": "function",
         "z": "02363c72749a98be",
         "name": "子设备",
-        "func": "let _hd = Object.assign({}, msg.payload.hd);\nlet _pld = Object.assign({}, msg.payload.pld);\n\nlet topic = _hd.to.id + \"/\" + \n            _hd.to.cid +  \n            (_hd.entry.name ?  (\"/\" + _hd.entry.name) : \"\") ;\n\nreturn {\n    topic: topic,\n    payload: _pld,\n    _payload: msg.payload\n};\n",
+        "func": "let _hd = Object.assign({}, msg.payload.hd);\nlet _pld = Object.assign({}, msg.payload.pld);\n\nlet pid = _hd.to.pid ? _hd.to.pid : _hd.to.id;\nlet id = _hd.to.cid ? _hd.to.cid : _hd.to.id;\n\nlet topic = pid + \"/\" + id +  \n            (_hd.entry.func ?  (\"/\" + _hd.entry.func) : \"\") ;\n\nreturn {\n    topic: topic,\n    payload: _pld,\n    _payload: msg.payload\n};\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -5425,7 +5437,7 @@
         "type": "function",
         "z": "02363c72749a98be",
         "name": "是否协调器",
-        "func": "let hd = msg.payload.hd;\nif (hd.to.id && !hd.to.cid) {\n    return [msg, null];\n} else {\n    return [null, msg];    \n    \n}",
+        "func": "let hd = msg.payload.hd;\nif (hd.to.id && !hd.to.cid && !hd.to.pid) {\n    return [msg, null];\n} else {\n    return [null, msg];    \n    \n}",
         "outputs": 2,
         "noerr": 0,
         "initialize": "",
@@ -5500,8 +5512,9 @@
         "y": 360,
         "wires": [
             [
-                "8ffe717629a8bf5f",
-                "6fc378926c28e0bd"
+                "6fc378926c28e0bd",
+                "8c0daf9769535c9e",
+                "4c8296c42e885144"
             ]
         ]
     },
@@ -5510,15 +5523,15 @@
         "type": "debug",
         "z": "02363c72749a98be",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1350,
-        "y": 420,
+        "x": 1270,
+        "y": 580,
         "wires": []
     },
     {
@@ -5587,5 +5600,56 @@
         "x": 890,
         "y": 1360,
         "wires": []
+    },
+    {
+        "id": "8c0daf9769535c9e",
+        "type": "function",
+        "z": "02363c72749a98be",
+        "name": "发布事件",
+        "func": "let data = global.get(\"data\");\n\nlet _hd = {\n    from: {\n        type: \"dev\",\n        id: msg.topics[0],\n        cid: msg.payload.data.ieee_address\n    },\n    to: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    entry: {\n        type: \"evt\",\n        id: msg.payload.type\n    }\n}\nlet _pld = msg.payload;\n\nreturn {\n    payload: {\n        hd: _hd,\n        pld: _pld\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1300,
+        "y": 460,
+        "wires": [
+            [
+                "f25dd30a6d3bf86b"
+            ]
+        ]
+    },
+    {
+        "id": "f25dd30a6d3bf86b",
+        "type": "link out",
+        "z": "02363c72749a98be",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "f4460e5db856239e"
+        ],
+        "x": 1445,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "4c8296c42e885144",
+        "type": "function",
+        "z": "02363c72749a98be",
+        "name": "设置Z2M数据",
+        "func": "let _msg = Object.assign({}, msg);\n_msg.topic = msg.topics[0]\nreturn _msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1320,
+        "y": 300,
+        "wires": [
+            [
+                "8ffe717629a8bf5f"
+            ]
+        ]
     }
 ]

@@ -353,7 +353,7 @@
                                     "pid": "ESP8266x00c17ca1"
                                 },
                                 "0x00158d000353c53f": {
-                                    
+
                                 }
                             }
                         },
@@ -370,6 +370,12 @@
                             "subs": {
                                 "dev_evt_report": "{app}/+/dev/+/+/+/evt/report",
                                 "dev_evt_status": "{app}/+/dev/+/+/+/evt/status",
+                                
+                                "dev_evt_device_joined": "{app}/+/dev/+/dio/{dio}/evt/device_joined",
+                                "dev_evt_device_leave": "{app}/+/dev/+/dio/{dio}/evt/device_leave",
+                                "dev_evt_device_announce": "{app}/+/dev/+/dio/{dio}/evt/device_announce",
+                                "dev_evt_device_interview": "{app}/+/dev/+/dio/{dio}/evt/device_interview",
+
                                 "dev_svc_reboot": "{app}/+/dev/+/+/+/svc/reboot",
                                 "dsp_evt_status": "{app}/+/dsp/+/+/+/evt/status",
                                 "edg_evt_status": "{app}/+/edg/+/+/+/evt/status"
