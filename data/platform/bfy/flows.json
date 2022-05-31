@@ -1692,9 +1692,9 @@
         "id": "463fb732348bad19",
         "type": "exec",
         "z": "b772149e45b504b7",
-        "command": "ls",
+        "command": "node",
         "addpay": "",
-        "append": "",
+        "append": "../zigbee2mqtt/index.js",
         "useSpawn": "true",
         "timer": "",
         "winHide": false,
@@ -1738,7 +1738,7 @@
         "type": "debug",
         "z": "b772149e45b504b7",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1779,6 +1779,151 @@
         "statusType": "auto",
         "x": 630,
         "y": 340,
+        "wires": []
+    },
+    {
+        "id": "d24d75468c66b36c",
+        "type": "change",
+        "z": "b772149e45b504b7",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 290,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e9e44820b41024ed",
+        "type": "change",
+        "z": "b772149e45b504b7",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "ZIGBEE2MQTT_DATA",
+                "tot": "env"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b9e49977e6d71567",
+        "type": "inject",
+        "z": "b772149e45b504b7",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "ZIGBEE2MQTT_DATA",
+        "payloadType": "env",
+        "x": 160,
+        "y": 460,
+        "wires": [
+            [
+                "42efc5712eadb0f0"
+            ]
+        ]
+    },
+    {
+        "id": "42efc5712eadb0f0",
+        "type": "debug",
+        "z": "b772149e45b504b7",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 350,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "a1fe092c21e5d3cd",
+        "type": "nd-set-env",
+        "z": "b772149e45b504b7",
+        "name": "",
+        "x": 680,
+        "y": 480,
+        "wires": [
+            [
+                "1a762373fac64be7"
+            ]
+        ]
+    },
+    {
+        "id": "e65ed2fe01a638dc",
+        "type": "inject",
+        "z": "b772149e45b504b7",
+        "name": "",
+        "props": [
+            {
+                "p": "env",
+                "v": "{\"ZIGBEE2MQTT_DATA\":\"ZIGBEE2MQTT_DATA\"}",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 470,
+        "y": 480,
+        "wires": [
+            [
+                "a1fe092c21e5d3cd"
+            ]
+        ]
+    },
+    {
+        "id": "1a762373fac64be7",
+        "type": "debug",
+        "z": "b772149e45b504b7",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 480,
         "wires": []
     }
 ]

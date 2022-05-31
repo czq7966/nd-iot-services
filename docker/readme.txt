@@ -1,5 +1,5 @@
 服务 docker 镜像 生成命令：
-docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-amd64:0.0.2 .
+docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-amd64:0.0.3 .
 
 docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-armv7:0.0.2 .
 
@@ -99,4 +99,4 @@ registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.2 \
 npm start
 
 
-docker run -d -e IOT_CONFIG_FILE="/services/nd-iot-services/docker/config.json" -e IOT_CODE_BRANCH=dev -e IOT_ENABLE_AUTO_UPDATE=1 -p 11880:11880 -p 11881:11881 -p 11882:11882 -p 11883:11883 -p 18090:18090 -p 18091:18091 -p 18092:18092 -p 18093:18093 -p 18094:18094 -p 18095:18095 -p 18096:18096 -e IOT_APP_ID=ndiot -e IOT_ENABLE_MQTT=1 -e IOT_ENABLE_DIO=1 -e IOT_ENABLE_DSP=1 -e IOT_ENABLE_EDG=1 registry.101.com/60b603a0d9419c00107e378d/nd-iot-services:0.0.2 npm start
+docker run -d -e IOT_CONFIG_FILE="/services/nd-iot-services/docker/config.json" -e IOT_CODE_BRANCH=dev -e IOT_ENABLE_AUTO_UPDATE=1 -p 8080:8080 -p 11881:11881 -p 11882:11882 -p 11883:11883 -p 18090:18090 -p 18091:18091 -p 18092:18092 -p 18093:18093 -p 18094:18094 -p 18095:18095 -p 18096:18096 -e IOT_APP_ID=ndiot -e IOT_ENABLE_MQTT=1 -e IOT_ENABLE_DIO=1 -e IOT_ENABLE_DSP=1 -e IOT_ENABLE_EDG=1 registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-amd64:0.0.3 npm start

@@ -45,12 +45,12 @@ COPY ./service/. /lib/systemd/system/.
 # RUN sudo systemctl enable nd-iot-service-edg
 RUN sudo systemctl daemon-reload
 
-# RUN mkdir -p /services \
-#     &&  cd /services \
-#     &&  git clone https://github.com/czq7966/nd-iot-services.git nd-iot-services -b dev \
-#     &&  cd /services/nd-iot-services \
-#     &&  npm run nd:install \
-#     &&  cd /services/nd-iot-services    
+RUN mkdir -p /services \
+    &&  cd /services \
+    &&  git clone https://github.com/czq7966/nd-iot-services.git nd-iot-services -b dev \
+    &&  cd /services/nd-iot-services \
+    &&  npm run nd:install \
+    &&  cd /services/nd-iot-services    
 
 
 WORKDIR /services/nd-iot-services
