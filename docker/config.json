@@ -426,7 +426,7 @@
             "common": {},
             "ids": {
                 "app": "{APP_ID}",
-                "dio": "{HOSTNAME}"
+                "dio": "{APP_ID}-dio"
             }
         }
     }

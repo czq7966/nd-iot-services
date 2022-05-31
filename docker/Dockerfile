@@ -56,4 +56,5 @@ RUN mkdir -p /services \
 WORKDIR /services/nd-iot-services
 
 EXPOSE 1880-1884 8080-8090 18090-18199 11880-11889
+USER iot
 CMD ["npm","start"]
