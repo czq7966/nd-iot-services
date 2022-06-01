@@ -938,7 +938,8 @@
             "a6df7d880adde7dd",
             "9bdce921275b0acd",
             "b45b2eba09115dae",
-            "f2d3874c6b2d73f3"
+            "f2d3874c6b2d73f3",
+            "250ffb893d37d89a"
         ],
         "x": 225,
         "y": 540,
@@ -1689,33 +1690,27 @@
         "wires": []
     },
     {
-        "id": "463fb732348bad19",
-        "type": "exec",
+        "id": "47446fad18d0c295",
+        "type": "function",
         "z": "b772149e45b504b7",
-        "command": "node",
-        "addpay": "",
-        "append": "../zigbee2mqtt/index.js",
-        "useSpawn": "true",
-        "timer": "",
-        "winHide": false,
-        "oldrc": false,
-        "name": "",
-        "x": 390,
-        "y": 280,
+        "name": "设备入网",
+        "func": "let data = global.get(\"data\")\nlet hd = {\n    pref: {\n        app: \"ndiot\",\n        dom: \"test\"\n    },\n    from: {\n        type :\"dev\",\n        id: \"test_joined\"\n    },\n    to: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    entry: {\n        type: \"evt\",\n        id: \"device_joined\"\n    }\n}\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: {}\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 180,
         "wires": [
             [
-                "2e1c8a327a16da08"
-            ],
-            [
-                "bcf470127e869890"
-            ],
-            [
-                "e11942e10da8756b"
+                "250ffb893d37d89a",
+                "b510678e48f8ad64"
             ]
         ]
     },
     {
-        "id": "4c227c3d40ad1f4a",
+        "id": "4bbfc7a04824f358",
         "type": "inject",
         "z": "b772149e45b504b7",
         "name": "",
@@ -1725,32 +1720,16 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 150,
-        "y": 280,
+        "x": 130,
+        "y": 180,
         "wires": [
             [
-                "463fb732348bad19"
+                "47446fad18d0c295"
             ]
         ]
     },
     {
-        "id": "2e1c8a327a16da08",
-        "type": "debug",
-        "z": "b772149e45b504b7",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 610,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "bcf470127e869890",
+        "id": "b510678e48f8ad64",
         "type": "debug",
         "z": "b772149e45b504b7",
         "name": "",
@@ -1761,169 +1740,59 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 630,
-        "y": 280,
+        "x": 670,
+        "y": 200,
         "wires": []
     },
     {
-        "id": "e11942e10da8756b",
-        "type": "debug",
+        "id": "250ffb893d37d89a",
+        "type": "link out",
         "z": "b772149e45b504b7",
         "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 630,
-        "y": 340,
-        "wires": []
-    },
-    {
-        "id": "d24d75468c66b36c",
-        "type": "change",
-        "z": "b772149e45b504b7",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "",
-                "tot": "str"
-            }
+        "mode": "link",
+        "links": [
+            "774d0cb8ef787fc2"
         ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 290,
+        "x": 555,
         "y": 160,
-        "wires": [
-            []
-        ]
+        "wires": []
     },
     {
-        "id": "e9e44820b41024ed",
-        "type": "change",
+        "id": "422b622465d8ef43",
+        "type": "function",
         "z": "b772149e45b504b7",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "ZIGBEE2MQTT_DATA",
-                "tot": "env"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 310,
-        "y": 540,
+        "name": "设备脱网",
+        "func": "let data = global.get(\"data\")\nlet hd = {\n    pref: {\n        app: \"ndiot\",\n        dom: \"test\"\n    },\n    from: {\n        type :\"dev\",\n        id: \"test_joined\"\n    },\n    to: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    entry: {\n        type: \"evt\",\n        id: \"device_leave\"\n    }\n}\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: {}\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 280,
         "wires": [
-            []
+            [
+                "250ffb893d37d89a"
+            ]
         ]
     },
     {
-        "id": "b9e49977e6d71567",
+        "id": "2fc157cc93fe0e87",
         "type": "inject",
         "z": "b772149e45b504b7",
         "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
+        "props": [],
         "repeat": "",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "ZIGBEE2MQTT_DATA",
-        "payloadType": "env",
-        "x": 160,
-        "y": 460,
+        "x": 130,
+        "y": 280,
         "wires": [
             [
-                "42efc5712eadb0f0"
+                "422b622465d8ef43"
             ]
         ]
-    },
-    {
-        "id": "42efc5712eadb0f0",
-        "type": "debug",
-        "z": "b772149e45b504b7",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 350,
-        "y": 400,
-        "wires": []
-    },
-    {
-        "id": "a1fe092c21e5d3cd",
-        "type": "nd-set-env",
-        "z": "b772149e45b504b7",
-        "name": "",
-        "x": 680,
-        "y": 480,
-        "wires": [
-            [
-                "1a762373fac64be7"
-            ]
-        ]
-    },
-    {
-        "id": "e65ed2fe01a638dc",
-        "type": "inject",
-        "z": "b772149e45b504b7",
-        "name": "",
-        "props": [
-            {
-                "p": "env",
-                "v": "{\"ZIGBEE2MQTT_DATA\":\"ZIGBEE2MQTT_DATA\"}",
-                "vt": "json"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 470,
-        "y": 480,
-        "wires": [
-            [
-                "a1fe092c21e5d3cd"
-            ]
-        ]
-    },
-    {
-        "id": "1a762373fac64be7",
-        "type": "debug",
-        "z": "b772149e45b504b7",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 870,
-        "y": 480,
-        "wires": []
     }
 ]
