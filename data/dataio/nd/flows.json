@@ -258,8 +258,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 790,
-        "y": 500,
+        "x": 810,
+        "y": 600,
         "wires": []
     },
     {
@@ -286,7 +286,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "展开主题函数",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = global.get(\"ids\");\n\n\nlet expandTopic = {\n    expandStr : function(v, did) {\n        if (typeof v == \"string\") {\n            v = v.replace(/\\{APP_ID\\}/g, env.get(\"IOT_APP_ID\") || \"\");\n            v = v.replace(/\\{DOM_ID\\}/g, env.get(\"IOT_DOM_ID\") || \"\");\n            v = v.replace(/\\{DSP_ID\\}/g, env.get(\"IOT_DSP_ID\") || \"\");\n            v = v.replace(/\\{EDG_ID\\}/g, env.get(\"IOT_EDG_ID\") || \"\");\n            v = v.replace(/\\{DIO_ID\\}/g, env.get(\"IOT_DIO_ID\") || \"\");\n            v = v.replace(/\\{HOSTNAME\\}/g, env.get(\"HOSTNAME\") || env.get(\"COMPUTERNAME\") || \"\");\n            \n            v = v.replace(/\\{app\\}/g, ids.app || \"\");\n            v = v.replace(/\\{dom\\}/g, ids.dom || \"\");\n            v = v.replace(/\\{dsp\\}/g, ids.dsp || \"\");\n            v = v.replace(/\\{edg\\}/g, ids.edg || \"\");\n            v = v.replace(/\\{dio\\}/g, ids.dio || \"\");\n            if (did)\n                v = v.replace(/\\{dev\\}/g, did || \"\");\n        }\n        return v;\n    },\n    expandArray : function(v, did) {\n        if (Array.isArray(v)) {\n            for(let i=0; i < v.length; i++) {\n                v[i] = this.expand(v[i], did);\n            }\n        }\n        return arr;\n    },\n    expandObj : function(v, did) {\n        if (typeof v == \"object\") {\n            let keys = Object.keys(v);\n            keys.forEach(k => {\n                v[k] = this.expand(v[k], did);\n            });\n        }\n        return v;        \n    },\n    expand : function(v, did) {\n        if (typeof v == \"string\")\n            v = this.expandStr(v, did);\n                    \n        if (Array.isArray(v)) {\n            v = expandArray(v, did);\n        }\n        \n        if (typeof v == \"object\") {\n            v = this.expandObj(v, did)\n        }\n                \n        return v\n    }\n}\n    \n\n\ncommon.expandTopic = expandTopic;\n\nreturn {payload: data};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet gids = global.get(\"ids\");\n\nlet expandTopic = {\n    expandStr : function(v, _ids) {\n        let ids = Object.assign({}, gids);\n        ids = Object.assign(ids, _ids || {});\n\n        if (typeof v == \"string\") {\n            v = v.replace(/\\{APP_ID\\}/g, env.get(\"IOT_APP_ID\") || \"\");\n            v = v.replace(/\\{DOM_ID\\}/g, env.get(\"IOT_DOM_ID\") || \"\");\n            v = v.replace(/\\{DSP_ID\\}/g, env.get(\"IOT_DSP_ID\") || \"\");\n            v = v.replace(/\\{EDG_ID\\}/g, env.get(\"IOT_EDG_ID\") || \"\");\n            v = v.replace(/\\{DIO_ID\\}/g, env.get(\"IOT_DIO_ID\") || \"\");\n            v = v.replace(/\\{PLF_ID\\}/g, env.get(\"IOT_PLF_ID\") || \"\");\n            v = v.replace(/\\{HOSTNAME\\}/g, env.get(\"HOSTNAME\") || env.get(\"COMPUTERNAME\") || \"\");\n            \n            v = v.replace(/\\{app\\}/g, ids.app || \"\");\n            v = v.replace(/\\{dom\\}/g, ids.dom || \"\");\n            v = v.replace(/\\{dsp\\}/g, ids.dsp || \"\");\n            v = v.replace(/\\{edg\\}/g, ids.edg || \"\");\n            v = v.replace(/\\{dio\\}/g, ids.dio || \"\");\n            v = v.replace(/\\{plf\\}/g, ids.plf || \"\");\n            if (ids.dev)\n                v = v.replace(/\\{dev\\}/g, ids.dev || \"\");\n        }\n        return v;\n    },\n    expandArray : function(v, _ids) {\n        if (Array.isArray(v)) {\n            for(let i=0; i < v.length; i++) {\n                v[i] = this.expand(v[i], _ids);\n            }\n        }\n        return arr;\n    },\n    expandObj : function(v, _ids) {\n        if (typeof v == \"object\") {\n            let keys = Object.keys(v);\n            keys.forEach(k => {\n                v[k] = this.expand(v[k], _ids);\n            });\n        }\n        return v;        \n    },\n    expand : function(v, _ids) {\n        if (typeof v == \"string\")\n            v = this.expandStr(v, _ids);\n                    \n        if (Array.isArray(v)) {\n            v = expandArray(v, _ids);\n        }\n        \n        if (typeof v == \"object\") {\n            v = this.expandObj(v, _ids)\n        }\n                \n        return v\n    }\n}\n    \n\n\ncommon.expandTopic = expandTopic;\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -381,8 +381,8 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据补全",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet fixUpDom = function(_dom, notNewIfNotExist, recu) {\n    if (!_dom || !_dom.id) return;\n    \n    let domId = _dom.id;\n    let doms = data.app.domains;\n    \n    let dom = doms[domId];\n    if (!dom) {\n        if (notNewIfNotExist)\n            dom = _dom;\n        else\n            dom = Object.assign({}, _dom);\n    } else {\n         dom = Object.assign(dom, _dom);\n    }\n\n    dom.id = domId;\n    dom.app = data.app;\n    dom.dispatchers = dom.dispatchers || {};\n    dom.edges = dom.edges || {};\n    dom.devices = dom.devices || {};\n    doms[domId] = dom;\n\n    if (recu) {\n        Object.keys(dom.dispatchers).forEach(dspId => {\n            let dsp = dom.dispatchers[dspId];\n            dsp.id = dspId;\n            dsp.app_id = dom.app.id;\n            dsp.dom_id = domId;\n            this.fixUpDsp(dsp, notNewIfNotExist, recu);\n        })\n    }\n}\n\nlet fixUpDsp = function(_dsp, notNewIfNotExist, recu) {\n    if (!_dsp || !_dsp.id || !_dsp.dom_id) return;\n\n    let domId = _dsp.dom_id;\n    let dspId = _dsp.id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let dsps = data.dispatchers;\n    let dsp = dsps[dspId];\n    \n    if (!dom) {\n        node.error(\"dsp没有租户\");\n        return;\n    };\n    \n    if (!dsp) {\n        if (notNewIfNotExist)\n            dsp = _dsp;\n        else\n            dsp = Object.assign({}, _dsp);\n    } else {\n        dsp = Object.assign(dsp, _dsp);\n    }\n    \n    \n    dsp.id = dspId;\n    dsp.domain = dom;\n    dsp.edges = dsp.edges || {};\n    dom.dispatchers[dspId] = dsp;\n    data.dispatchers[dspId] = dsp;\n    \n    if (recu) {\n        Object.keys(dsp.edges).forEach(edgId => {\n            let edg = dsp.edges[edgId];\n            edg.id =edgId;\n            edg.app_id = dom.app.id;\n            edg.dom_id = dom.id;\n            edg.dsp_id = dsp.id;\n            this.fixUpEdg(edg, notNewIfNotExist, recu);\n        })\n    }\n}\n\nlet fixUpEdg = function(_edg, notNewIfNotExist, recu) {\n    if (!_edg || !_edg.id || !_edg.dom_id || !_edg.dsp_id) return;\n\n    let domId = _edg.dom_id;\n    let dspId = _edg.dsp_id;\n    let edgId = _edg.id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let dsps = data.dispatchers;\n    let dsp = dsps[dspId];\n    let edgs = data.edges;\n    let edg = edgs[edgId];\n    \n    if (!dom || !dsp) {\n        node.error(\"edg 没有租户或DSP\");\n        return;\n    };\n    \n    if (!edg) {\n        if (notNewIfNotExist)\n            edg = _edg;\n        else\n            edg = Object.assign({}, _edg);\n    } else {\n        edg = Object.assign(edg, _edg);\n    }\n    \n    edg.id = edgId;\n    edg.dispatcher = dsp;\n    edg.devices = edg.devices || {};\n    dsp.edges[edgId] = edg;\n    dom.edges[edgId] = edg;\n    data.edges[edgId] = edg;\n}\n\nlet fixUpDev = function(_dev, notNewIfNotExist) {\n    if (!_dev || !_dev.id || !_dev.dom_id) return;\n\n    let devId = _dev.id;\n    let domId = _dev.dom_id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let devs = data.devices;\n    let dev = devs[devId];\n    \n    if (!dom) {\n        node.error(\"dev没有租户\");\n        return;\n    };\n    \n    if (!dev) {\n        if (notNewIfNotExist)\n            dev = _dev;\n        else\n            dev = Object.assign({}, _dev);\n    } else {\n        dev = Object.assign(dev, _dev);\n    }\n    \n    dev.id = devId;\n    dev.domain = dom;\n    dom.devices[devId] = dev;\n    data.devices[devId] = dev;\n    \n}\n\nlet fixUpPlf = function(_plf, notNewIfNotExist) {\n    if (!_plf || !_plf.id) return;\n    \n    let plfId = _plf.id;\n    let plfs = data.app.platforms;\n    \n    let plf = plfs[plfId];\n    if (!plf) {\n        if (notNewIfNotExist)\n            plf = _plf;\n        else\n            plf = Object.assign({}, _plf);\n    } else {\n        plf = Object.assign(plf, _plf);\n    }\n\n    plf.id = plfId;\n    plf.app = data.app;\n    plfs[plfId] = plf;\n\n}\n\n\nlet fixUpData = function() {\n    let doms = data.app.domains;\n    Object.keys(doms).forEach(domId => {\n        let dom = doms[domId];\n        dom.id = domId;\n        this.fixUpDom(dom, true, true);\n        if (dom.reg_devices) {\n            regDevs = dom.reg_devices;\n            Object.keys(regDevs).forEach(devId => {\n                let val = regDevs[devId];\n                dev = {};\n                if (typeof val == \"object\" ) {\n                    dev = Object.assign(dev, val);\n                } else {\n                    dev.name = val;\n                }\n                dev.id = devId;\n                dev.app_id = dev.app_id || dom.app.id;\n                dev.dom_id = dev.dom_id || dom.id;\n                 \n                this.fixUpDev(dev, false)\n            })\n        }\n    });\n    \n    let plfs = data.app.platforms;\n    Object.keys(plfs).forEach(plfId => {\n        let plf = plfs[plfId];\n        plf.id = plfId;\n        this.fixUpPlf(plf, true);\n    })\n    \n}\n\nlet fixUpData1 = function() {\n    let doms = data.app.domains;\n    Object.keys(doms).forEach(domKey => {\n        let dom = doms[domKey];\n        dom.id = domKey;\n        dom.app = data.app;\n        let dsps = dom.dispatchers || {};\n        dom.dispatchers = dsps;\n        dom.edges = dom.edges || {}\n        dom.devices = dom.devices || {}\n        Object.keys(dsps).forEach(dspKey => {\n            let dsp = dsps[dspKey];\n            dsp.id = dspKey;\n            dsp.domain = dom;\n\n            data.dispatchers[dspKey] = dsp;\n            let edgs = dsp.edges || {};\n            dsp.edges = edgs;\n            Object.keys(edgs).forEach(edgKey => {\n                let edg = edgs[edgKey];\n                edg.id = edgKey;\n                edg.dispatcher = dsp;\n                edg.devices = edg.devices || {};\n                dom.edges[edgKey] = edg;\n                data.edges[edgKey] = edg;\n                // let devs = edg.devices || {};\n                // edg.devices = devs;\n                // Object.keys(devs).forEach(devKey => {\n                //     let dev = devs[devKey];\n                //     dev.id = devKey;\n                //     dev.edge = edg;\n                //     data.devices[devKey] = dev;\n                // })\n                \n            })\n            \n        })\n        \n        //注册设备\n        let regDevs = dom.reg_devices || {};\n        dom.reg_devices = regDevs;\n        Object.keys(regDevs).forEach(devKey => {\n            let devVal = regDevs[devKey] || {};\n            if (typeof devVal == \"string\") {\n                devVal = {\n                    id: devKey,\n                    name: devVal\n                }\n            } else {\n                devVal.id = devKey\n            }\n            let dev = dom.devices[devKey] || devVal;\n            dom.devices[devKey] = dev;\n            dev.domain = dom;\n            data.reg_devices[devKey] = dev;\n            data.devices[devKey] = dev;\n        })\n    })\n}\n\ncommon.fixUpData = fixUpData;\ncommon.fixUpDom = fixUpDom;\ncommon.fixUpDsp = fixUpDsp;\ncommon.fixUpEdg = fixUpEdg;\ncommon.fixUpDev = fixUpDev;\ncommon.fixUpPlf = fixUpPlf;\n\ncommon.expandTopic.expand(data.ids);   \ncommon.expandTopic.expand(data.topics);\ndata.app.id = data.ids.app;\n\ncommon.fixUpData();\ncommon.keyToObjId(data.domains);\ncommon.keyToObjId(data.dispatchers);\ncommon.keyToObjId(data.edges);\ncommon.keyToObjId(data.devices);\n\n\n\nreturn {payload: data};",
-        "outputs": 1,
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet fixUpDom = function(_dom, notNewIfNotExist, recu) {\n    if (!_dom || !_dom.id) return;\n    \n    let domId = _dom.id;\n    let doms = data.app.domains;\n    \n    let dom = doms[domId];\n    if (!dom) {\n        if (notNewIfNotExist)\n            dom = _dom;\n        else\n            dom = Object.assign({}, _dom);\n    } else {\n         dom = Object.assign(dom, _dom);\n    }\n\n    dom.id = domId;\n    dom.app = data.app;\n    dom.dispatchers = dom.dispatchers || {};\n    dom.edges = dom.edges || {};\n    dom.devices = dom.devices || {};\n    doms[domId] = dom;\n\n    if (recu) {\n        Object.keys(dom.dispatchers).forEach(dspId => {\n            let dsp = dom.dispatchers[dspId];\n            dsp.id = dspId;\n            dsp.app_id = dom.app.id;\n            dsp.dom_id = domId;\n            this.fixUpDsp(dsp, notNewIfNotExist, recu);\n        })\n    }\n}\n\nlet fixUpDsp = function(_dsp, notNewIfNotExist, recu) {\n    if (!_dsp || !_dsp.id || !_dsp.dom_id) return;\n\n    let domId = _dsp.dom_id;\n    let dspId = _dsp.id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let dsps = data.dispatchers;\n    let dsp = dsps[dspId];\n    let dysub = false;\n    \n    if (!dom) {\n        node.error(\"dsp没有租户\");\n        return;\n    };\n    \n    if (!dsp) {\n        if (notNewIfNotExist)\n            dsp = _dsp;\n        else\n            dsp = Object.assign({}, _dsp);\n        dysub = true;\n    } else {\n        dsp = Object.assign(dsp, _dsp);\n    }\n    \n    \n    dsp.id = dspId;\n    dsp.domain = dom;\n    dsp.edges = dsp.edges || {};\n    dom.dispatchers[dspId] = dsp;\n    data.dispatchers[dspId] = dsp;\n    //订阅调度上下线\n    if (dysub) node.send([{dispatcher: dsp}, null]);\n    \n    if (recu) {\n        Object.keys(dsp.edges).forEach(edgId => {\n            let edg = dsp.edges[edgId];\n            edg.id =edgId;\n            edg.app_id = dom.app.id;\n            edg.dom_id = dom.id;\n            edg.dsp_id = dsp.id;\n            this.fixUpEdg(edg, notNewIfNotExist, recu);\n        })\n    }\n}\n\nlet fixUpEdg = function(_edg, notNewIfNotExist, recu) {\n    if (!_edg || !_edg.id || !_edg.dom_id || !_edg.dsp_id) return;\n\n    let domId = _edg.dom_id;\n    let dspId = _edg.dsp_id;\n    let edgId = _edg.id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let dsps = data.dispatchers;\n    let dsp = dsps[dspId];\n    let edgs = data.edges;\n    let edg = edgs[edgId];\n    let dysub = false;\n    \n    if (!dom || !dsp) {\n        node.error(\"edg 没有租户或DSP\");\n        return;\n    };\n    \n    if (!edg) {\n        if (notNewIfNotExist)\n            edg = _edg;\n        else\n            edg = Object.assign({}, _edg);\n        dysub = true;\n    } else {\n        edg = Object.assign(edg, _edg);\n    }\n    \n    edg.id = edgId;\n    edg.dispatcher = dsp;\n    edg.devices = edg.devices || {};\n    dsp.edges[edgId] = edg;\n    dom.edges[edgId] = edg;\n    data.edges[edgId] = edg;\n    \n    //订阅边缘上下线\n    if (dysub) node.send([{edge: edg}, null])\n}\n\nlet fixUpDev = function(_dev, notNewIfNotExist) {\n    if (!_dev || !_dev.id || !_dev.dom_id) return;\n\n    let devId = _dev.id;\n    let domId = _dev.dom_id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let devs = data.devices;\n    let dev = devs[devId];\n    let dysub = false;\n    \n    if (!dom) {\n        node.error(\"dev没有租户\");\n        return;\n    };\n    \n    if (!dev) {\n        if (notNewIfNotExist)\n            dev = _dev;\n        else\n            dev = Object.assign({}, _dev);\n        dysub = true;\n    } else {\n        dev = Object.assign(dev, _dev);\n    }\n    \n    dev.id = devId;\n    dev.domain = dom;\n    dom.devices[devId] = dev;\n    data.devices[devId] = dev;\n    \n    //订阅设备上下线\n    if (dysub)  node.send([{device: dev}, null]);\n    \n}\n\nlet fixUpPlf = function(_plf, notNewIfNotExist) {\n    if (!_plf || !_plf.id) return;\n    \n    let plfId = _plf.id;\n    let plfs = data.app.platforms;\n    let dysub = false;\n    \n    let plf = plfs[plfId];\n    if (!plf) {\n        if (notNewIfNotExist)\n            plf = _plf;\n        else\n            plf = Object.assign({}, _plf);\n        dysub = true;\n    } else {\n        plf = Object.assign(plf, _plf);\n    }\n\n    plf.id = plfId;\n    plf.app = data.app;\n    plfs[plfId] = plf;\n    \n    //订阅平台上下线\n    if (dysub)  node.send([{platform: plf}, null])\n\n}\n\n\nlet fixUpData = function() {\n    let doms = data.app.domains;\n    Object.keys(doms).forEach(domId => {\n        let dom = doms[domId];\n        dom.id = domId;\n        this.fixUpDom(dom, true, true);\n        if (dom.reg_devices) {\n            regDevs = dom.reg_devices;\n            Object.keys(regDevs).forEach(devId => {\n                let val = regDevs[devId];\n                dev = {};\n                if (typeof val == \"object\" ) {\n                    dev = Object.assign(dev, val);\n                } else {\n                    dev.name = val;\n                }\n                dev.id = devId;\n                dev.app_id = dev.app_id || dom.app.id;\n                dev.dom_id = dev.dom_id || dom.id;\n                 \n                this.fixUpDev(dev, false)\n            })\n        }\n    });\n    \n    let plfs = data.app.platforms;\n    Object.keys(plfs).forEach(plfId => {\n        let plf = plfs[plfId];\n        plf.id = plfId;\n        this.fixUpPlf(plf, true);\n    })\n    \n}\n\ncommon.fixUpData = fixUpData;\ncommon.fixUpDom = fixUpDom;\ncommon.fixUpDsp = fixUpDsp;\ncommon.fixUpEdg = fixUpEdg;\ncommon.fixUpDev = fixUpDev;\ncommon.fixUpPlf = fixUpPlf;\n\ncommon.expandTopic.expand(data.ids);   \ncommon.expandTopic.expand(data.topics.subs);\ncommon.expandTopic.expand(data.topics.services);\ndata.app.id = data.ids.app;\n\ncommon.fixUpData();\ncommon.keyToObjId(data.domains);\ncommon.keyToObjId(data.dispatchers);\ncommon.keyToObjId(data.edges);\ncommon.keyToObjId(data.devices);\n\n\n\nreturn [null, {payload: data}];",
+        "outputs": 2,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -391,8 +391,11 @@
         "y": 560,
         "wires": [
             [
-                "6423346762c80c34",
-                "1188b78d61e6e2a8"
+                "806baee163cb44cc"
+            ],
+            [
+                "1188b78d61e6e2a8",
+                "6423346762c80c34"
             ]
         ]
     },
@@ -691,6 +694,56 @@
         "wires": []
     },
     {
+        "id": "806baee163cb44cc",
+        "type": "function",
+        "z": "7c7a09edf982e2f4",
+        "name": "订阅上下线主题",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet topic;\nlet ids = {};\nif (msg.dispatcher) {\n    topic = data.topics.dysubs.dsp_evt_status;\n    ids.dsp = msg.dispatcher.id;\n}\n\nif (msg.edge) {\n    topic = data.topics.dysubs.edg_evt_status;\n    ids.edg = msg.edge.id;    \n}\n\nif (msg.device) {\n    topic = data.topics.dysubs.dev_evt_status;\n    ids.dev = msg.device.id;    \n}\n\nif (msg.platform) {\n    topic = data.topics.dysubs.plf_evt_status;\n    ids.plf = msg.platform.id;      \n}\n\nif (topic) {\n    topic = common.expandTopic.expandStr(topic, ids);\n\n    node.send({\n            action: \"unsubscribe\",\n            topic: topic\n    })\n    \n    node.send({\n            action: \"subscribe\",\n            topic: topic\n    })\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 480,
+        "wires": [
+            [
+                "c681ca1c09bbf5eb",
+                "be8dee420468e410"
+            ]
+        ]
+    },
+    {
+        "id": "c681ca1c09bbf5eb",
+        "type": "link out",
+        "z": "7c7a09edf982e2f4",
+        "name": "订阅上下线主题输出",
+        "mode": "link",
+        "links": [
+            "1fbea7baf2a0c450"
+        ],
+        "x": 935,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "be8dee420468e410",
+        "type": "debug",
+        "z": "7c7a09edf982e2f4",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "topic",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 420,
+        "wires": []
+    },
+    {
         "id": "0f989c13f4e0c1cb",
         "type": "mqtt in",
         "z": "e93bbc67912b9178",
@@ -753,7 +806,7 @@
         "type": "debug",
         "z": "e93bbc67912b9178",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -920,7 +973,7 @@
         "z": "e93bbc67912b9178",
         "name": "动态订阅主题",
         "links": [
-            "83c403b1c017c665"
+            "c681ca1c09bbf5eb"
         ],
         "x": 125,
         "y": 100,
@@ -1189,8 +1242,8 @@
         "y": 220,
         "wires": [
             [
-                "0f989c13f4e0c1cb",
-                "589883c5ddd06e17"
+                "589883c5ddd06e17",
+                "0f989c13f4e0c1cb"
             ]
         ]
     },
@@ -1199,7 +1252,7 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "出生消息",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    from: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dio,\n    online: 1\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet birth = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\nmsg.broker = msg.broker || {};\nmsg.broker.birth = birth;\n\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n      app: \"0\",\n      dom: \"0\"\n    },\n    from: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dio,\n    online: 1\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet birth = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\nmsg.broker = msg.broker || {};\nmsg.broker.birth = birth;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",

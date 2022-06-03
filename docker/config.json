@@ -76,7 +76,7 @@
                                 "topics": {
                                     "subs": {                                        
                                         "dev_evt_report":   "{app}/+/dev/+/+/+/evt/report",
-                                        "dev_evt_status":   "{app}/+/dev/+/+/+/evt/status",
+                                        "dev_evt_status":   "0/0/dev/+/0/0/evt/status",
                                         "dev_svc_get":      "{app}/+/dev/+/+/+/svc/get",
                                         "dev_svc_set":      "{app}/+/dev/+/+/+/svc/set",
                                         "dev_svc_reboot":   "{app}/+/dev/+/+/+/svc/reboot",
@@ -134,22 +134,18 @@
                                 },
                                 "topics": {
                                     "subs": {
-                                        "dio_evt_status":    "{app}/+/dio/+/+/+/evt/status",
-                                        "edg_evt_status":    "{app}/{dom}/edg/+/+/+/evt/status",
-                                        "dev_evt_status":    "{app}/{dom}/dev/+/+/+/evt/status",
+                                        "dio_evt_status":    "0/0/dio/{dio}/0/0/evt/status",
+                                        "edg_evt_status":    "{app}/{dom}/edg/+/{dsp}/{dsp}/evt/status",
+                                        "dev_evt_status":    "{app}/{dom}/dev/+/{dsp}/{dsp}/evt/status",
                                         "dev_evt_report":    "{app}/{dom}/dev/+/+/+/evt/report",
-                                        "dev_svc_reboot":   "{app}/{dom}/dev/+/+/+/svc/reboot"
+                                        "dev_svc_reboot":    "{app}/{dom}/dev/+/+/+/svc/reboot"
+                                    },
+                                    "dysubs": {                                        
+                                        "edg_evt_status":    "0/0/edg/{edg}/0/0/evt/status",
+                                        "dev_evt_status":    "0/0/dev/{dev}/0/0/evt/status"
                                     },
                                     "services":{
-                                        "dsp_svc_login":        "+/+/+/+/dsp/{dsp}/svc/login",
-                                        "dsp_svc_get_z2m_datafile": "{app}/{dom}/+/+/dsp/{dsp}/svc/get_z2m_datafile",
-                                        "dsp_svc_set_z2m_datafile": "{app}/{dom}/+/+/dsp/{dsp}/svc/set_z2m_datafile"
-                                    },
-                                    "pubs":{
-                                        "dev_svc_login":        "login",
-                                        "edg_svc_login":        "login",
-                                        "edg_svc_get_z2m_datafile": "get_z2m_datafile",                                    
-                                        "dsp_evt_status": "status"
+                                        "dsp_svc_login":     "+/+/+/+/dsp/{dsp}/svc/login"
                                     }
                                 }
                             },             
@@ -235,12 +231,13 @@
                                     },
                                     "topics": {
                                         "subs": {
+                                            "dio_evt_status": "0/0/dio/{dio}/0/0/evt/status",                                                                        
+                                            "dsp_evt_status": "0/0/dsp/{dsp}/0/0/evt/status",
                                             "dev_evt_report": "{app}/{dom}/dev/+/edg/{edg}/evt/report",
-                                            "dev_svc_reboot": "{app}/{dom}/dev/+/+/+/svc/reboot",
-                                            "dsp_evt_status": "{app}/{dom}/dsp/{dsp}/0/0/evt/status"
+                                            "dev_svc_reboot": "{app}/{dom}/dev/+/+/+/svc/reboot"
                                         },
-                                        "dysubs": {
-                                            "dev_evt_status": "{app}/{dom}/dev/{dev}/0/0/evt/status",
+                                        "dysubs": {     
+                                            "dev_evt_status": "0/0/dev/{dev}/0/0/evt/status",
                                             "dev_evt_penet": "{app}/{dom}/dev/{dev}/edg/{edg}/evt/penet",
                                             "z3co_svc_request": "{app}/{dom}/0/0/dev/{dev}/svc/request"                                          
                                         },                                       
@@ -368,17 +365,21 @@
                         },
                         "topics":{
                             "subs": {
-                                "dev_evt_report": "{app}/+/dev/+/+/+/evt/report",
-                                "dev_evt_status": "{app}/+/dev/+/+/+/evt/status",
-                                
+                                "dev_evt_report": "{app}/+/dev/+/+/+/evt/report",  
+                                "dev_svc_reboot": "{app}/+/dev/+/+/+/svc/reboot",
                                 "dev_evt_device_joined": "{app}/+/dev/+/dio/{dio}/evt/device_joined",
                                 "dev_evt_device_leave": "{app}/+/dev/+/dio/{dio}/evt/device_leave",
                                 "dev_evt_device_announce": "{app}/+/dev/+/dio/{dio}/evt/device_announce",
                                 "dev_evt_device_interview": "{app}/+/dev/+/dio/{dio}/evt/device_interview",
-
-                                "dev_svc_reboot": "{app}/+/dev/+/+/+/svc/reboot",
+                                
                                 "dsp_evt_status": "{app}/+/dsp/+/+/+/evt/status",
                                 "edg_evt_status": "{app}/+/edg/+/+/+/evt/status"
+                            },
+                            "dysubs":{
+                                "dsp_evt_status": "0/0/dsp/{dsp}/0/0/evt/status",
+                                "edg_evt_status": "0/0/edg/{edg}/0/0/evt/status",
+                                "dev_evt_status": "0/0/dev/{dev}/0/0/evt/status",
+                                "plf_evt_status": "0/0/plf/{plf}/0/0/evt/status"
                             },
                             "services":{
                                 "dio_svc_login": "+/+/+/+/0/0/svc/login",
