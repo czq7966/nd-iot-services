@@ -1,6 +1,63 @@
 {
-    "platforms": {        
-        "nd":{
+    "platforms": {   
+        "ndv1":{
+            "global": {
+                "data":{
+                    "app": {
+                        "id": "{APP_ID}",
+                        "name": "网龙物联网",
+                        "platform": {
+                            "id": "{plf}",
+                            "name": "网龙集控平台",
+                            "devices": {},
+                            "mqtt": {
+                                "broker" : {
+                                    "url": "mqtt://push-access.sdp.101.com:1780",
+                                    "username": "ioe",
+                                    "password": ""
+                                },                                
+                                "topics": {
+                                    "subs": {    
+                                        "dio_evt_status":   "0/0/dio/{dio}/0/0/evt/status",                                    
+                                        "dev_evt_report":   "{app}/+/dev/+/+/+/evt/report",
+                                        "dev_evt_status":   "0/0/dev/+/0/0/evt/status",
+                                        "dev_svc_get":      "{app}/+/dev/+/+/+/svc/get",
+                                        "dev_svc_set":      "{app}/+/dev/+/+/+/svc/set",
+                                        "dev_svc_reboot":   "{app}/+/dev/+/+/+/svc/reboot",
+                                        "dev_svc_login":    "{app}/+/dev/+/0/0/svc/login",                        
+                                        "dev_svc_handshake":"{app}/+/dev/+/+/+/svc/handshake"                                        
+                                    },
+                                    "dysubs": {
+                                        "dev_evt_status":   "0/0/dev/{dev}/0/0/evt/status"
+                                    },
+                                    "services": {
+                                        "plf_svc_login":     "+/+/+/+/plf/{plf}/svc/login"
+                                    },
+                                    "pubs": {
+                                        "platform":{
+
+                                        }
+                                    }
+                                }                            
+                            }            
+                        }
+                
+                    },
+                    "platform": {},
+                    "devices": {},
+                    "topics": {},
+                    "ids": {},
+                    "mqtt": {}                    
+                },
+                "common": {},
+                "ids": {
+                    "app": "{APP_ID}",
+                    "dio": "{DIO_ID}",
+                    "plf": "ndv1-{HOSTNAME}"
+                }
+            }
+        },     
+        "ndv2":{
             "global": {
                 "data":{
                     "app": {
