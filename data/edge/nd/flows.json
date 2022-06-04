@@ -391,8 +391,8 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "缓存数据函数",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet online = function(){\n    let events = this.events;\n    if (events && events.status)\n        return events.status.pld.online;\n    return 0;\n}\n\nlet cachePayload = function(payload) {\n    let hd = payload.hd;\n    let pld = payload.pld;\n    if (hd.from.type == \"dev\") {\n        let dev = data.devices[hd.from.id] || {};\n        dev.id = hd.from.id;\n        dev.events = dev.events || {};\n        if (hd.from.pid)\n            dev.pid = hd.from.pid;\n        dev.events[hd.entry.id] = payload;\n        dev.online = online;\n        data.devices[hd.from.id] = dev;\n    }\n    \n    let dsp = data.dispatcher;\n    if (hd.from.type == \"dsp\" && hd.from.id == dsp.id ) {\n        if (hd.entry.type == \"evt\"){\n            dsp.events = dsp.events || {};\n            dsp.events[hd.entry.id] = payload;\n            dsp.online = online;\n        }\n    }\n}\n\ncommon.cachePayload = cachePayload;\n\nreturn {payload: data};",
-        "outputs": 1,
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet online = function(){\n    let events = this.events;\n    if (events && events.status)\n        return events.status.pld.online;\n    return 0;\n}\n\nlet cachePayload = function(payload) {\n    let hd = payload.hd;\n    let pld = payload.pld;\n    if (hd.from.type == \"dev\") {\n        let dysub = false;\n        let dev = data.devices[hd.from.id];\n        if (!dev) {\n            dev = {};\n            dysub = true;\n        }\n        dev.id = hd.from.id;\n        dev.events = dev.events || {};\n        if (hd.from.pid)\n            dev.pid = hd.from.pid;\n        dev.events[hd.entry.id] = payload;\n        dev.online = online;\n        data.devices[hd.from.id] = dev;\n        if (dysub) node.send({device: dev}, null);\n    }\n    \n    let dsp = data.dispatcher;\n    if (hd.from.type == \"dsp\" && hd.from.id == dsp.id ) {\n        if (hd.entry.type == \"evt\"){\n            dsp.events = dsp.events || {};\n            dsp.events[hd.entry.id] = payload;\n            dsp.online = online;\n        }\n    }\n}\n\ncommon.cachePayload = cachePayload;\n\nreturn [null, {payload: data}];",
+        "outputs": 2,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -400,6 +400,9 @@
         "x": 440,
         "y": 400,
         "wires": [
+            [
+                "b15bbbcec428c762"
+            ],
             [
                 "53f8f8933a1a8726"
             ]
@@ -576,6 +579,38 @@
         ]
     },
     {
+        "id": "2a5bed3b693562e4",
+        "type": "link out",
+        "z": "7c7a09edf982e2f4",
+        "name": "设备状态订阅",
+        "mode": "link",
+        "links": [
+            "1fbea7baf2a0c450"
+        ],
+        "x": 825,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "b15bbbcec428c762",
+        "type": "function",
+        "z": "7c7a09edf982e2f4",
+        "name": "订阅上下线主题",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet topic;\nlet ids = {};\nif (msg.dispatcher) {\n    topic = data.topics.dysubs.dsp_evt_status;\n    ids.dsp = msg.dispatcher.id;\n}\n\nif (msg.edge) {\n    topic = data.topics.dysubs.edg_evt_status;\n    ids.edg = msg.edge.id;    \n}\n\nif (msg.device) {\n    topic = data.topics.dysubs.dev_evt_status;\n    ids.dev = msg.device.id;    \n}\n\nif (msg.platform) {\n    topic = data.topics.dysubs.plf_evt_status;\n    ids.plf = msg.platform.id;      \n}\n\nif (topic) {\n    topic = common.expandTopic.expandStr(topic, ids);\n\n    node.send({\n            action: \"unsubscribe\",\n            topic: topic\n    })\n    \n    node.send({\n            action: \"subscribe\",\n            topic: topic\n    })\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 400,
+        "wires": [
+            [
+                "2a5bed3b693562e4"
+            ]
+        ]
+    },
+    {
         "id": "0f989c13f4e0c1cb",
         "type": "mqtt in",
         "z": "e93bbc67912b9178",
@@ -609,7 +644,7 @@
         "y": 260,
         "wires": [
             [
-                "e631c502013e282a"
+                "e4534314a7bcd4b3"
             ]
         ]
     },
@@ -638,7 +673,7 @@
         "type": "debug",
         "z": "e93bbc67912b9178",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -804,7 +839,8 @@
         "name": "动态订阅主题",
         "links": [
             "83c403b1c017c665",
-            "9df668438b39a15c"
+            "9df668438b39a15c",
+            "2a5bed3b693562e4"
         ],
         "x": 185,
         "y": 160,
@@ -833,25 +869,6 @@
         "wires": []
     },
     {
-        "id": "04c398816ff958e8",
-        "type": "inject",
-        "z": "e93bbc67912b9178",
-        "name": "",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 190,
-        "y": 420,
-        "wires": [
-            [
-                "e4534314a7bcd4b3"
-            ]
-        ]
-    },
-    {
         "id": "6b6a7c7b19998294",
         "type": "debug",
         "z": "e93bbc67912b9178",
@@ -864,8 +881,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1070,
-        "y": 340,
+        "x": 790,
+        "y": 260,
         "wires": []
     },
     {
@@ -876,7 +893,7 @@
         "property": "broker.will.payload",
         "action": "str",
         "pretty": false,
-        "x": 1090,
+        "x": 610,
         "y": 260,
         "wires": [
             [
@@ -891,18 +908,16 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "出生消息",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    from: {\n        type: \"edg\",\n        id: data.ids.edg\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: data.topics.pubs.edg_evt_status\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: hd.from.id,\n    online: 1\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet birth = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\n\nmsg.broker.birth = birth;\n\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n        app: \"0\",\n        dom: \"0\"\n    },\n    from: {\n        type: \"edg\",\n        id: data.ids.edg\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.edg,\n    online: 1\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet birth = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\n\nmsg.broker.birth = birth;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 780,
-        "y": 260,
+        "x": 680,
+        "y": 360,
         "wires": [
-            [
-                "45838fa67f1ea02a"
-            ]
+            []
         ]
     },
     {
@@ -916,11 +931,11 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 620,
+        "x": 300,
         "y": 260,
         "wires": [
             [
-                "b920e31b90166791"
+                "45838fa67f1ea02a"
             ]
         ]
     },
@@ -929,13 +944,13 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "遗嘱消息",
-        "func": "let birth = msg.broker.birth;\n\nlet pld = {\n    id: birth.payload.pld.id,\n    online: 0\n};\n\n\n\nlet will = {\n    topic: birth.topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: birth.payload.hd,\n        pld: pld\n    }\n}\n\n\nmsg.broker.will = will;\n\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n      app: \"0\",\n      dom: \"0\"\n    },\n    from: {\n        type: \"edg\",\n        id: data.ids.edg\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.edg,\n    online: 0\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet will = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\n\nmsg.broker.will = will;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 940,
+        "x": 460,
         "y": 260,
         "wires": [
             [
@@ -1135,11 +1150,10 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 290,
-        "y": 300,
+        "x": 270,
+        "y": 360,
         "wires": [
             [
-                "0f989c13f4e0c1cb",
                 "e631c502013e282a"
             ]
         ]
@@ -1162,11 +1176,9 @@
         "allowrate": false,
         "outputs": 1,
         "x": 460,
-        "y": 260,
+        "y": 360,
         "wires": [
-            [
-                "e4534314a7bcd4b3"
-            ]
+            []
         ]
     },
     {
@@ -1258,7 +1270,7 @@
         "type": "debug",
         "z": "e93bbc67912b9178",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1723,7 +1735,7 @@
         "type": "function",
         "z": "46a5ba0d798d87c3",
         "name": "状态发布",
-        "func": "let data = global.get(\"data\");\nlet edg = data.edge;\n\nlet z2m_count = 0;\n\nObject.values(edg.devices).forEach(dev => {\n    if (dev.z2m && dev.z2m.z2m)\n        z2m_count++;\n})\n\n\nlet _hd = {\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    }\n};\n\nlet _pld = {\n    id: edg.id,\n    online: 1,\n    device_max: edg.device_max,\n    device_count: Object.keys(edg.devices).length,\n    z2m_max: edg.z2m_max,\n    z2m_count: z2m_count\n    \n};\nreturn {\n    payload:{\n        hd: _hd,\n        pld: _pld\n    }\n};",
+        "func": "let data = global.get(\"data\");\n\nlet hd = {\n    pref: {\n        app: \"0\",\n        dom: \"0\"\n    },\n    from: {\n        type: \"edg\",\n        id: data.ids.edg\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.edg,\n    online: 1\n};\n\n\nreturn {\n    payload:{\n        hd: hd,\n        pld: pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1733,7 +1745,8 @@
         "y": 460,
         "wires": [
             [
-                "5002cb933f4b4eb5"
+                "5002cb933f4b4eb5",
+                "9579ca626a886c07"
             ]
         ]
     },
@@ -2208,6 +2221,58 @@
         ]
     },
     {
+        "id": "9579ca626a886c07",
+        "type": "debug",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "e2fdad0ddac0973d",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "状态发布ToDSP",
+        "func": "let data = global.get(\"data\");\nlet edg = data.edge;\n\nlet z2m_count = 0;\n\nObject.values(edg.devices).forEach(dev => {\n    if (dev.z2m && dev.z2m.z2m)\n        z2m_count++;\n})\n\n\nlet hd = {\n    to: {\n        type: \"dsp\",\n        id: data.ids.dsp\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\n\nlet pld = {\n    id: edg.id,\n    online: 1,\n    device_max: edg.device_max,\n    device_count: Object.keys(edg.devices).length,\n    z2m_max: edg.z2m_max,\n    z2m_count: z2m_count\n    \n};\nreturn {\n    payload:{\n        hd: hd,\n        pld: pld\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 520,
+        "wires": [
+            [
+                "9579ca626a886c07",
+                "5002cb933f4b4eb5"
+            ]
+        ]
+    },
+    {
+        "id": "befe0fced79c1e94",
+        "type": "link in",
+        "z": "46a5ba0d798d87c3",
+        "name": "状态发布ToDSP输入",
+        "links": [
+            "6f4ea3b14159efe0"
+        ],
+        "x": 95,
+        "y": 520,
+        "wires": [
+            [
+                "e2fdad0ddac0973d"
+            ]
+        ]
+    },
+    {
         "id": "b909128e182d46da",
         "type": "link in",
         "z": "f7e96a32e56d72eb",
@@ -2415,7 +2480,8 @@
         "y": 420,
         "wires": [
             [
-                "3c2636695bc1a25e"
+                "3c2636695bc1a25e",
+                "ec1a4cd5dac8dbf6"
             ]
         ]
     },
@@ -2423,18 +2489,19 @@
         "id": "3c2636695bc1a25e",
         "type": "function",
         "z": "f7e96a32e56d72eb",
-        "name": "边缘上线",
+        "name": "调度上线处理",
         "func": "return msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 720,
-        "y": 420,
+        "x": 740,
+        "y": 400,
         "wires": [
             [
-                "0e5b3bc6e3952f26"
+                "0e5b3bc6e3952f26",
+                "6f4ea3b14159efe0"
             ]
         ]
     },
@@ -2448,7 +2515,7 @@
             "b784350e948a9e8b"
         ],
         "x": 995,
-        "y": 400,
+        "y": 380,
         "wires": []
     },
     {
@@ -2512,23 +2579,9 @@
         "wires": [
             [
                 "9883a4ad409c9141",
-                "806baee163cb44cc",
                 "c9e9d547ed815f9a"
             ]
         ]
-    },
-    {
-        "id": "9df668438b39a15c",
-        "type": "link out",
-        "z": "f7e96a32e56d72eb",
-        "name": "设备状态订阅",
-        "mode": "link",
-        "links": [
-            "1fbea7baf2a0c450"
-        ],
-        "x": 995,
-        "y": 460,
-        "wires": []
     },
     {
         "id": "c9e9d547ed815f9a",
@@ -2647,8 +2700,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 990,
-        "y": 660,
+        "x": 950,
+        "y": 620,
         "wires": []
     },
     {
@@ -2668,23 +2721,33 @@
         "wires": []
     },
     {
-        "id": "806baee163cb44cc",
-        "type": "function",
+        "id": "ec1a4cd5dac8dbf6",
+        "type": "debug",
         "z": "f7e96a32e56d72eb",
-        "name": "订阅上下线主题",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet topic;\nlet ids = {};\nif (msg.dispatcher) {\n    topic = data.topics.dysubs.dsp_evt_status;\n    ids.dsp = msg.dispatcher.id;\n}\n\nif (msg.edge) {\n    topic = data.topics.dysubs.edg_evt_status;\n    ids.edg = msg.edge.id;    \n}\n\nif (msg.device) {\n    topic = data.topics.dysubs.dev_evt_status;\n    ids.dev = msg.device.id;    \n}\n\nif (msg.platform) {\n    topic = data.topics.dysubs.plf_evt_status;\n    ids.plf = msg.platform.id;      \n}\n\nif (topic) {\n    topic = common.expandTopic.expandStr(topic, ids);\n\n    node.send({\n            action: \"unsubscribe\",\n            topic: topic\n    })\n    \n    node.send({\n            action: \"subscribe\",\n            topic: topic\n    })\n}",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 880,
-        "y": 460,
-        "wires": [
-            [
-                "9df668438b39a15c"
-            ]
-        ]
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "6f4ea3b14159efe0",
+        "type": "link out",
+        "z": "f7e96a32e56d72eb",
+        "name": "状态发布ToDSP",
+        "mode": "link",
+        "links": [
+            "befe0fced79c1e94"
+        ],
+        "x": 995,
+        "y": 420,
+        "wires": []
     },
     {
         "id": "8266808a.876a4",

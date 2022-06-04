@@ -209,7 +209,7 @@
         "payload": "data",
         "payloadType": "global",
         "x": 220,
-        "y": 680,
+        "y": 740,
         "wires": [
             [
                 "61299e55f08ac3e1"
@@ -229,7 +229,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 410,
-        "y": 680,
+        "y": 740,
         "wires": []
     },
     {
@@ -258,8 +258,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 810,
-        "y": 600,
+        "x": 470,
+        "y": 660,
         "wires": []
     },
     {
@@ -395,7 +395,8 @@
             ],
             [
                 "1188b78d61e6e2a8",
-                "6423346762c80c34"
+                "6423346762c80c34",
+                "984299f5f2358be9"
             ]
         ]
     },
@@ -704,8 +705,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 820,
-        "y": 480,
+        "x": 780,
+        "y": 520,
         "wires": [
             [
                 "c681ca1c09bbf5eb",
@@ -723,7 +724,7 @@
             "1fbea7baf2a0c450"
         ],
         "x": 935,
-        "y": 480,
+        "y": 520,
         "wires": []
     },
     {
@@ -741,6 +742,83 @@
         "statusType": "auto",
         "x": 1000,
         "y": 420,
+        "wires": []
+    },
+    {
+        "id": "35ef90ce6fa2dfd3",
+        "type": "link out",
+        "z": "7c7a09edf982e2f4",
+        "name": "刷新数据",
+        "mode": "link",
+        "links": [
+            "46c7be7c38c2cddc"
+        ],
+        "x": 935,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "984299f5f2358be9",
+        "type": "delay",
+        "z": "7c7a09edf982e2f4",
+        "name": "1秒后刷新数据",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 580,
+        "y": 600,
+        "wires": [
+            [
+                "35ef90ce6fa2dfd3",
+                "109b0482f3439c03"
+            ]
+        ]
+    },
+    {
+        "id": "109b0482f3439c03",
+        "type": "delay",
+        "z": "7c7a09edf982e2f4",
+        "name": "3秒后上线通知",
+        "pauseType": "delay",
+        "timeout": "3",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 780,
+        "y": 640,
+        "wires": [
+            [
+                "9505a529442793c0"
+            ]
+        ]
+    },
+    {
+        "id": "9505a529442793c0",
+        "type": "link out",
+        "z": "7c7a09edf982e2f4",
+        "name": "上线通知输出",
+        "mode": "link",
+        "links": [
+            "cac9b036a1b34134"
+        ],
+        "x": 935,
+        "y": 640,
         "wires": []
     },
     {
@@ -904,7 +982,8 @@
             "befe5b1ac4389423",
             "8f5000be83384a7a",
             "a6df7d880adde7dd",
-            "eda86a17cbf189f0"
+            "eda86a17cbf189f0",
+            "d9ded5bff98b6d8d"
         ],
         "x": 225,
         "y": 420,
@@ -1226,7 +1305,7 @@
         "y": 220,
         "wires": [
             [
-                "b920e31b90166791"
+                "45838fa67f1ea02a"
             ]
         ]
     },
@@ -1238,7 +1317,7 @@
         "property": "broker.will.payload",
         "action": "str",
         "pretty": false,
-        "x": 710,
+        "x": 550,
         "y": 220,
         "wires": [
             [
@@ -1251,6 +1330,7 @@
         "id": "b920e31b90166791",
         "type": "function",
         "z": "e93bbc67912b9178",
+        "d": true,
         "name": "出生消息",
         "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n      app: \"0\",\n      dom: \"0\"\n    },\n    from: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dio,\n    online: 1\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet birth = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\nmsg.broker = msg.broker || {};\nmsg.broker.birth = birth;\n\nreturn msg;",
         "outputs": 1,
@@ -1259,7 +1339,7 @@
         "finalize": "",
         "libs": [],
         "x": 400,
-        "y": 220,
+        "y": 280,
         "wires": [
             [
                 "45838fa67f1ea02a"
@@ -1271,13 +1351,13 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "遗嘱消息",
-        "func": "let birth = msg.broker.birth;\n\nlet pld = {\n    id: birth.payload.pld.id,\n    online: 0\n};\n\n\n\nlet will = {\n    topic: birth.topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: birth.payload.hd,\n        pld: pld\n    }\n}\n\n\nmsg.broker.will = will;\n\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n      app: \"0\",\n      dom: \"0\"\n    },\n    from: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dio,\n    online: 0\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet will = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\n\nmsg.broker.will = will;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 560,
+        "x": 400,
         "y": 220,
         "wires": [
             [
@@ -1619,7 +1699,9 @@
         "type": "link in",
         "z": "63bcc9db2b38df75",
         "name": "获取租户数据输入",
-        "links": [],
+        "links": [
+            "35ef90ce6fa2dfd3"
+        ],
         "x": 105,
         "y": 260,
         "wires": [
@@ -2012,6 +2094,54 @@
                 "4355ecb65b58c6d6"
             ]
         ]
+    },
+    {
+        "id": "f876644da2af838c",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "状态上线发布",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n        app: \"0\",\n        dom: \"0\"\n    },\n    from: {\n        type: \"\",\n        id: data.ids.dio\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dsp,\n    online: 1\n};\n\nreturn {\n    payload:{\n        hd: hd,\n        pld: pld\n    },\n    qos: 2,\n    retain: true\n};\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 1060,
+        "wires": [
+            [
+                "d9ded5bff98b6d8d"
+            ]
+        ]
+    },
+    {
+        "id": "cac9b036a1b34134",
+        "type": "link in",
+        "z": "63bcc9db2b38df75",
+        "name": "状态上线发布输入",
+        "links": [
+            "9505a529442793c0"
+        ],
+        "x": 85,
+        "y": 1060,
+        "wires": [
+            [
+                "f876644da2af838c"
+            ]
+        ]
+    },
+    {
+        "id": "d9ded5bff98b6d8d",
+        "type": "link out",
+        "z": "63bcc9db2b38df75",
+        "name": "主题发布输出",
+        "mode": "link",
+        "links": [
+            "f4460e5db856239e"
+        ],
+        "x": 555,
+        "y": 1060,
+        "wires": []
     },
     {
         "id": "2ff5101df1ab6584",

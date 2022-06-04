@@ -1362,6 +1362,50 @@
         ]
     },
     {
+        "id": "8eedbf4597c81fc2",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "注册",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"test\"\n    },\n    from: {\n        type: \"dev\",\n        id: msg.payload.id\n    },\n    to: {\n        type: \"dio\",\n        id: data.ids.dio,\n    },\n    entry: {\n        type: \"evt\",\n        id: \"device_joined\"\n    },\n    sid: \"0\",\n    stp: 0\n}\nlet pld = msg.payload\n\n\nreturn {\n\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 420,
+        "wires": [
+            [
+                "9bdce921275b0acd"
+            ]
+        ]
+    },
+    {
+        "id": "630671762dec0b37",
+        "type": "inject",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "props": [
+            {
+                "p": "payload.id",
+                "v": "ESP8266x0098b1f8",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 210,
+        "y": 420,
+        "wires": [
+            [
+                "8eedbf4597c81fc2"
+            ]
+        ]
+    },
+    {
         "id": "b293cfb8b41ad91f",
         "type": "link in",
         "z": "f7e96a32e56d72eb",

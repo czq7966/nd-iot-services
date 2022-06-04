@@ -135,8 +135,8 @@
                                 "topics": {
                                     "subs": {
                                         "dio_evt_status":    "0/0/dio/{dio}/0/0/evt/status",
-                                        "edg_evt_status":    "{app}/{dom}/edg/+/{dsp}/{dsp}/evt/status",
-                                        "dev_evt_status":    "{app}/{dom}/dev/+/{dsp}/{dsp}/evt/status",
+                                        "edg_evt_status":    "{app}/{dom}/edg/+/dsp/{dsp}/evt/status",
+                                        "dev_evt_status":    "{app}/{dom}/dev/+/dsp/{dsp}/evt/status",
                                         "dev_evt_report":    "{app}/{dom}/dev/+/+/+/evt/report",
                                         "dev_svc_reboot":    "{app}/{dom}/dev/+/+/+/svc/reboot"
                                     },

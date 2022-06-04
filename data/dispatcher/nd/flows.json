@@ -378,8 +378,8 @@
         "type": "function",
         "z": "a2231b8bf9e5da49",
         "name": "缓存数据函数",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet online = function(){\n    let events = this.events;\n    if (events && events.status)\n        return events.status.pld.online;\n    return 0;\n}\n\nlet cachePayload = function(payload) {\n    let hd = payload.hd;\n    if (hd.from.type == \"dev\") {\n        let dev = data.devices[hd.from.id] || {events:{}};\n        dev.id = hd.from.id;\n        dev.events = dev.events || {};\n        if (hd.from.pid)\n            dev.pid = hd.from.pid;\n        dev.events[hd.entry.id] = payload;\n        dev.online = online;\n        data.devices[hd.from.id] = dev;\n    }\n    \n    if (hd.from.type == \"edg\") {\n        let edg = data.edges[hd.from.id] || {};\n        edg.events = edg.events || {};\n        edg.id = hd.from.id;\n        edg.events[hd.entry.id] = payload;\n        edg.online = online;\n        edg.enabled = 1;\n        data.edges[hd.from.id] = edg;\n    }\n}\n\ncommon.cachePayload = cachePayload;\n\nreturn {payload: data};",
-        "outputs": 1,
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet online = function(){\n    let events = this.events;\n    if (events && events.status)\n        return events.status.pld.online;\n    return 0;\n}\n\nlet cachePayload = function(payload) {\n    let hd = payload.hd;\n    if (hd.from.type == \"dev\") {\n        let dysub = false;\n        let dev = data.devices[hd.from.id];\n        if (!dev) {\n            dev = {};\n            dysub = true;\n        }\n        dev.id = hd.from.id;\n        dev.events = dev.events || {};\n        if (hd.from.pid)\n            dev.pid = hd.from.pid;\n        dev.events[hd.entry.id] = payload;\n        dev.online = online;\n        data.devices[hd.from.id] = dev;\n        if (dysub) node.send({device: dev}, null);\n    }\n    \n    if (hd.from.type == \"edg\") {\n        let dysub = false;\n        let edg = data.edges[hd.from.id];\n        if (!edg) {\n            edg = {};\n            dysub = true;\n        }\n        edg.events = edg.events || {};\n        edg.id = hd.from.id;\n        edg.events[hd.entry.id] = payload;\n        edg.online = online;\n        edg.enabled = 1;\n        data.edges[hd.from.id] = edg;\n        if (dysub) node.send([{edge: edg}, null]);\n    }\n}\n\ncommon.cachePayload = cachePayload;\n\nreturn [null, {payload: data}];\n",
+        "outputs": 2,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -387,6 +387,9 @@
         "x": 500,
         "y": 440,
         "wires": [
+            [
+                "cf8bb3ede866fe12"
+            ],
             [
                 "aea3af329e2e33ba"
             ]
@@ -465,7 +468,8 @@
         "wires": [
             [
                 "6423346762c80c34",
-                "1188b78d61e6e2a8"
+                "1188b78d61e6e2a8",
+                "effcf217acb43dfa"
             ]
         ]
     },
@@ -549,7 +553,7 @@
         "type": "debug",
         "z": "a2231b8bf9e5da49",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -558,6 +562,95 @@
         "statusType": "auto",
         "x": 870,
         "y": 320,
+        "wires": []
+    },
+    {
+        "id": "effcf217acb43dfa",
+        "type": "function",
+        "z": "a2231b8bf9e5da49",
+        "name": "上线通知",
+        "func": "let data = global.get(\"data\")\nlet ids = data.ids;\nif (ids.app && ids.dom) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 660,
+        "wires": [
+            [
+                "48de9ecdbc8dbeaf"
+            ]
+        ]
+    },
+    {
+        "id": "48de9ecdbc8dbeaf",
+        "type": "delay",
+        "z": "a2231b8bf9e5da49",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 820,
+        "y": 660,
+        "wires": [
+            [
+                "0ecafaa953e1df94"
+            ]
+        ]
+    },
+    {
+        "id": "0ecafaa953e1df94",
+        "type": "link out",
+        "z": "a2231b8bf9e5da49",
+        "name": "上线通知输出",
+        "mode": "link",
+        "links": [
+            "b784350e948a9e8b"
+        ],
+        "x": 955,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "cf8bb3ede866fe12",
+        "type": "function",
+        "z": "a2231b8bf9e5da49",
+        "name": "订阅上下线主题",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet topic;\nlet ids = {};\nif (msg.dispatcher) {\n    topic = data.topics.dysubs.dsp_evt_status;\n    ids.dsp = msg.dispatcher.id;\n}\n\nif (msg.edge) {\n    topic = data.topics.dysubs.edg_evt_status;\n    ids.edg = msg.edge.id;    \n}\n\nif (msg.device) {\n    topic = data.topics.dysubs.dev_evt_status;\n    ids.dev = msg.device.id;    \n}\n\nif (msg.platform) {\n    topic = data.topics.dysubs.plf_evt_status;\n    ids.plf = msg.platform.id;      \n}\n\nif (topic) {\n    topic = common.expandTopic.expandStr(topic, ids);\n\n    node.send({\n            action: \"unsubscribe\",\n            topic: topic\n    })\n    \n    node.send({\n            action: \"subscribe\",\n            topic: topic\n    })\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 440,
+        "wires": [
+            [
+                "92d872156e511bd6"
+            ]
+        ]
+    },
+    {
+        "id": "92d872156e511bd6",
+        "type": "link out",
+        "z": "a2231b8bf9e5da49",
+        "name": "订阅上下线主题输出",
+        "mode": "link",
+        "links": [
+            "bfa31282f696f40b"
+        ],
+        "x": 955,
+        "y": 440,
         "wires": []
     },
     {
@@ -593,7 +686,7 @@
         "y": 200,
         "wires": [
             [
-                "6cfb5b8bbb676e36"
+                "e4534314a7bcd4b3"
             ]
         ]
     },
@@ -786,7 +879,8 @@
         "name": "动态订阅主题",
         "links": [
             "83c403b1c017c665",
-            "cd875e3e80269b72"
+            "cd875e3e80269b72",
+            "92d872156e511bd6"
         ],
         "x": 125,
         "y": 100,
@@ -1017,7 +1111,7 @@
         "property": "broker.will.payload",
         "action": "str",
         "pretty": false,
-        "x": 1010,
+        "x": 550,
         "y": 200,
         "wires": [
             [
@@ -1038,12 +1132,10 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 700,
-        "y": 200,
+        "x": 520,
+        "y": 300,
         "wires": [
-            [
-                "45838fa67f1ea02a"
-            ]
+            []
         ]
     },
     {
@@ -1057,11 +1149,11 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 540,
+        "x": 240,
         "y": 200,
         "wires": [
             [
-                "b920e31b90166791"
+                "45838fa67f1ea02a"
             ]
         ]
     },
@@ -1070,13 +1162,13 @@
         "type": "function",
         "z": "bbc788f5f9e280ee",
         "name": "遗嘱消息",
-        "func": "let birth = msg.broker.birth;\n\nlet pld = {\n    id: birth.payload.pld.id,\n    online: 0\n};\n\n\n\nlet will = {\n    topic: birth.topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: birth.payload.hd,\n        pld: pld\n    }\n}\n\n\nmsg.broker.will = will;\n\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n      app: \"0\",\n      dom: \"0\"\n    },\n    from: {\n        type: \"dsp\",\n        id: data.ids.dsp\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dsp,\n    online: 0\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet will = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\n\nmsg.broker.will = will;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 860,
+        "x": 400,
         "y": 200,
         "wires": [
             [
@@ -1111,11 +1203,10 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 230,
-        "y": 240,
+        "x": 210,
+        "y": 300,
         "wires": [
             [
-                "7890d1121e8c800a",
                 "6cfb5b8bbb676e36"
             ]
         ]
@@ -1137,12 +1228,10 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 380,
-        "y": 200,
+        "x": 360,
+        "y": 300,
         "wires": [
-            [
-                "e4534314a7bcd4b3"
-            ]
+            []
         ]
     },
     {
@@ -1359,7 +1448,7 @@
         "type": "function",
         "z": "aa7a09a7a0bf6210",
         "name": "状态发布",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n        app: \"0\",\n        dom: \"0\"\n    },\n    from: {\n        type: \"dsp\",\n        id: data.ids.dsp\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dsp,\n    online: 1\n};\n\nreturn {\n    payload:{\n        hd: hd,\n        pld: pld\n    }\n};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n        app: \"0\",\n        dom: \"0\"\n    },\n    from: {\n        type: \"dsp\",\n        id: data.ids.dsp\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dsp,\n    online: 1\n};\n\nreturn {\n    payload:{\n        hd: hd,\n        pld: pld\n    },\n    qos: 2,\n    retain: true\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1381,7 +1470,8 @@
         "name": "状态发布输入",
         "links": [
             "62b3ca59dea6f8fb",
-            "0e5b3bc6e3952f26"
+            "0e5b3bc6e3952f26",
+            "0ecafaa953e1df94"
         ],
         "x": 135,
         "y": 380,
@@ -1619,7 +1709,6 @@
         "wires": [
             [
                 "5829f7425c50b7c0",
-                "806baee163cb44cc",
                 "c7a25721500a419f"
             ]
         ]
@@ -1770,66 +1859,16 @@
         "y": 460,
         "wires": [
             [
-                "5829f7425c50b7c0",
-                "806baee163cb44cc"
+                "5829f7425c50b7c0"
             ]
         ]
-    },
-    {
-        "id": "806baee163cb44cc",
-        "type": "function",
-        "z": "d080623d467caf8f",
-        "name": "订阅上下线主题",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet topic;\nlet ids = {};\nif (msg.dispatcher) {\n    topic = data.topics.dysubs.dsp_evt_status;\n    ids.dsp = msg.dispatcher.id;\n}\n\nif (msg.edge) {\n    topic = data.topics.dysubs.edg_evt_status;\n    ids.edg = msg.edge.id;    \n}\n\nif (msg.device) {\n    topic = data.topics.dysubs.dev_evt_status;\n    ids.dev = msg.device.id;    \n}\n\nif (msg.platform) {\n    topic = data.topics.dysubs.plf_evt_status;\n    ids.plf = msg.platform.id;      \n}\n\nif (topic) {\n    topic = common.expandTopic.expandStr(topic, ids);\n\n    node.send({\n            action: \"unsubscribe\",\n            topic: topic\n    })\n    \n    node.send({\n            action: \"subscribe\",\n            topic: topic\n    })\n}",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 740,
-        "y": 520,
-        "wires": [
-            [
-                "cd875e3e80269b72",
-                "a2a015e07f8963c6"
-            ]
-        ]
-    },
-    {
-        "id": "cd875e3e80269b72",
-        "type": "link out",
-        "z": "d080623d467caf8f",
-        "name": "订阅上下线主题输出",
-        "mode": "link",
-        "links": [
-            "bfa31282f696f40b"
-        ],
-        "x": 955,
-        "y": 520,
-        "wires": []
-    },
-    {
-        "id": "a2a015e07f8963c6",
-        "type": "debug",
-        "z": "d080623d467caf8f",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 910,
-        "y": 580,
-        "wires": []
     },
     {
         "id": "c7a25721500a419f",
         "type": "debug",
         "z": "d080623d467caf8f",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
