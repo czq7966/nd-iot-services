@@ -274,8 +274,8 @@
             "906bb62a708b4c0c",
             "59181471dbc6175b"
         ],
-        "x": 995,
-        "y": 560,
+        "x": 975,
+        "y": 540,
         "wires": []
     },
     {
@@ -291,7 +291,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 850,
+        "x": 830,
         "y": 500,
         "wires": []
     },
@@ -300,14 +300,14 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据初始化",
-        "func": "let config = msg.payload;\n\nObject.keys(config).forEach(key => {\n    global.set(key, config[key])\n})\n\nlet data = global.get(\"data\");\nlet ids = global.get(\"ids\");\n\nlet app = data.app;\nlet plf = app.platform;\nplf.devices = plf.devices || {};\n\ndata.platform = plf\ndata.devices = plf.devices || {};\ndata.mqtt = plf.mqtt;\ndata.topics = plf.mqtt.topics;\ndata.ids = ids;\n\nreturn {payload: data};\n",
+        "func": "let config = msg.payload;\n\nlet _ids = global.get(\"ids\");\n\nObject.keys(config).forEach(key => {\n    global.set(key, config[key])\n})\n\nlet data = global.get(\"data\");\nif (_ids) global.set(\"ids\", _ids);\nlet ids = global.get(\"ids\");\n\nlet app = data.app;\nlet plf = app.platform;\nplf.devices = plf.devices || {};\n\ndata.platform = plf\ndata.devices = plf.devices || {};\ndata.mqtt = plf.mqtt;\ndata.topics = plf.mqtt.topics;\ndata.ids = ids;\n\nreturn {payload: data};\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 230,
-        "y": 360,
+        "y": 380,
         "wires": [
             [
                 "fe1774a6b4d68308"
@@ -325,8 +325,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 460,
-        "y": 360,
+        "x": 440,
+        "y": 380,
         "wires": [
             [
                 "de1af31ddcf813b0"
@@ -338,15 +338,18 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "缓存数据函数",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet online = function(){\n    let events = this.events;\n    if (events && events.status)\n        return events.status.pld.online;\n    return 0;\n}\n\nlet cachePayload = function(payload) {\n    let hd = payload.hd;\n    let pld = payload.pld;\n    \n    if (hd.from.type == \"dev\") {\n        let dev = data.devices[hd.from.id] || {};\n        dev.id = hd.from.id;\n        dev.events = dev.events || {};\n        if (hd.from.pid)\n            dev.pid = hd.from.pid;\n        dev.events[hd.entry.id] = payload;\n        dev.online = online;\n        data.devices[hd.from.id] = dev;\n    }\n    return payload;\n\n}\n\ncommon.cachePayload = cachePayload;\n\nreturn {payload: data};",
-        "outputs": 1,
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet online = function(){\n    let events = this.events;\n    if (events && events.status)\n        return events.status.pld.online;\n    return 0;\n}\n\nlet cachePayload = function(payload) {\n    let hd = payload.hd;\n    if (hd.from.type == \"dev\") {\n        let dysub = false;\n        let dev = data.devices[hd.from.id];\n        if (!dev) {\n            dev = {};\n            dysub = true;\n        }\n        dev.id = hd.from.id;\n        dev.events = dev.events || {};\n        if (hd.from.pid)\n            dev.pid = hd.from.pid;\n        dev.events[hd.entry.id] = payload;\n        dev.online = online;\n        data.devices[hd.from.id] = dev;\n        if (dysub) node.send({device: dev}, null);\n    }\n\n}\n\ncommon.cachePayload = cachePayload;\n\nreturn [null, {payload: data}];",
+        "outputs": 2,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 460,
-        "y": 400,
+        "x": 440,
+        "y": 420,
         "wires": [
+            [
+                "cf8bb3ede866fe12"
+            ],
             [
                 "aea3af329e2e33ba"
             ]
@@ -357,14 +360,14 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "获取HD主题函数",
-        "func": "let common = global.get(\"common\");\nlet ids = global.get(\"data\").ids;\n\nlet getHDTopic = function(hd) {\n    let tpc = \"\";\n    // let ids = hd.ids || gids;\n    if (!hd.pref) hd.pref = {};\n    if (!hd.pref.app) hd.pref.app = (ids.app ? ids.app : \"0\");\n    if (!hd.pref.dom) hd.pref.dom = (ids.dom ? ids.dom : \"0\");\n    \n    if (!hd.from) hd.from = {};\n    if (!hd.from.type) hd.from.type = \"plf\";\n    if (!hd.from.id) hd.from.id = ids.plf;\n    if (!hd.to) hd.to = {};\n    if (!hd.to.type) hd.to.type = \"0\";\n    if (!hd.to.id) hd.to.id = \"0\";\n    if (!hd.entry) hd.entry = {};\n    if (!hd.entry.type) hd.entry.type = \"0\";\n    if (!hd.entry.id) hd.entry.id = \"0\";\n    if (!hd.sid) hd.sid = \"0\";\n    if (!hd.stp) hd.stp = 0;\n    if (!hd.version) hd.version = global.get(\"version\")\n\n\n    tpc =   hd.pref.app + \"/\" + hd.pref.dom + \"/\" + \n            hd.from.type + \"/\" + hd.from.id + \"/\" + \n            hd.to.type + \"/\" + hd.to.id + \"/\" + \n            hd.entry.type + \"/\" + hd.entry.id;\n    return tpc;\n}\n\n\ncommon.getHDTopic = getHDTopic;\n\nreturn {payload: common};",
+        "func": "let common = global.get(\"common\");\nlet ids = global.get(\"data\").ids;\n\nlet getHDTopic = function(hd) {\n    let tpc = \"\";\n    if (!hd.pref) hd.pref = {};\n    if (!hd.pref.app) hd.pref.app = (ids.app ? ids.app : \"0\");\n    if (!hd.pref.dom) hd.pref.dom = (ids.dom ? ids.dom : \"0\");\n    \n    if (!hd.from) hd.from = {};\n    if (!hd.from.type) hd.from.type = \"plf\";\n    if (!hd.from.id) hd.from.id = ids.plf;\n    if (!hd.to) hd.to = {};\n    if (!hd.to.type) hd.to.type = \"0\";\n    if (!hd.to.id) hd.to.id = \"0\";\n    if (!hd.entry) hd.entry = {};\n    if (!hd.entry.type) hd.entry.type = \"0\";\n    if (!hd.entry.id) hd.entry.id = \"0\";\n    if (!hd.sid) hd.sid = \"0\";\n    if (!hd.stp) hd.stp = 0;\n    if (!hd.version) hd.version = global.get(\"version\");\n    \n    tpc =   hd.pref.app + \"/\" + hd.pref.dom + \"/\" + \n            hd.from.type + \"/\" + hd.from.id + \"/\" + \n            hd.to.type + \"/\" + hd.to.id + \"/\" + \n            hd.entry.type + \"/\" + hd.entry.id;\n    return tpc;\n}\n\n\ncommon.getHDTopic = getHDTopic;\n\nreturn {payload: common};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 470,
-        "y": 480,
+        "x": 450,
+        "y": 500,
         "wires": [
             [
                 "fc89e9165d2ffb12"
@@ -382,8 +385,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 460,
-        "y": 440,
+        "x": 440,
+        "y": 460,
         "wires": [
             [
                 "5cddc77aa8c606cd"
@@ -395,18 +398,19 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据补全",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet fixUpData = function() {\n\n}\n\ncommon.fixUpData = fixUpData;\n\ncommon.expandTopic.expand(data.ids);   \ncommon.expandTopic.expand(data.app);   \n\ncommon.fixUpData();\ncommon.keyToObjId(data.devices);\n\n\n\nreturn {payload: data};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\n\ncommon.expandTopic.expand(data.ids);   \ncommon.expandTopic.expand(data.app);   \ncommon.expandTopic.expand(data.topics.subs);\ncommon.expandTopic.expand(data.topics.services);\n\ncommon.keyToObjId(data.devices);\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 440,
+        "x": 420,
         "y": 540,
         "wires": [
             [
                 "6423346762c80c34",
-                "1188b78d61e6e2a8"
+                "1188b78d61e6e2a8",
+                "effcf217acb43dfa"
             ]
         ]
     },
@@ -472,8 +476,7 @@
         "y": 180,
         "wires": [
             [
-                "1924f7fd90ef314c",
-                "9d7e17320b6ef853"
+                "1924f7fd90ef314c"
             ]
         ]
     },
@@ -497,45 +500,18 @@
         ]
     },
     {
-        "id": "683f9c514d3dc3f8",
-        "type": "change",
-        "z": "7c7a09edf982e2f4",
-        "name": "version",
-        "rules": [
-            {
-                "t": "set",
-                "p": "version",
-                "pt": "global",
-                "to": "0.0.1",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 360,
-        "y": 100,
-        "wires": [
-            [
-                "52f82eb73840e302"
-            ]
-        ]
-    },
-    {
         "id": "b1a104c8f9b78d59",
         "type": "link in",
         "z": "7c7a09edf982e2f4",
-        "name": "",
+        "name": "重载配置输入",
         "links": [
-            "13a9b4457054c058"
+            "3be6aa741efc38c0"
         ],
-        "x": 175,
-        "y": 440,
+        "x": 125,
+        "y": 240,
         "wires": [
             [
-                "4754da03d64fad4b"
+                "a6a4ebf94a8b8924"
             ]
         ]
     },
@@ -554,51 +530,9 @@
         "y": 180,
         "wires": [
             [
-                "4754da03d64fad4b",
-                "9d7e17320b6ef853"
+                "4754da03d64fad4b"
             ]
         ]
-    },
-    {
-        "id": "d85b9cc42425cc33",
-        "type": "inject",
-        "z": "7c7a09edf982e2f4",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "IOT_PLATFORM_BFY_ID",
-        "payloadType": "env",
-        "x": 780,
-        "y": 380,
-        "wires": [
-            [
-                "9d7e17320b6ef853"
-            ]
-        ]
-    },
-    {
-        "id": "9d7e17320b6ef853",
-        "type": "debug",
-        "z": "7c7a09edf982e2f4",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1070,
-        "y": 320,
-        "wires": []
     },
     {
         "id": "222a754589dfce9c",
@@ -615,6 +549,144 @@
         "x": 390,
         "y": 240,
         "wires": []
+    },
+    {
+        "id": "cf8bb3ede866fe12",
+        "type": "function",
+        "z": "7c7a09edf982e2f4",
+        "name": "订阅上下线主题",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet topic;\nlet ids = {};\nif (msg.dispatcher) {\n    topic = data.topics.dysubs.dsp_evt_status;\n    ids.dsp = msg.dispatcher.id;\n}\n\nif (msg.edge) {\n    topic = data.topics.dysubs.edg_evt_status;\n    ids.edg = msg.edge.id;    \n}\n\nif (msg.device) {\n    topic = data.topics.dysubs.dev_evt_status;\n    ids.dev = msg.device.id;    \n}\n\nif (msg.platform) {\n    topic = data.topics.dysubs.plf_evt_status;\n    ids.plf = msg.platform.id;      \n}\n\nif (topic) {\n    topic = common.expandTopic.expandStr(topic, ids);\n\n    node.send({\n            action: \"unsubscribe\",\n            topic: topic\n    })\n    \n    node.send({\n            action: \"subscribe\",\n            topic: topic\n    })\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 420,
+        "wires": [
+            [
+                "92d872156e511bd6"
+            ]
+        ]
+    },
+    {
+        "id": "92d872156e511bd6",
+        "type": "link out",
+        "z": "7c7a09edf982e2f4",
+        "name": "订阅上下线主题输出",
+        "mode": "link",
+        "links": [
+            "1fbea7baf2a0c450"
+        ],
+        "x": 975,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "effcf217acb43dfa",
+        "type": "function",
+        "z": "7c7a09edf982e2f4",
+        "name": "上线通知",
+        "func": "let data = global.get(\"data\")\nlet ids = data.ids;\nif (ids.app && ids.dio) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 580,
+        "wires": [
+            [
+                "48de9ecdbc8dbeaf"
+            ]
+        ]
+    },
+    {
+        "id": "48de9ecdbc8dbeaf",
+        "type": "delay",
+        "z": "7c7a09edf982e2f4",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 840,
+        "y": 580,
+        "wires": [
+            [
+                "0ecafaa953e1df94",
+                "558d6a7b4117d101"
+            ]
+        ]
+    },
+    {
+        "id": "0ecafaa953e1df94",
+        "type": "link out",
+        "z": "7c7a09edf982e2f4",
+        "name": "上线通知输出",
+        "mode": "link",
+        "links": [
+            "b784350e948a9e8b"
+        ],
+        "x": 975,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "558d6a7b4117d101",
+        "type": "debug",
+        "z": "7c7a09edf982e2f4",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 990,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "683f9c514d3dc3f8",
+        "type": "change",
+        "z": "7c7a09edf982e2f4",
+        "name": "version",
+        "rules": [
+            {
+                "t": "set",
+                "p": "version",
+                "pt": "global",
+                "to": "0.0.1",
+                "tot": "str"
+            },
+            {
+                "t": "delete",
+                "p": "ids",
+                "pt": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 100,
+        "wires": [
+            [
+                "52f82eb73840e302"
+            ]
+        ]
     },
     {
         "id": "0f989c13f4e0c1cb",
@@ -660,7 +732,7 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "订阅主题",
-        "func": "let data = global.get(\"data\")\nlet topics = data.topics;\n\nnode.send({\n        action: \"unsubscribe\",\n        topic: Object.values(topics.subs)\n})\n\nnode.send({\n        action: \"subscribe\",\n        topic: Object.values(topics.subs)\n})\n\nnode.send({\n        action: \"unsubscribe\",\n        topic: Object.values(topics.services)\n})\n\nnode.send({\n        action: \"subscribe\",\n        topic: Object.values(topics.services)\n})\n\n",
+        "func": "let data = global.get(\"data\")\nlet topics = data.topics;\nlet ids = data.ids;\nif (ids.app && ids.dio) {\n    node.send({\n            action: \"unsubscribe\",\n            topic: Object.values(topics.subs)\n    })\n    \n    node.send({\n            action: \"unsubscribe\",\n            topic: Object.values(topics.services)\n    })  \n    \n    node.send({\n            action: \"subscribe\",\n            topic: Object.values(topics.subs)\n    })\n    \n    node.send({\n            action: \"subscribe\",\n            topic: Object.values(topics.services)\n    })    \n} else {\n    node.send({\n            action: \"unsubscribe\",\n            topic: topics.services.plf_svc_login\n    })  \n    \n    node.send({\n            action: \"subscribe\",\n            topic: topics.services.plf_svc_login\n    })      \n}\n\n\n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -697,7 +769,7 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "缓存数据",
-        "func": "let common = global.get(\"common\");\ncommon.cachePayload(msg.payload)\nreturn msg;",
+        "func": "msg.topics = msg.topic.split(\"/\");\nlet hd = msg.payload.hd;\nif (!hd.pref) {\n    hd.pref = {\n        app: msg.topics[0],\n        dom: msg.topics[1]\n    }\n}\n\nlet common = global.get(\"common\");\ncommon.cachePayload(msg.payload)\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -751,7 +823,8 @@
         "z": "e93bbc67912b9178",
         "name": "动态订阅主题",
         "links": [
-            "83c403b1c017c665"
+            "83c403b1c017c665",
+            "92d872156e511bd6"
         ],
         "x": 125,
         "y": 100,
@@ -826,7 +899,7 @@
         "y": 240,
         "wires": [
             [
-                "d4cd2db5e5a2688f"
+                "fcc0eb8cbb3816df"
             ]
         ]
     },
@@ -838,7 +911,7 @@
         "property": "broker.will.payload",
         "action": "str",
         "pretty": false,
-        "x": 710,
+        "x": 550,
         "y": 240,
         "wires": [
             [
@@ -851,6 +924,7 @@
         "id": "d4cd2db5e5a2688f",
         "type": "function",
         "z": "e93bbc67912b9178",
+        "d": true,
         "name": "出生消息",
         "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    from: {\n        type: \"plf\",\n        id: data.ids.plf\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.plf,\n    online: 1\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet birth = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\nmsg.broker = msg.broker || {};\nmsg.broker.birth = birth;\n\nreturn msg;",
         "outputs": 1,
@@ -858,8 +932,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 400,
-        "y": 240,
+        "x": 420,
+        "y": 380,
         "wires": [
             [
                 "fcc0eb8cbb3816df"
@@ -871,13 +945,13 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "遗嘱消息",
-        "func": "let birth = msg.broker.birth;\n\nlet pld = Object.assign({}, birth.payload.pld);\npld.online = 0;\n\n\n\nlet will = {\n    topic: birth.topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: birth.payload.hd,\n        pld: pld\n    }\n}\n\n\nmsg.broker.will = will;\n\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n      app: \"0\",\n      dom: \"0\"\n    },\n    from: {\n        type: \"plf\",\n        id: data.ids.plf\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dsp,\n    online: 0\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet will = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\n\nmsg.broker.will = will;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 560,
+        "x": 400,
         "y": 240,
         "wires": [
             [
@@ -954,7 +1028,7 @@
         "type": "debug",
         "z": "e93bbc67912b9178",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -971,7 +1045,7 @@
         "type": "debug",
         "z": "e93bbc67912b9178",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -994,7 +1068,7 @@
         "onceDelay": 0.1,
         "topic": "",
         "x": 210,
-        "y": 520,
+        "y": 980,
         "wires": [
             [
                 "288f169baa4b62b3"
@@ -1013,7 +1087,7 @@
         "finalize": "",
         "libs": [],
         "x": 390,
-        "y": 520,
+        "y": 980,
         "wires": [
             [
                 "9bdce921275b0acd"
@@ -1030,7 +1104,7 @@
             "774d0cb8ef787fc2"
         ],
         "x": 615,
-        "y": 520,
+        "y": 980,
         "wires": []
     },
     {
@@ -1045,7 +1119,7 @@
         "finalize": "",
         "libs": [],
         "x": 390,
-        "y": 600,
+        "y": 1060,
         "wires": [
             [
                 "9bdce921275b0acd"
@@ -1064,7 +1138,7 @@
         "onceDelay": 0.1,
         "topic": "",
         "x": 210,
-        "y": 620,
+        "y": 1080,
         "wires": [
             [
                 "26b03579838bb361"
@@ -1083,7 +1157,7 @@
         "y": 200,
         "wires": [
             [
-                "9b39f6a45516c881"
+                "a1d93e26f00d9928"
             ]
         ]
     },
@@ -1193,7 +1267,8 @@
         "name": "重置登入请求",
         "links": [
             "87bda24bd97b90b7",
-            "7cc27320956b5354"
+            "7cc27320956b5354",
+            "e15f8affc75b6294"
         ],
         "x": 165,
         "y": 260,
@@ -1260,7 +1335,7 @@
         "onceDelay": 0.1,
         "topic": "",
         "x": 190,
-        "y": 720,
+        "y": 1180,
         "wires": [
             [
                 "c552a06182e3ca45"
@@ -1279,7 +1354,7 @@
         "finalize": "",
         "libs": [],
         "x": 410,
-        "y": 760,
+        "y": 1220,
         "wires": [
             [
                 "9bdce921275b0acd"
@@ -1304,7 +1379,7 @@
         "onceDelay": 0.1,
         "topic": "",
         "x": 190,
-        "y": 760,
+        "y": 1220,
         "wires": [
             [
                 "c552a06182e3ca45"
@@ -1329,7 +1404,7 @@
         "onceDelay": 0.1,
         "topic": "",
         "x": 190,
-        "y": 800,
+        "y": 1260,
         "wires": [
             [
                 "c552a06182e3ca45"
@@ -1354,7 +1429,7 @@
         "onceDelay": 0.1,
         "topic": "",
         "x": 190,
-        "y": 840,
+        "y": 1300,
         "wires": [
             [
                 "c552a06182e3ca45"
@@ -1373,7 +1448,7 @@
         "finalize": "",
         "libs": [],
         "x": 390,
-        "y": 420,
+        "y": 880,
         "wires": [
             [
                 "9bdce921275b0acd"
@@ -1398,10 +1473,84 @@
         "onceDelay": 0.1,
         "topic": "",
         "x": 210,
-        "y": 420,
+        "y": 880,
         "wires": [
             [
                 "8eedbf4597c81fc2"
+            ]
+        ]
+    },
+    {
+        "id": "6daf1af57e46df30",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "状态发布",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n        app: \"0\",\n        dom: \"0\"\n    },\n    from: {\n        type: \"plf\",\n        id: data.ids.plf\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.plf,\n    online: 1\n};\n\nreturn {\n    payload:{\n        hd: hd,\n        pld: pld\n    },\n    qos: 2,\n    retain: true\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 380,
+        "wires": [
+            [
+                "7dc6bf6f82555874",
+                "b45b2eba09115dae"
+            ]
+        ]
+    },
+    {
+        "id": "b784350e948a9e8b",
+        "type": "link in",
+        "z": "46a5ba0d798d87c3",
+        "name": "状态发布输入",
+        "links": [
+            "0ecafaa953e1df94",
+            "09cf3f2506fb6591",
+            "810c9c146d81321c",
+            "41780e48f27ccf1c"
+        ],
+        "x": 165,
+        "y": 380,
+        "wires": [
+            [
+                "6daf1af57e46df30"
+            ]
+        ]
+    },
+    {
+        "id": "7dc6bf6f82555874",
+        "type": "debug",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1010,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "a1d93e26f00d9928",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "未登入？",
+        "func": "let data = global.get(\"data\");\nif (!data.ids.app || !data.ids.dio) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 200,
+        "wires": [
+            [
+                "9b39f6a45516c881"
             ]
         ]
     },
@@ -1417,7 +1566,8 @@
         "y": 160,
         "wires": [
             [
-                "f3fbccc82b509675"
+                "f3fbccc82b509675",
+                "6514803e7db80cac"
             ]
         ]
     },
@@ -1505,10 +1655,103 @@
         "name": "重载配置",
         "mode": "link",
         "links": [
-            "49a324141b826dec"
+            "b1a104c8f9b78d59"
         ],
         "x": 945,
         "y": 140,
+        "wires": []
+    },
+    {
+        "id": "6514803e7db80cac",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "数据事件请求",
+        "func": "let hd = msg.payload.hd;\nif (hd.stp == 0 && hd.entry.type == \"evt\" && hd.from.type == \"dio\" ) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 220,
+        "wires": [
+            [
+                "4788e4fd31445485"
+            ]
+        ]
+    },
+    {
+        "id": "4788e4fd31445485",
+        "type": "switch",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "property": "payload.hd.entry.id",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "status",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 220,
+        "wires": [
+            [
+                "1ea18b95bf25cb02",
+                "294724a339ded15a"
+            ]
+        ]
+    },
+    {
+        "id": "1ea18b95bf25cb02",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "上线",
+        "func": "return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 220,
+        "wires": [
+            [
+                "41780e48f27ccf1c"
+            ]
+        ]
+    },
+    {
+        "id": "41780e48f27ccf1c",
+        "type": "link out",
+        "z": "f7e96a32e56d72eb",
+        "name": "状态发布",
+        "mode": "link",
+        "links": [
+            "b784350e948a9e8b"
+        ],
+        "x": 945,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "294724a339ded15a",
+        "type": "debug",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 300,
         "wires": []
     },
     {

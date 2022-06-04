@@ -74,18 +74,21 @@
                                     "password": ""
                                 },                                
                                 "topics": {
-                                    "subs": {                                        
+                                    "subs": {    
+                                        "dio_evt_status":   "0/0/dio/{dio}/0/0/evt/status",                                    
                                         "dev_evt_report":   "{app}/+/dev/+/+/+/evt/report",
                                         "dev_evt_status":   "0/0/dev/+/0/0/evt/status",
                                         "dev_svc_get":      "{app}/+/dev/+/+/+/svc/get",
                                         "dev_svc_set":      "{app}/+/dev/+/+/+/svc/set",
                                         "dev_svc_reboot":   "{app}/+/dev/+/+/+/svc/reboot",
                                         "dev_svc_login":    "{app}/+/dev/+/0/0/svc/login",                        
-                                        "dev_svc_handshake":"{app}/+/dev/+/+/+/svc/handshake"
-                                        
+                                        "dev_svc_handshake":"{app}/+/dev/+/+/+/svc/handshake"                                        
+                                    },
+                                    "dysubs": {
+                                        "dev_evt_status":   "0/0/dev/{dev}/0/0/evt/status"
                                     },
                                     "services": {
-                                        "plf_svc_login": "{app}/0/+/+/plf/{plf}/svc/login"
+                                        "plf_svc_login":     "+/+/+/+/plf/{plf}/svc/login"
                                     },
                                     "pubs": {
                                         "platform":{
@@ -107,7 +110,7 @@
                 "ids": {
                     "app": "{APP_ID}",
                     "dio": "{DIO_ID}",
-                    "plf": "{HOSTNAME}"
+                    "plf": "bfy-{HOSTNAME}"
                 }
             }
         }                  

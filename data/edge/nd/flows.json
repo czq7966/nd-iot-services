@@ -558,11 +558,9 @@
                 "tot": "str"
             },
             {
-                "t": "set",
+                "t": "delete",
                 "p": "ids",
-                "pt": "global",
-                "to": "",
-                "tot": "str"
+                "pt": "global"
             }
         ],
         "action": "",
