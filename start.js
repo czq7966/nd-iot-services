@@ -153,11 +153,41 @@ let startEDG = () => {
     console.log("edge started");
 }
 
-//ND平台对接服务
-let startPLF_ND = () => {    
+//NDV1平台对接服务
+let startPLF_NDV1 = () => {    
     if (useSpawn) {
         let cmd = "node"; 
-        let args = ["./index.js", "-u", "./data/platform/nd"];
+        let args = ["./index.js", "-u", "./data/platform/ndv1"];
+        let cwd = path.resolve(__dirname);
+
+        let child = spawn(cmd, args, { stdio: 'inherit', cwd: cwd});    
+        child.on("error", (code) => {
+            console.error("edge error: " + code);
+        })     
+        child.on("close", (code, signal) => {
+                console.error("platform ndv1 closed");
+                setTimeout(() => {
+                    startPLF_ND();               
+                }, 1000);
+        });
+    }else {
+        let cmd = "npm run nd:platform:ndv1:start";
+        exec(cmd, function(error, stdout, stderr) {
+            if (error || stderr)
+                console.error("platform ndv1 service error: %s , %s!", error, stderr);
+
+            if (isWin32()) 
+                console.error("platform ndv1 service stopped");
+        });
+    }
+    console.log("platform ndv1 started");
+}
+
+//NDV1平台对接服务
+let startPLF_NDV2 = () => {    
+    if (useSpawn) {
+        let cmd = "node"; 
+        let args = ["./index.js", "-u", "./data/platform/ndv2"];
         let cwd = path.resolve(__dirname);
 
         let child = spawn(cmd, args, { stdio: 'inherit', cwd: cwd});    
@@ -171,16 +201,16 @@ let startPLF_ND = () => {
                 }, 1000);
         });
     }else {
-        let cmd = "npm run nd:platform:nd:start";
+        let cmd = "npm run nd:platform:ndv2:start";
         exec(cmd, function(error, stdout, stderr) {
             if (error || stderr)
-                console.error("platform nd service error: %s , %s!", error, stderr);
+                console.error("platform ndv2 service error: %s , %s!", error, stderr);
 
             if (isWin32()) 
-                console.error("platform nd service stopped");
+                console.error("platform ndv2 service stopped");
         });
     }
-    console.log("platform nd started");
+    console.log("platform ndv2 started");
 }
 
 //巴法云平台对接服务
@@ -247,8 +277,12 @@ if (process.env.IOT_ENABLE_EDG == "1") {
     startEDG();
 }
 
-if (process.env.IOT_ENABLE_PLF_ND == "1") {
-    startPLF_ND();
+if (process.env.IOT_ENABLE_PLF_NDV1 == "1") {
+    startPLF_NDV1();
+}  
+
+if (process.env.IOT_ENABLE_PLF_NDV2 == "1") {
+    startPLF_NDV2();
 }  
 
 if (process.env.IOT_ENABLE_PLF_BFY == "1") {
