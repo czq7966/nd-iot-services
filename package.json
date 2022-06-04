@@ -19,15 +19,19 @@
     "nd:edge:start": "node ./index.js -u ./data/edge/nd",
     "nd:edge:service:start": "sudo systemctl start nd-iot-service-edg",
     
-    "nd:platform:nd:install": "cd ./data/platform/nd && npm i",
-    "nd:platform:nd:start": "node ./index.js -u ./data/platform/nd",
-    "nd:platform:nd:service:start": "sudo systemctl start nd-iot-service-plf-nd",
+    "nd:platform:ndv1:install": "cd ./data/platform/ndv1 && npm i",
+    "nd:platform:ndv1:start": "node ./index.js -u ./data/platform/ndv1",
+    "nd:platform:ndv1:service:start": "sudo systemctl start nd-iot-service-plf-ndv1",
+
+    "nd:platform:ndv2:install": "cd ./data/platform/ndv2 && npm i",
+    "nd:platform:ndv2:start": "node ./index.js -u ./data/platform/ndv2",
+    "nd:platform:ndv2:service:start": "sudo systemctl start nd-iot-service-plf-ndv2",
 
     "nd:platform:bfy:install": "cd ./data/platform/bfy && npm i",
     "nd:platform:bfy:start": "node ./index.js -u ./data/platform/bfy",
     "nd:platform:bfy:service:start": "sudo systemctl start nd-iot-service-plf-bfy",
 
-    "nd:install": "npm i && npm run nd:dataio:install && npm run nd:dispatcher:install && npm run nd:edge:install && npm run nd:platform:nd:install && npm run nd:platform:bfy:install",
+    "nd:install": "npm i && npm run nd:dataio:install && npm run nd:dispatcher:install && npm run nd:edge:install && npm run nd:platform:ndv1:install && npm run nd:platform:ndv2:install && npm run nd:platform:bfy:install",
 
     "start": "node ./start.js"
 
