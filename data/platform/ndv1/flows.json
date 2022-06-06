@@ -10,7 +10,15 @@
     {
         "id": "e93bbc67912b9178",
         "type": "tab",
-        "label": "订阅/发布",
+        "label": "订阅/发布2.0",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "115f1d81a93b6fc4",
+        "type": "tab",
+        "label": "订阅/发布1.0",
         "disabled": false,
         "info": "",
         "env": []
@@ -27,6 +35,14 @@
         "id": "f7e96a32e56d72eb",
         "type": "tab",
         "label": "接口处理",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4508900ef2a7b261",
+        "type": "tab",
+        "label": "流程 1",
         "disabled": false,
         "info": "",
         "env": []
@@ -229,8 +245,8 @@
         "name": "配置完成",
         "mode": "link",
         "links": [
-            "906bb62a708b4c0c",
-            "59181471dbc6175b"
+            "59181471dbc6175b",
+            "906bb62a708b4c0c"
         ],
         "x": 975,
         "y": 540,
@@ -241,7 +257,7 @@
         "type": "debug",
         "z": "7c7a09edf982e2f4",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -250,7 +266,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 830,
-        "y": 500,
+        "y": 520,
         "wires": []
     },
     {
@@ -287,7 +303,7 @@
         "y": 380,
         "wires": [
             [
-                "de1af31ddcf813b0"
+                "aea3af329e2e33ba"
             ]
         ]
     },
@@ -303,13 +319,13 @@
         "finalize": "",
         "libs": [],
         "x": 440,
-        "y": 420,
+        "y": 500,
         "wires": [
             [
                 "cf8bb3ede866fe12"
             ],
             [
-                "aea3af329e2e33ba"
+                "fc89e9165d2ffb12"
             ]
         ]
     },
@@ -325,10 +341,10 @@
         "finalize": "",
         "libs": [],
         "x": 450,
-        "y": 500,
+        "y": 460,
         "wires": [
             [
-                "fc89e9165d2ffb12"
+                "de1af31ddcf813b0"
             ]
         ]
     },
@@ -344,7 +360,7 @@
         "finalize": "",
         "libs": [],
         "x": 440,
-        "y": 460,
+        "y": 420,
         "wires": [
             [
                 "5cddc77aa8c606cd"
@@ -355,7 +371,6 @@
         "id": "fc89e9165d2ffb12",
         "type": "function",
         "z": "7c7a09edf982e2f4",
-        "d": true,
         "name": "数据补全",
         "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\n\ncommon.expandTopic.expand(data.ids);   \ncommon.expandTopic.expand(data.app);   \ncommon.expandTopic.expand(data.topics.subs);\ncommon.expandTopic.expand(data.topics.services);\n\ncommon.keyToObjId(data.devices);\n\nreturn {payload: data};",
         "outputs": 1,
@@ -364,7 +379,7 @@
         "finalize": "",
         "libs": [],
         "x": 420,
-        "y": 540,
+        "y": 560,
         "wires": [
             [
                 "6423346762c80c34",
@@ -378,7 +393,7 @@
         "type": "switch",
         "z": "7c7a09edf982e2f4",
         "name": "是否激活？",
-        "property": "IOT_ENABLE_PLF_BFY",
+        "property": "IOT_ENABLE_PLF_NDV1",
         "propertyType": "env",
         "rules": [
             {
@@ -399,9 +414,7 @@
             [
                 "c0624055eec65ac4"
             ],
-            [
-                "222a754589dfce9c"
-            ]
+            []
         ]
     },
     {
@@ -470,7 +483,8 @@
         "y": 240,
         "wires": [
             [
-                "a6a4ebf94a8b8924"
+                "a6a4ebf94a8b8924",
+                "222a754589dfce9c"
             ]
         ]
     },
@@ -479,7 +493,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "获取数据节点",
-        "func": "let config = msg.payload;\nlet plf = config.platforms[\"bfy\"];\nif (plf && plf.global) {\n    return {\n        payload: plf.global\n    };\n}",
+        "func": "let config = msg.payload;\nlet plf = config.platforms[\"ndv1\"];\nif (plf && plf.global) {\n    return {\n        payload: plf.global\n    };\n}",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -521,7 +535,7 @@
         "finalize": "",
         "libs": [],
         "x": 820,
-        "y": 420,
+        "y": 460,
         "wires": [
             [
                 "92d872156e511bd6"
@@ -593,7 +607,8 @@
         "name": "上线通知输出",
         "mode": "link",
         "links": [
-            "b784350e948a9e8b"
+            "b784350e948a9e8b",
+            "667b436f43ebae3b"
         ],
         "x": 975,
         "y": 580,
@@ -848,7 +863,7 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "自动连接",
-        "func": "let data = global.get(\"data\");\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: true\n}\nObject.assign(msg.broker, data.mqtt.broker);\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nlet ids = data.ids;\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false\n}\nObject.assign(msg.broker, data.mqtt.broker);\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -876,26 +891,6 @@
             [
                 "0f989c13f4e0c1cb",
                 "589883c5ddd06e17"
-            ]
-        ]
-    },
-    {
-        "id": "d4cd2db5e5a2688f",
-        "type": "function",
-        "z": "e93bbc67912b9178",
-        "d": true,
-        "name": "出生消息",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    from: {\n        type: \"plf\",\n        id: data.ids.plf\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.plf,\n    online: 1\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet birth = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\nmsg.broker = msg.broker || {};\nmsg.broker.birth = birth;\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 420,
-        "y": 380,
-        "wires": [
-            [
-                "fcc0eb8cbb3816df"
             ]
         ]
     },
@@ -972,7 +967,8 @@
             "9bdce921275b0acd",
             "b45b2eba09115dae",
             "f2d3874c6b2d73f3",
-            "250ffb893d37d89a"
+            "250ffb893d37d89a",
+            "c7b7c2d7a905a76d"
         ],
         "x": 225,
         "y": 540,
@@ -1013,6 +1009,199 @@
         "statusType": "auto",
         "x": 530,
         "y": 700,
+        "wires": []
+    },
+    {
+        "id": "f782abfd31d4bf71",
+        "type": "function",
+        "z": "e93bbc67912b9178",
+        "name": "中转",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\n\nlet topic = common.getHDTopic({\n    pref: {app: ids.app, dom: \"0\"},\n    to: {type: \"dio\", id: ids.dio},\n    entry: {type: \"svc\", id: \"turn\"}\n    \n});\n\n\nreturn {\n    topic: topic,\n    payload: msg.payload\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 860,
+        "wires": [
+            [
+                "43bf37762f52e71c"
+            ]
+        ]
+    },
+    {
+        "id": "eea822e040f44475",
+        "type": "link in",
+        "z": "e93bbc67912b9178",
+        "name": "中转输入",
+        "links": [],
+        "x": 235,
+        "y": 860,
+        "wires": [
+            [
+                "f782abfd31d4bf71"
+            ]
+        ]
+    },
+    {
+        "id": "6abe85752f7acd88",
+        "type": "inject",
+        "z": "e93bbc67912b9178",
+        "name": "定时检查连接",
+        "props": [
+            {
+                "p": "action",
+                "v": "connect",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "60",
+        "topic": "",
+        "x": 220,
+        "y": 300,
+        "wires": [
+            [
+                "0f989c13f4e0c1cb"
+            ]
+        ]
+    },
+    {
+        "id": "b8e2664d60c6e048",
+        "type": "mqtt in",
+        "z": "115f1d81a93b6fc4",
+        "name": "平台订阅",
+        "topic": "",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "4f298837cfcb1b75",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 480,
+        "y": 340,
+        "wires": [
+            [
+                "b1f7e714e83d84ea"
+            ]
+        ]
+    },
+    {
+        "id": "b69d84e0aa5a04fb",
+        "type": "function",
+        "z": "115f1d81a93b6fc4",
+        "name": "",
+        "func": "\nlet topics = [\n    \"business/cmdgate/CMDGATE_FZ_PMZ_AC\"\n    \n    ];\n\n\nnode.send({\n        action: \"subscribe\",\n        topic: topics\n})    \n\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 340,
+        "wires": [
+            [
+                "b8e2664d60c6e048"
+            ]
+        ]
+    },
+    {
+        "id": "7b71eeb89ec8c9ae",
+        "type": "change",
+        "z": "115f1d81a93b6fc4",
+        "name": "设备数据",
+        "rules": [
+            {
+                "t": "set",
+                "p": "devices",
+                "pt": "flow",
+                "to": "{\"CMDGATE_CL_VRTYG\":{\"name\":\"长乐VR体验馆\",\"devices\":{\"ESP8266_9926564\":{\"name\":\"二楼1成果区宣传大屏前空调\"},\"ESP8266_9928598\":{\"name\":\"二楼2成果区体验中心入口空调\"},\"ESP8266_9933676\":{\"name\":\"二楼3成果区富士康大屏处空调\"},\"ESP8266_488969\":{\"name\":\"二楼5成果区版图区域内侧空调\"},\"ESP8266_9931870\":{\"name\":\"二楼6成果区版图区域外侧空调\"},\"ESP8266_9956709\":{\"name\":\"二楼7成果区小镇沙盘前空调\"},\"ESP8266_430864\":{\"name\":\"二楼8成果区红色教育一体机旁空调\"},\"ESP8266_486720\":{\"name\":\"二楼9恐龙休息区沙发区上方空调\"},\"ESP8266_469370\":{\"name\":\"二楼10恐龙休息区恐龙区入口上方空调\"},\"ESP8266_9922593\":{\"name\":\"二楼11恐龙休息区恐龙大屏上方空调\"},\"ESP8266_491535\":{\"name\":\"二楼12恐龙休息区长桌上方空调\"},\"ESP8266_9945247\":{\"name\":\"二楼16沉浸教室地理沙盘上方空调\"},\"ESP8266_450977\":{\"name\":\"二楼17沉浸教室3D扫描上方空调\"},\"ESP8266_9954003\":{\"name\":\"二楼18沉浸教室曲面屏上方空调\"},\"ESP8266_448616\":{\"name\":\"二楼19沉浸教室座位区上方空调\"},\"ESP8266_431099\":{\"name\":\"二楼22应用区新品体验展位上方空调\"},\"ESP8266_9930630\":{\"name\":\"二楼23应用区急速风暴展位上方空调\"},\"ESP8266_502328\":{\"name\":\"二楼24应用区世宇展位上方空调\"},\"ESP8266_525449\":{\"name\":\"二楼25应用区ColdingGalaxy展位上方空调\"},\"ESP8266_9928778\":{\"name\":\"二楼26应用区虎豹骑展位上方空调\"},\"ESP8266_9930144\":{\"name\":\"二楼27应用区VR消防展位上方空调\"},\"ESP8266_523355\":{\"name\":\"二楼28应用区虚拟实验室前空调\"},\"ESP8266_524983\":{\"name\":\"二楼29应用区央馆虚拟实验展位上方空调\"},\"ESP8266_10004904\":{\"name\":\"二楼30全息舞台舞台上方空调-1\"},\"ESP8266_9921707\":{\"name\":\"二楼31全息舞台舞台上方空调-2\"},\"ESP8266_433213\":{\"name\":\"二楼32乐空间四格空间1空调\"},\"ESP8266_9920978\":{\"name\":\"二楼33乐空间入口空调\"},\"ESP8266_464648\":{\"name\":\"二楼34乐空间六轴赛车上方空调\"},\"ESP8266_9924660\":{\"name\":\"二楼35乐空间四轴赛车上方空调\"},\"ESP8266_9957889\":{\"name\":\"二楼36乐空间Switch游戏上方空调\"},\"ESP8266_9930089\":{\"name\":\"二楼37乐空间VR自行车上方空调\"},\"ESP8266_448481\":{\"name\":\"二楼38乐空间四格空间4空调\"},\"ESP8266_427331\":{\"name\":\"二楼39乐空间四格空间2&3空调\"},\"ESP8266_9934513\":{\"name\":\"二楼40乐空间仓库空调\"},\"ESP8266_9925594\":{\"name\":\"二楼41乐空间滑雪机上方空调\"},\"ESP8266_9926755\":{\"name\":\"二楼4通道、卫生间区域卫生间一外空调\"},\"ESP8266_9938106\":{\"name\":\"二楼13通道、卫生间区域卫生间二外空调\"},\"ESP8266_9932037\":{\"name\":\"二楼14通道、卫生间区域电梯厅外空调\"},\"ESP8266_465345\":{\"name\":\"二楼15通道、卫生间区域电梯厅内空调\"},\"ESP8266_10009326\":{\"name\":\"二楼20通道、卫生间区域卫生间三外新风机\"},\"ESP8266_9926288\":{\"name\":\"二楼21通道、卫生间区域卫生间三外空调\"},\"ESP8266_9937795\":{\"name\":\"三楼1直播摄影棚摄影棚后方空调1\"},\"ESP8266_10006724\":{\"name\":\"三楼2直播摄影棚摄影棚区域办公室空调1\"},\"ESP8266_442480\":{\"name\":\"三楼3直播摄影棚摄影棚后方空调2\"},\"ESP8266_519369\":{\"name\":\"三楼4直播摄影棚摄影棚区域办公室空调2\"},\"ESP8266_448586\":{\"name\":\"三楼5直播摄影棚摄影棚区域会议室空调\"},\"ESP8266_9930798\":{\"name\":\"三楼6直播摄影棚摄影棚前方空调1\"},\"ESP8266_521738\":{\"name\":\"三楼7直播摄影棚摄影棚前方空调2\"},\"ESP8266_432044\":{\"name\":\"三楼8VR办公区VR办公室新风\"},\"ESP8266_526058\":{\"name\":\"三楼9VR办公区VR办公室空调1\"},\"ESP8266_9926764\":{\"name\":\"三楼10VR办公区VR办公室空调2\"},\"ESP8266_427863\":{\"name\":\"三楼11党建办公区党建办公室空调1\"},\"ESP8266_9926765\":{\"name\":\"三楼12党建办公区党建办公室空调2\"},\"ESP8266_9958380\":{\"name\":\"三楼13党建办公区党建办公室空调3\"},\"ESP8266_474651\":{\"name\":\"三楼14党建办公区党建办公室空调4\"},\"ESP8266_432426\":{\"name\":\"三楼15通道区域电梯间空调\"},\"ESP8266_447884\":{\"name\":\"三楼16通道区域通道空调1\"},\"ESP8266_522277\":{\"name\":\"三楼17通道区域通道空调2\"},\"ESP8266_525584\":{\"name\":\"三楼18通道区域通道空调3\"},\"ESP8266_10029119\":{\"name\":\"三楼19通道区域通道区域新风\"},\"ESP8266_9944959\":{\"name\":\"三楼20党员活动室活动室空调1\"},\"ESP8266_10047940\":{\"name\":\"三楼21党员活动室活动室空调2\"},\"ESP8266_9927599\":{\"name\":\"三楼22党员活动室活动室空调3\"},\"ESP8266_440864\":{\"name\":\"三楼23党员活动室活动室空调4\"},\"ESP8266_9920788\":{\"name\":\"三楼24党员活动室活动室展区空调1\"},\"ESP8266_500512\":{\"name\":\"三楼25党员活动室活动室展区空调2\"},\"ESP8266_9934592\":{\"name\":\"三楼26党员活动室活动室展区空调3\"},\"ESP8266_469696\":{\"name\":\"三楼27党建会议室前方空调1\"},\"ESP8266_9926218\":{\"name\":\"三楼28党建会议室前方空调2\"},\"ESP8266_9955466\":{\"name\":\"三楼29党建会议室前方空调3\"},\"ESP8266_448179\":{\"name\":\"三楼30党建会议室前方空调4\"},\"ESP8266_9932108\":{\"name\":\"三楼31党建会议室前方空调5\"},\"ESP8266_10027740\":{\"name\":\"三楼32党建会议室前方空调6\"},\"ESP8266_9928853\":{\"name\":\"三楼33党建会议室前方空调7\"},\"ESP8266_433112\":{\"name\":\"三楼34党建会议室前方空调8\"},\"ESP8266_9932430\":{\"name\":\"三楼35党建会议室新风\"},\"ESP8266_9925572\":{\"name\":\"\"},\"ESP8266_10005258\":{\"name\":\"\"},\"ESP8266_524478\":{\"name\":\"\"},\"ESP8266_9959024\":{\"name\":\"\"},\"ESP8266_9924667\":{\"name\":\"\"},\"ESP8266_9931370\":{\"name\":\"\"},\"ESP8266_9923383\":{\"name\":\"\"},\"ESP8266_10006696\":{\"name\":\"\"},\"ESP8266_9944985\":{\"name\":\"\"},\"ESP8266_9941341\":{\"name\":\"\"},\"ESP8266_9936075\":{\"name\":\"\"},\"ESP8266_449971\":{\"name\":\"\"},\"ESP8266_9935390\":{\"name\":\"\"},\"ESP8266_10007032\":{\"name\":\"\"},\"ESP8266x00c1747a\":{\"name\":\"二楼窗帘、雨棚433发射器\"},\"ESP8266x00c1cb4e\":{\"name\":\"二楼雨棚433发射器\"},\"ESP8266x00c1cb4e_1\":{\"name\":\"二楼1号雨棚\"},\"ESP8266x00c1cb4e_2\":{\"name\":\"二楼2号雨棚\"},\"ESP8266x00491fd5\":{\"name\":\"福州东门开发板\"}}},\"CMDGATE_CL_VR_F1\":{\"name\":\"长乐VR体验馆党建1楼\",\"devices\":{\"ESP8266x0006d778\":{\"name\":\"党建1楼样板\"},\"ESP8266x002b1a04\":{\"name\":\"党建1楼1\"},\"ESP8266x002c258c\":{\"name\":\"党建1楼2\"},\"ESP8266x002b0e27\":{\"name\":\"党建1楼3\"},\"ESP8266x00c77d13\":{\"name\":\"党建1楼4\"},\"ESP8266x00c7b907\":{\"name\":\"党建1楼5\"},\"ESP8266x002b7188\":{\"name\":\"党建1楼6\"},\"ESP8266x002c2fe7\":{\"name\":\"党建1楼7\"},\"ESP8266x002c6f23\":{\"name\":\"党建1楼8\"},\"ESP8266x00c7a9c6\":{\"name\":\"党建1楼9\"},\"ESP8266x002c162d\":{\"name\":\"党建1楼10\"},\"ESP8266x00c786a4\":{\"name\":\"党建1楼11\"},\"ESP8266x00c69d8f\":{\"name\":\"党建1楼12\"},\"ESP8266x00c71f60\":{\"name\":\"党建1楼13\"},\"ESP8266x002c2464\":{\"name\":\"党建1楼14\"},\"ESP8266x002c8923\":{\"name\":\"党建1楼15\"},\"ESP8266x00c79674\":{\"name\":\"党建1楼16\"},\"ESP8266x00c6e64a\":{\"name\":\"党建1楼17\"},\"ESP8266x00c78231\":{\"name\":\"党建1楼18\"},\"ESP8266x00c771dd\":{\"name\":\"党建1楼19\"},\"ESP8266x002bdc04\":{\"name\":\"党建1楼20\"},\"ESP8266x00c5a9e6\":{\"name\":\"党建1楼21\"},\"ESP8266x00c5a343\":{\"name\":\"党建1楼22\"},\"ESP8266x002badef\":{\"name\":\"党建1楼23\"},\"ESP8266x002c1edd\":{\"name\":\"党建1楼24\"},\"ESP8266x00c72f12\":{\"name\":\"党建1楼25\"},\"ESP8266x00c6495d\":{\"name\":\"党建1楼26\"},\"ESP8266x002b0948\":{\"name\":\"党建1楼27\"},\"ESP8266x002c2813\":{\"name\":\"党建1楼28\"},\"ESP8266x002cac4e\":{\"name\":\"党建1楼29\"},\"ESP8266x00c77946\":{\"name\":\"党建1楼30\"},\"ESP8266x00c764c8\":{\"name\":\"党建1楼31\"},\"ESP8266x00c72e9b\":{\"name\":\"党建1楼32\"},\"ESP8266x002c25b3\":{\"name\":\"党建1楼33\"},\"ESP8266x002c7ff3\":{\"name\":\"党建1楼34\"},\"ESP8266x002c7cea\":{\"name\":\"党建1楼35\"},\"ESP8266x00c78eb5\":{\"name\":\"党建1楼36\"},\"ESP8266x00c5cced\":{\"name\":\"党建1楼37\"},\"ESP8266x00c66b43\":{\"name\":\"党建1楼38\"},\"ESP8266x002c959f\":{\"name\":\"党建1楼39\"},\"ESP8266x002b0bcc\":{\"name\":\"党建1楼40\"},\"ESP8266x002c9ece\":{\"name\":\"党建1楼41\"},\"ESP8266x002b33bb\":{\"name\":\"党建1楼42\"},\"ESP8266x002ca32b\":{\"name\":\"党建1楼43\"},\"ESP8266x00c74957\":{\"name\":\"党建1楼44\"},\"ESP8266x002c9141\":{\"name\":\"党建1楼45\"},\"ESP8266x002ba534\":{\"name\":\"党建1楼46\"},\"ESP8266x00c5a8b4\":{\"name\":\"党建1楼47\"},\"ESP8266x00c691b6\":{\"name\":\"党建1楼48\"},\"ESP8266x002c2c21\":{\"name\":\"党建1楼49\"},\"ESP8266x002b28e4\":{\"name\":\"党建1楼50\"},\"ESP8266x00c77c37\":{\"name\":\"党建1楼51\"},\"ESP8266x00c68f51\":{\"name\":\"党建1楼52\"},\"ESP8266x00c73120\":{\"name\":\"党建1楼53\"},\"ESP8266x002b1076\":{\"name\":\"党建1楼54\"},\"ESP8266x00c72fee\":{\"name\":\"党建1楼55\"},\"ESP8266x00c78ee8\":{\"name\":\"党建1楼56\"},\"ESP8266x002c921c\":{\"name\":\"党建1楼57\"},\"ESP8266x002b659e\":{\"name\":\"党建1楼58\"},\"ESP8266x002c9b1f\":{\"name\":\"党建1楼59\"},\"ESP8266x00c7793e\":{\"name\":\"党建1楼60\"},\"ESP8266x00c1a13c\":{\"name\":\"党建1楼水机\"}}},\"CMDGATE_CL_VR_F2\":{\"name\":\"长乐VR体验馆2楼\",\"devices\":{\"0xa4c1381c5bd15c52\":{\"name\":\"恐龙区男卫生间三路开关\"},\"0xa4c138d2c1bdc074\":{\"name\":\"恐龙区女卫生间三路开关\"},\"0x00158d0003539f17\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"}}},\"CMDGATE_CL_JZX01\":{\"name\":\"长乐1号集装箱\",\"devices\":{\"c8f742e36fd2\":{\"name\":\"1号空调\"},\"24dfa7056ca9\":{\"name\":\"2号空调\"},\"ESP8266_5628343\":{\"name\":\"窗帘控制芯片\"},\"CL_JZX01_curtain_01\":{\"name\":\"1号窗帘\"},\"CL_JZX01_curtain_02\":{\"name\":\"2号窗帘\"},\"CL_JZX01_curtain_03\":{\"name\":\"3号窗帘\"},\"CL_JZX01_curtain_04\":{\"name\":\"4号窗帘\"},\"CL_JZX01_curtain_05\":{\"name\":\"5号窗帘\"},\"CL_JZX01_curtain_06\":{\"name\":\"6号窗帘\"}}},\"CMDGATE_CL_JZX02\":{\"name\":\"长乐2号集装箱\",\"devices\":{}},\"CMDGATE_CL_QYA53\":{\"name\":\"长乐企业号A5-3\",\"devices\":{\"CL_QYA53_curtain_01\":{\"name\":\"1号窗帘\"},\"CL_QYA53_curtain_02\":{\"name\":\"2号窗帘\"}}},\"CMDGATE_CL_DJHYS\":{\"name\":\"长乐DJ会议室\",\"devices\":{\"CL_DJHYS_curtain_01\":{\"name\":\"1号窗帘\"},\"CL_DJHYS_curtain_02\":{\"name\":\"2号窗帘\"},\"CL_DJHYS_curtain_03\":{\"name\":\"3号窗帘\"},\"CL_DJHYS_curtain_04\":{\"name\":\"4号窗帘\"},\"CL_DJHYS_curtain_05\":{\"name\":\"5号窗帘\"},\"CL_DJHYS_curtain_06\":{\"name\":\"6号窗帘\"},\"CL_DJHYS_curtain_07\":{\"name\":\"7号窗帘\"},\"CL_DJHYS_curtain_08\":{\"name\":\"8号窗帘\"},\"CL_DJHYS_curtain_09\":{\"name\":\"9号窗帘\"},\"CL_DJHYS_curtain_10\":{\"name\":\"10号窗帘\"},\"CL_DJHYS_curtain_11\":{\"name\":\"11号窗帘\"},\"CL_DJHYS_curtain_12\":{\"name\":\"12号窗帘\"},\"CL_DJHYS_curtain_13\":{\"name\":\"13号窗帘\"},\"CL_DJHYS_curtain_14\":{\"name\":\"14号窗帘\"},\"CL_DJHYS_curtain_15\":{\"name\":\"15号窗帘\"},\"CL_DJHYS_curtain_16\":{\"name\":\"16号窗帘\"},\"CL_DJHYS_curtain_17\":{\"name\":\"17号窗帘\"},\"CL_DJHYS_curtain_18\":{\"name\":\"18号窗帘\"},\"CL_DJHYS_curtain_19\":{\"name\":\"19号窗帘\"},\"CL_DJHYS_curtain_20\":{\"name\":\"20号窗帘\"},\"ESP8266x005dc688\":{\"name\":\"福州开发空调板\"},\"ESP8266x005dc677\":{\"name\":\"（后）走道区5号空调\",\"sensors\":{\"0x00158d000704fdaa\":\"\",\"0x00158d0007064a65\":\"\"}},\"ESP8266x00c1dffd\":{\"name\":\"健身区->靠走道空调\"},\"ESP8266x00c1c16d\":{\"name\":\"c1c16d\"},\"ESP8266x00c1cb9a\":{\"name\":\"会议区->靠模型区2入口2号空调\"},\"ESP8266x00c223c1\":{\"name\":\"c223c1\"},\"ESP8266x00c1a011\":{\"name\":\"c1a011\"},\"ESP8266x00c1d2ab\":{\"name\":\"c1d2ab\"},\"ESP8266x00c203ef\":{\"name\":\"c203ef\"},\"ESP8266x00c176cb\":{\"name\":\"模型式1-靠墙空调\"},\"ESP8266x00c17bd3\":{\"name\":\"会议区->会议桌左上方空调\"},\"ESP8266x00c1a2ab\":{\"name\":\"读书区->靠窗空调\"},\"ESP8266x00c23f17\":{\"name\":\"卫生间门口->柱子右前方靠走廊空调\"},\"ESP8266x00c1e174\":{\"name\":\"会议区->靠模型区2入口1号空调\"},\"ESP8266x00c1d5ac\":{\"name\":\"模型式1-中间空调\"},\"ESP8266x00c22c11\":{\"name\":\"c22c11\"},\"ESP8266x00c1bf04\":{\"name\":\"c1bf04\"},\"ESP8266x00c14ddc\":{\"name\":\"模型式2-靠墙空调\"},\"ESP8266x00c1e7f4\":{\"name\":\"c1e7f4\"},\"ESP8266x00c1c9df\":{\"name\":\"c1c9df\"},\"ESP8266x00c20a26\":{\"name\":\"（前）走道区3号空调\"},\"ESP8266x00c21296\":{\"name\":\"会议区->靠前走廊空调\"},\"ESP8266x00c17f7c\":{\"name\":\"c17f7c\"},\"ESP8266x00c1a719\":{\"name\":\"卫生间门口->柱子右后方靠墙空调\"},\"ESP8266x00c1a9b2\":{\"name\":\"模型式2->中间空调\"},\"ESP8266x00c1c69d\":{\"name\":\"c1c69d\"},\"ESP8266x00c17d51\":{\"name\":\"卫生间门口->柱子左边靠读书区空调\"},\"ESP8266x00c20ca1\":{\"name\":\"c20ca1\"},\"ESP8266x00c19fe5\":{\"name\":\"会议区->前大屏左上方空调\"},\"ESP8266x00c204a1\":{\"name\":\"卫生间门口->靠走廊柱子后方空调\"},\"ESP8266x00c1cc0a\":{\"name\":\"c1cc0a\"},\"ESP8266x00c1997e\":{\"name\":\"会议区->前大屏右上方空调\"},\"ESP8266x00c1aa1c\":{\"name\":\"（后）走道区4号空调\"},\"ESP8266x00c235cb\":{\"name\":\"c235cb\"},\"ESP8266x00c1c1ec\":{\"name\":\"c1c1ec\"},\"ESP8266x00c1cfb3\":{\"name\":\"c1cfb3\"},\"ESP8266x00c1cda4\":{\"name\":\"c1cda4\"},\"ESP8266x00c19a65\":{\"name\":\"弹丸区->靠走道空调\"},\"ESP8266x00c18442\":{\"name\":\"（前）走道区1号空调\"},\"ESP8266x00c17dd8\":{\"name\":\"c17dd8\"},\"ESP8266x00c162fa\":{\"name\":\"c162fa\"},\"ESP8266x00c1c5f9\":{\"name\":\"（前）走道区2号空调\"},\"ESP8266x00c23379\":{\"name\":\"c23379\"},\"ESP8266x00c1b48c\":{\"name\":\"c1b48c\"},\"0x00158d000353a076\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"},\"0x00158d000353a073\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"},\"0x00158d000353c52b\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"},\"0x00158d00039bf5bc\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"},\"0x00158d0003539a3c\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"},\"0x00158d000704fdaa\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d0007064a65\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d000705e971\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d0007071712\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d000706883e\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d000705007b\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d0007071af4\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d0007089665\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d0007071747\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d000588d40a\":{\"name\":\"绿米温湿度计-无屏\"},\"0x54ef441000090760\":{\"name\":\"绿米温湿度计-有屏\"},\"0x54ef4410000902f2\":{\"name\":\"绿米温湿度计-有屏\"},\"0x54ef44100001b16c\":{\"name\":\"绿米温湿度计-有屏\"},\"0x54ef44100009011c\":{\"name\":\"绿米温湿度计-有屏\"},\"0x54ef44100009063c\":{\"name\":\"绿米温湿度计-有屏\"},\"0x54ef441000090215\":{\"name\":\"绿米温湿度计-有屏\"},\"0x60a423fffe3470e5\":{\"name\":\"鸿雁温湿度计-无屏\"},\"0x60a423fffe348618\":{\"name\":\"鸿雁温湿度计-无屏\"},\"0x60a423fffe2a2eb6\":{\"name\":\"鸿雁温湿度计-无屏\"},\"0x60a423fffe347315\":{\"name\":\"鸿雁温湿度计-无屏\"},\"ESP8266x00c20678\":{\"name\":\"乐高区射灯开关\"}}},\"CMDGATE_CL_DJHYS_CBUS\":{\"name\":\"长乐DJ会议室CBUS\",\"devices\":{\"CL_DJHYS_lighting_0\":{\"name\":\"0组灯光\"},\"CL_DJHYS_lighting_1\":{\"name\":\"1组灯光\"},\"CL_DJHYS_lighting_2\":{\"name\":\"2组灯光\"},\"CL_DJHYS_lighting_3\":{\"name\":\"3组灯光\"},\"CL_DJHYS_door_4\":{\"name\":\"4组门开关\"},\"CL_DJHYS_door_5\":{\"name\":\"5组门开关\"},\"CL_DJHYS_lighting_6\":{\"name\":\"6组灯光\"},\"CL_DJHYS_lighting_7\":{\"name\":\"7组灯光\"},\"CL_DJHYS_lighting_8\":{\"name\":\"8组灯光\"},\"CL_DJHYS_lighting_9\":{\"name\":\"9组灯光\"},\"CL_DJHYS_lighting_10\":{\"name\":\"10组灯光\"},\"CL_DJHYS_lighting_11\":{\"name\":\"11组灯光\"},\"CL_DJHYS_door_12\":{\"name\":\"12组门开关\"},\"CL_DJHYS_door_13\":{\"name\":\"13组门开关\"},\"CL_DJHYS_lighting_14\":{\"name\":\"14组灯光\"},\"CL_DJHYS_lighting_15\":{\"name\":\"15组灯光\"},\"CL_DJHYS_lighting_16\":{\"name\":\"16组灯光\"},\"CL_DJHYS_lighting_17\":{\"name\":\"17组灯光\"},\"CL_DJHYS_lighting_18\":{\"name\":\"18组灯光\"},\"CL_DJHYS_lighting_19\":{\"name\":\"19组灯光\"},\"CL_DJHYS_lighting_20\":{\"name\":\"20组灯光\"},\"CL_DJHYS_lighting_21\":{\"name\":\"21组灯光\"},\"CL_DJHYS_lighting_22\":{\"name\":\"22组灯光\"},\"CL_DJHYS_lighting_23\":{\"name\":\"23组灯光\"},\"CL_DJHYS_lighting_24\":{\"name\":\"24组灯光\"},\"CL_DJHYS_lighting_25\":{\"name\":\"25组灯光\"},\"CL_DJHYS_lighting_26\":{\"name\":\"26组灯光\"},\"CL_DJHYS_lighting_27\":{\"name\":\"27组灯光\"},\"CL_DJHYS_lighting_28\":{\"name\":\"28组灯光\"},\"CL_DJHYS_lighting_29\":{\"name\":\"29组灯光\"},\"CL_DJHYS_lighting_30\":{\"name\":\"30组灯光\"},\"CL_DJHYS_lighting_31\":{\"name\":\"31组灯光\"},\"CL_DJHYS_lighting_32\":{\"name\":\"32组灯光\"},\"CL_DJHYS_lighting_33\":{\"name\":\"33组灯光\"},\"CL_DJHYS_lighting_34\":{\"name\":\"34组灯光\"},\"CL_DJHYS_lighting_35\":{\"name\":\"35组灯光\"},\"CL_DJHYS_lighting_36\":{\"name\":\"36组灯光\"},\"CL_DJHYS_lighting_37\":{\"name\":\"37组灯光\"},\"CL_DJHYS_lighting_38\":{\"name\":\"38组灯光\"},\"CL_DJHYS_lighting_39\":{\"name\":\"39组灯光\"},\"CL_DJHYS_lighting_40\":{\"name\":\"40组灯光\"}}},\"CMDGATE_CL_DJHYS_CT_485\":{\"name\":\"长乐DJ会议室485窗帘\",\"devices\":{}},\"CMDGATE_CL_CXY\":{\"name\":\"长乐禅修院\",\"devices\":{\"ESP8266x00dce3ae\":{\"name\":\"音箱\"}}},\"CMDGATE_CL_FRA303\":{\"name\":\"福软教室A303\",\"devices\":{\"CL_FRA303_curtain_01\":{\"name\":\"幕布\"},\"CL_FRA303_curtain_02\":{\"name\":\"备用\"}}},\"CMDGATE_CL_FRA305\":{\"name\":\"福软教室A305\",\"devices\":{\"CL_FRA305_curtain_01\":{\"name\":\"幕布\"},\"CL_FRA305_curtain_02\":{\"name\":\"备用\"}}},\"CMDGATE_CL_FRA306\":{\"name\":\"福软教室A306\",\"devices\":{\"CL_FRA306_curtain_01\":{\"name\":\"幕布\"},\"CL_FRA306_curtain_02\":{\"name\":\"备用\"}}},\"CMDGATE_CL_FRD302\":{\"name\":\"福软教室D302\",\"devices\":{\"CL_FRD302_curtain_01\":{\"name\":\"幕布\"},\"CL_FRD302_curtain_02\":{\"name\":\"备用\"}}},\"CMDGATE_CL_FRF308\":{\"name\":\"福软教室F308\",\"devices\":{\"CL_FRF308_curtain_01\":{\"name\":\"幕布\"},\"CL_FRF308_curtain_02\":{\"name\":\"备用\"}}},\"CMDGATE_CL_FRF319\":{\"name\":\"福软教室F319\",\"devices\":{\"CL_FRF319_curtain_01\":{\"name\":\"幕布\"},\"CL_FRF319_curtain_02\":{\"name\":\"备用\"}}},\"CMDGATE_CL_XZ_MSG\":{\"name\":\"长乐小镇美术馆\",\"devices\":{\"ESP8266x00c1cd77\":{\"name\":\"空调风机-485控制模块\"},\"ESP8266x00c1cd77_1\":{\"name\":\"空调风机1\"},\"ESP8266x00c1cd77_2\":{\"name\":\"空调风机2\"},\"ESP8266x00c1cd77_3\":{\"name\":\"空调风机3\"},\"ESP8266x00c1cd77_4\":{\"name\":\"空调风机4\"}}},\"CMDGATE_FZ_DEV\":{\"name\":\"福州亚太二楼开发(有433射频)\",\"devices\":{\"DJ-YT-500-01\":{\"name\":\"1号舵机\"},\"ESP32x6abf713c\":{\"name\":\"esp32开发板\"},\"ESP32x6dabf498\":{\"name\":\"esp32开发板\"},\"ESP8266x005dc775\":{\"name\":\"党建1楼开发板\"},\"ESP8266x0006d432\":{\"name\":\"党建1楼开发板带强电\"},\"android_924ed49\":{\"name\":\"采码android机1\"},\"0xa4c13860713c6457\":{\"name\":\"Z3开关HONYAR一路开关\"},\"0x00158d000353c53f\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"},\"0x00158d00039be5c1\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"},\"ESP8266_1839985816\":{\"name\":\"ESP32测试板\"},\"ESP8266x0006dbe5\":{\"name\":\"CC2652透传网关\"}}},\"CMDGATE_FZ_PMZ_AC\":{\"name\":\"福州飘渺庄空调\",\"devices\":{\"ESP8266x005dcac5\":{\"name\":\"未启用\"},\"ESP8266x0006d906\":{\"name\":\"未启用\"},\"ESP8266x00c20fff\":{\"name\":\"飘渺庄空调1-PM3-F10\"},\"ESP8266x00d03f88\":{\"name\":\"飘渺庄空调2-PM3-F11\"},\"ESP8266x00c1a22a\":{\"name\":\"飘渺庄空调3-PM2-F07\"},\"ESP8266x00c1cae3\":{\"name\":\"飘渺庄空调4-PM2-F25\"},\"ESP8266x00c19982\":{\"name\":\"飘渺庄空调5-PM2-F24\"},\"ESP8266x00c1cbb8\":{\"name\":\"飘渺庄空调6-PM2-F19\"},\"ESP8266x00c1cca9\":{\"name\":\"飘渺庄空调7-PM2-F18\"},\"ESP8266x00c22d93\":{\"name\":\"飘渺庄空调8-PM2-F20\"},\"ESP8266x00c1d2ba\":{\"name\":\"飘渺庄空调9-PM2-F13\"},\"ESP8266x003dc0f3\":{\"name\":\"飘渺庄空调10-PM2-F21\"},\"ESP8266x00c1d3fd\":{\"name\":\"飘渺庄空调11-PM2-F15\"},\"ESP8266x00c1ceca\":{\"name\":\"飘渺庄空调12-PM2-F22\"},\"ESP8266x00c20ed6\":{\"name\":\"飘渺庄空调13-PM2-F23\"},\"ESP8266x003db3c4\":{\"name\":\"飘渺庄空调14-PM2-F16\"},\"ESP8266x00c1ddd1\":{\"name\":\"飘渺庄空调15-PM3-F20\"},\"ESP8266x00c1bad8\":{\"name\":\"飘渺庄空调16-PM2-F14\"},\"ESP8266x003dc6b4\":{\"name\":\"飘渺庄空调17-PM2-F12\"},\"ESP8266x00c1a8c2\":{\"name\":\"飘渺庄空调18-PM2-F10\"},\"ESP8266x00c1768e\":{\"name\":\"飘渺庄空调19-PM2-F11\"},\"ESP8266x00c1c883\":{\"name\":\"飘渺庄空调20-PM2-F06\"},\"ESP8266x00c1a908\":{\"name\":\"飘渺庄空调21-PM2-F05\"},\"ESP8266x00c1d2ac\":{\"name\":\"飘渺庄空调22-PM2-F04\"},\"ESP8266x00d09c3a\":{\"name\":\"飘渺庄空调23-PM2-F08\"},\"ESP8266x00c184de\":{\"name\":\"飘渺庄空调24-\"},\"ESP8266x00c1e1af\":{\"name\":\"飘渺庄空调25-PM2-F09\"},\"ESP8266x003d92de\":{\"name\":\"飘渺庄空调26-PM2-F01\"},\"ESP8266x00c1ad5e\":{\"name\":\"飘渺庄空调27-PM2-F02\"},\"ESP8266x00c2036c\":{\"name\":\"飘渺庄空调28-PM2-F17\"},\"ESP8266x00c172c3\":{\"name\":\"飘渺庄空调29-PM3-电梯口\"},\"ESP8266x00c1d473\":{\"name\":\"飘渺庄空调30-PM3-F25\"},\"ESP8266x00c1d309\":{\"name\":\"飘渺庄空调31-PM3-F12\"},\"ESP8266x00c172d3\":{\"name\":\"飘渺庄空调32-PM3-F13\"},\"ESP8266x00c1d4dc\":{\"name\":\"飘渺庄空调33-PM3-F19\"},\"ESP8266x00c153db\":{\"name\":\"飘渺庄空调34-PM3-F14\"},\"ESP8266x00c20c2c\":{\"name\":\"飘渺庄空调35-PM3-F18\"},\"ESP8266x00c1a6be\":{\"name\":\"飘渺庄空调36-PM3-F17\"},\"ESP8266x00c1e517\":{\"name\":\"飘渺庄空调37-PM2-F03\"},\"ESP8266x00c15426\":{\"name\":\"飘渺庄空调38-PM3-F16\"},\"ESP8266x00c22bf6\":{\"name\":\"东门空调39\"},\"ESP8266x00c20638\":{\"name\":\"东门空调40\"}}},\"CMDGATE_FZ_YT_AC\":{\"name\":\"福州亚太空调\",\"devices\":{\"ESP8266x002c2739\":{\"name\":\"5楼测试样板\"}}},\"CMDGATE_FZ_DM_AC\":{\"name\":\"福州东门空调\",\"devices\":{}},\"CMDGATE_FZ_YT2DGN\":{\"name\":\"福州亚太二楼多功能会议室\",\"devices\":{\"FZ_YT2DGN_curtain_01\":{\"name\":\"幕布\"}}},\"CMDGATE_XA_KFDX01\":{\"name\":\"西安开放大学\",\"devices\":{\"780f7732d5f6\":{\"name\":\"1号空调\"},\"XA_KFDX01_curtain_01\":{\"name\":\"1号窗帘\"},\"XA_KFDX01_curtain_02\":{\"name\":\"2号窗帘\"},\"XA_KFDX01_curtain_03\":{\"name\":\"3号窗帘\"}}},\"CMDGATE_XA_KFDX03\":{\"name\":\"西安开放大学智慧教室303\",\"devices\":{\"XA_KFDX03_air_01\":{\"name\":\"1号空调\"}}},\"CMDGATE_XA_KFDX08\":{\"name\":\"西安开放大学智慧教室302\",\"devices\":{\"XA_KFDX08_air_01\":{\"name\":\"1号空调\"}}},\"CMDGATE_ZFZ01\":{\"name\":\"中非展01\",\"devices\":{\"tasmota_982A80\":{\"name\":\"1号风扇\"},\"tasmota_9AA972\":{\"name\":\"2号风扇\"},\"ZFZ01_curtain_01\":{\"name\":\"1号窗帘\"},\"ZFZ01_curtain_02\":{\"name\":\"2号窗帘\"}}}}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 380,
+        "y": 100,
+        "wires": [
+            [
+                "9e5c938f56874a87"
+            ]
+        ]
+    },
+    {
+        "id": "9e5c938f56874a87",
+        "type": "function",
+        "z": "115f1d81a93b6fc4",
+        "name": "数据补全",
+        "func": "let devices = flow.get(\"devices\") ;\n\nlet setDevice = (did, device, gateway) => {\n    if (devices[did] && devices[did].gid) {\n        node.error(\"设备编号重复：\" + did);\n        node.warn(devices[did]);\n        node.warn(gateway);\n        return;\n    }\n    device.did = did;\n    device.gid = gateway ? gateway.did : null\n    device.gateway = gateway;\n    devices[did] = device;\n\n    let subdevs = device.devices;\n    if (subdevs) {\n        let subkeys = Object.keys(subdevs);\n        subkeys.forEach(subkey => {\n            let subdev = subdevs[subkey];\n            setDevice(subkey, subdev, device);            \n        });        \n\n    }\n}\n\n\n\n    let keys = Object.keys(devices);\n    keys.forEach(key => {\n        let device = devices[key];\n        setDevice(key, device)\n        \n    });\n\nmsg.payload = devices;\n\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 100,
+        "wires": [
+            [
+                "b785005d36c485c9",
+                "b69d84e0aa5a04fb"
+            ]
+        ]
+    },
+    {
+        "id": "b785005d36c485c9",
+        "type": "debug",
+        "z": "115f1d81a93b6fc4",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "667b436f43ebae3b",
+        "type": "link in",
+        "z": "115f1d81a93b6fc4",
+        "name": "",
+        "links": [
+            "0ecafaa953e1df94"
+        ],
+        "x": 165,
+        "y": 100,
+        "wires": [
+            [
+                "7b71eeb89ec8c9ae"
+            ]
+        ]
+    },
+    {
+        "id": "b1f7e714e83d84ea",
+        "type": "debug",
+        "z": "115f1d81a93b6fc4",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 340,
         "wires": []
     },
     {
@@ -1306,7 +1495,7 @@
         "type": "function",
         "z": "46a5ba0d798d87c3",
         "name": "reboot",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"test\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: msg.payload.id,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"reboot\"\n    },\n    sid: \"0\",\n    stp: 0\n}\nlet pld = {id: msg.payload.id}\n\n\n\nreturn {\n\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"test\"\n    },\n    // pref: {\n    //     app: \"0\",\n    //     dom: \"0\"\n    // },    \n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: msg.payload.id,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"reboot\"\n    },\n    sid: \"0\",\n    stp: 0\n}\nlet pld = {id: msg.payload.id}\n\n\n\nreturn {\n\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1422,7 +1611,7 @@
         "props": [
             {
                 "p": "payload.id",
-                "v": "ESP8266x0098b1f8",
+                "v": "ESP8266x00c22bf6",
                 "vt": "str"
             }
         ],
@@ -1483,7 +1672,7 @@
         "type": "debug",
         "z": "46a5ba0d798d87c3",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1510,6 +1699,95 @@
         "wires": [
             [
                 "9b39f6a45516c881"
+            ]
+        ]
+    },
+    {
+        "id": "75f02d7892d5c309",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "状态上线ToDIO",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nif (data.ids.dio) {\n    let hd = {\n        pref: {\n            app: \"0\",\n            dom: \"0\"\n        },\n        to: {\n            type: \"0\",\n            id: \"0\"\n        },\n        entry: {\n            type: \"evt\",\n            id: \"status\"\n        },\n        stp: 1,\n        version: global.get(\"version\")\n    };\n    \n    let pld = {\n        id: data.ids.plf,\n        online: 1\n    };\n    \n    return {\n        payload:{\n            hd: hd,\n            pld: pld\n        }\n    };\n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 480,
+        "wires": [
+            [
+                "b45b2eba09115dae",
+                "7dc6bf6f82555874"
+            ]
+        ]
+    },
+    {
+        "id": "8a57ac32f524bf5e",
+        "type": "inject",
+        "z": "46a5ba0d798d87c3",
+        "name": "定时上报",
+        "props": [],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "60",
+        "topic": "",
+        "x": 510,
+        "y": 480,
+        "wires": [
+            [
+                "75f02d7892d5c309"
+            ]
+        ]
+    },
+    {
+        "id": "f235568794a255ef",
+        "type": "inject",
+        "z": "46a5ba0d798d87c3",
+        "name": "DM3-39",
+        "props": [
+            {
+                "p": "payload.id",
+                "v": "ESP8266x00c22bf6",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 1380,
+        "wires": [
+            [
+                "c552a06182e3ca45"
+            ]
+        ]
+    },
+    {
+        "id": "78f14371aa6a9cb0",
+        "type": "inject",
+        "z": "46a5ba0d798d87c3",
+        "name": "ESP8266x0098b1f8",
+        "props": [
+            {
+                "p": "payload.id",
+                "v": "ESP8266x0098b1f8",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 190,
+        "y": 1520,
+        "wires": [
+            [
+                "c552a06182e3ca45"
             ]
         ]
     },
@@ -1712,5 +1990,890 @@
         "x": 730,
         "y": 300,
         "wires": []
+    },
+    {
+        "id": "6ce42dab16237a85",
+        "type": "change",
+        "z": "4508900ef2a7b261",
+        "name": "DM3-39",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.hd.did",
+                "pt": "msg",
+                "to": "ESP8266x00c22bf6",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 440,
+        "y": 320,
+        "wires": [
+            [
+                "db3f9cb72104ec3c"
+            ]
+        ]
+    },
+    {
+        "id": "d47cdbf8c10a2e0c",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "重启",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "7",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 210,
+        "y": 320,
+        "wires": [
+            [
+                "6ce42dab16237a85",
+                "7c3087c926c4fa30"
+            ]
+        ]
+    },
+    {
+        "id": "ecdfbc816da51494",
+        "type": "debug",
+        "z": "4508900ef2a7b261",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "topic",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "db3f9cb72104ec3c",
+        "type": "change",
+        "z": "4508900ef2a7b261",
+        "name": "topic",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "\"cmdgate/device/\" & msg.payload.hd.did",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 750,
+        "y": 320,
+        "wires": [
+            [
+                "ecdfbc816da51494",
+                "ce312e3aaa942c51",
+                "c7b7c2d7a905a76d"
+            ]
+        ]
+    },
+    {
+        "id": "ce312e3aaa942c51",
+        "type": "debug",
+        "z": "4508900ef2a7b261",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 970,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "c7b7c2d7a905a76d",
+        "type": "link out",
+        "z": "4508900ef2a7b261",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "774d0cb8ef787fc2"
+        ],
+        "x": 985,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "7c3087c926c4fa30",
+        "type": "change",
+        "z": "4508900ef2a7b261",
+        "name": "DM3-40",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.hd.did",
+                "pt": "msg",
+                "to": "ESP8266x00c20638",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 440,
+        "y": 400,
+        "wires": [
+            [
+                "db3f9cb72104ec3c"
+            ]
+        ]
+    },
+    {
+        "id": "bc266763500c0271",
+        "type": "function",
+        "z": "4508900ef2a7b261",
+        "name": "",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: \"0x00158d0003539f17\",\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        name: \"set\"\n    },\n    sid: \"0\",\n    stp: 0\n}\nlet pld = {\"state\":\"OFF\"}\n\n// let topic = \"ndiot/test/0/0/dev/ESP8266x00068a16/svc/request\";\n\nlet topic = common.getHDTopic({\n    pref: {app: ids.app, dom: \"0\"},\n    to: {type: \"dio\", id: ids.dio},\n    entry: {type: \"svc\", id: \"turn\"}\n    \n});\n\n\nreturn {\n    topic: topic,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2ae1ce46.12df62",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "查询",
+        "props": [
+            {
+                "p": "payload.hd.to.id",
+                "v": "ESP8266x00c22bf6",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 190,
+        "y": 620,
+        "wires": [
+            [
+                "a3091d4744cbaf9f"
+            ]
+        ]
+    },
+    {
+        "id": "768865ff.638f7c",
+        "type": "change",
+        "z": "4508900ef2a7b261",
+        "name": "设备ID",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.hd.to.id",
+                "pt": "msg",
+                "to": "ESP8266x00c22bf6",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 510,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c6575cc3.32b1",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "开",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "str",
+        "x": 190,
+        "y": 680,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "b8d477ee.74ae38",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "关",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "off",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "str",
+        "x": 190,
+        "y": 720,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "fac00f08.8b768",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "开/制冷",
+        "props": [
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.mode",
+                "v": "cool",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 190,
+        "y": 820,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "173476ab.292a79",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "开/制热",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.mode",
+                "v": "heat",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 190,
+        "y": 860,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "cde39296.e1a7e",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "20度",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.temperature",
+                "v": "20",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "str",
+        "x": 190,
+        "y": 960,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "d6a55f15.b65d9",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "25度",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.temperature",
+                "v": "25",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "str",
+        "x": 190,
+        "y": 1000,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "3c19ea4f.823ac6",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "低风",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.fanSpeed",
+                "v": "low",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "str",
+        "x": 190,
+        "y": 1120,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "90dc94f5.2fcd58",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "中风",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.fanSpeed",
+                "v": "medium",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 190,
+        "y": 1160,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "54b33bf1.9772d4",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "高风",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.fanSpeed",
+                "v": "high",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 190,
+        "y": 1200,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "cd9a2414.1e3838",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "重启",
+        "props": [
+            {
+                "p": "payload.hd.to.type",
+                "v": "dev",
+                "vt": "str"
+            },
+            {
+                "p": "payload.hd.to.id",
+                "v": "",
+                "vt": "str"
+            },
+            {
+                "p": "payload.hd.entry.type",
+                "v": "svc",
+                "vt": "str"
+            },
+            {
+                "p": "payload.hd.entry.id",
+                "v": "reboot",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 190,
+        "y": 480,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "fff63ccd.bee8d",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "10度",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.temperature",
+                "v": "10",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "str",
+        "x": 190,
+        "y": 920,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "f067ddee.22573",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "摆风开",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.swing",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 190,
+        "y": 1280,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "17f56d73.ce85b3",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "30度",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.temperature",
+                "v": "30",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 190,
+        "y": 1040,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "83815ab0.960708",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "开/自动",
+        "props": [
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.mode",
+                "v": "auto",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 190,
+        "y": 780,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "da3629b1.4224f8",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "24度",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.temperature",
+                "v": "24",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 430,
+        "y": 1060,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "2791e7fd.07a908",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "29度",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.temperature",
+                "v": "29",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 430,
+        "y": 1100,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "d3e8fb10.f7c238",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "18度",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.temperature",
+                "v": "18",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 430,
+        "y": 960,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "75a3224d.7e11cc",
+        "type": "inject",
+        "z": "4508900ef2a7b261",
+        "name": "19度",
+        "props": [
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.temperature",
+                "v": "19",
+                "vt": "num"
+            },
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 430,
+        "y": 1000,
+        "wires": [
+            [
+                "768865ff.638f7c"
+            ]
+        ]
+    },
+    {
+        "id": "f94a0b5e7acb66fb",
+        "type": "function",
+        "z": "4508900ef2a7b261",
+        "name": "查询",
+        "func": "\nlet hd = {\n    to: {\n        type: \"dev\",\n        id: msg.payload.hd.to.id,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"get\"\n    }\n}\n\n\nlet pld = msg.payload.pld\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a3091d4744cbaf9f",
+        "type": "change",
+        "z": "4508900ef2a7b261",
+        "name": "设备ID",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.hd.to.id",
+                "pt": "msg",
+                "to": "ESP8266x00c22bf6",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 510,
+        "y": 640,
+        "wires": [
+            []
+        ]
     }
 ]

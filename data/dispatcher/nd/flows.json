@@ -1096,28 +1096,11 @@
         ]
     },
     {
-        "id": "b920e31b90166791",
-        "type": "function",
-        "z": "bbc788f5f9e280ee",
-        "name": "出生消息",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n        app: \"0\",\n        dom: \"0\"\n    },\n    from: {\n        type: \"dsp\",\n        id: data.ids.dsp\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dsp,\n    online: 1\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet birth = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\nmsg.broker = msg.broker || {};\nmsg.broker.birth = birth;\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 520,
-        "y": 300,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "e4534314a7bcd4b3",
         "type": "function",
         "z": "bbc788f5f9e280ee",
         "name": "自动连接",
-        "func": "let data = global.get(\"data\");\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: true,\n    // clientid: \"dsp_\" + data.ids.dsp\n}\n\n\nObject.assign(msg.broker, data.mqtt.broker);\n\nreturn msg;",
+        "func": "let data = global.get(\"data\");\n  \n    msg = {};\n    msg.action = \"connect\";\n    msg.broker = {\n        autoConnect: true,\n        force: false,\n        // clientid: \"dsp_\" + data.ids.dsp\n    }\n    \n    \n    Object.assign(msg.broker, data.mqtt.broker);\n    \n    return msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1127,7 +1110,8 @@
         "y": 200,
         "wires": [
             [
-                "45838fa67f1ea02a"
+                "45838fa67f1ea02a",
+                "66838c4235fa4e3f"
             ]
         ]
     },
@@ -1167,46 +1151,45 @@
         ]
     },
     {
-        "id": "8f351621757399ad",
-        "type": "function",
+        "id": "6abe85752f7acd88",
+        "type": "inject",
         "z": "bbc788f5f9e280ee",
-        "name": "断开",
-        "func": "\nmsg = {\n    action : \"disconnect\"\n};\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 210,
-        "y": 300,
+        "name": "定时检查连接",
+        "props": [
+            {
+                "p": "action",
+                "v": "connect",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "60",
+        "topic": "",
+        "x": 200,
+        "y": 260,
         "wires": [
             [
-                "6cfb5b8bbb676e36"
+                "7890d1121e8c800a"
             ]
         ]
     },
     {
-        "id": "6cfb5b8bbb676e36",
-        "type": "delay",
+        "id": "66838c4235fa4e3f",
+        "type": "debug",
         "z": "bbc788f5f9e280ee",
         "name": "",
-        "pauseType": "delay",
-        "timeout": "1",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 360,
-        "y": 300,
-        "wires": [
-            []
-        ]
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 410,
+        "y": 260,
+        "wires": []
     },
     {
         "id": "59181471dbc6175b",
@@ -1470,6 +1453,44 @@
         "x": 650,
         "y": 420,
         "wires": []
+    },
+    {
+        "id": "75f02d7892d5c309",
+        "type": "function",
+        "z": "aa7a09a7a0bf6210",
+        "name": "状态上线ToDIO",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nif (data.ids.dio) {\n    let hd = {\n        from: {\n            type: \"dsp\",\n            id: data.ids.dsp\n        },\n        to: {\n            type: \"dio\",\n            id: data.ids.dio\n        },\n        entry: {\n            type: \"evt\",\n            id: \"status\"\n        },\n        stp: 1,\n        version: global.get(\"version\")\n    };\n    \n    let pld = {\n        id: data.ids.dsp,\n        online: 1\n    };\n    \n    return {\n        payload:{\n            hd: hd,\n            pld: pld\n        }\n    };\n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 520,
+        "wires": [
+            [
+                "b45b2eba09115dae"
+            ]
+        ]
+    },
+    {
+        "id": "8a57ac32f524bf5e",
+        "type": "inject",
+        "z": "aa7a09a7a0bf6210",
+        "name": "定时上报",
+        "props": [],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "60",
+        "topic": "",
+        "x": 210,
+        "y": 520,
+        "wires": [
+            [
+                "75f02d7892d5c309"
+            ]
+        ]
     },
     {
         "id": "b293cfb8b41ad91f",

@@ -889,7 +889,7 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "自动连接",
-        "func": "let data = global.get(\"data\");\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: true\n}\nObject.assign(msg.broker, data.mqtt.broker);\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false\n}\nObject.assign(msg.broker, data.mqtt.broker);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -917,26 +917,6 @@
             [
                 "0f989c13f4e0c1cb",
                 "589883c5ddd06e17"
-            ]
-        ]
-    },
-    {
-        "id": "d4cd2db5e5a2688f",
-        "type": "function",
-        "z": "e93bbc67912b9178",
-        "d": true,
-        "name": "出生消息",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    from: {\n        type: \"plf\",\n        id: data.ids.plf\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.plf,\n    online: 1\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet birth = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\nmsg.broker = msg.broker || {};\nmsg.broker.birth = birth;\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 420,
-        "y": 380,
-        "wires": [
-            [
-                "fcc0eb8cbb3816df"
             ]
         ]
     },
@@ -1055,6 +1035,31 @@
         "x": 530,
         "y": 700,
         "wires": []
+    },
+    {
+        "id": "6abe85752f7acd88",
+        "type": "inject",
+        "z": "e93bbc67912b9178",
+        "name": "定时检查连接",
+        "props": [
+            {
+                "p": "action",
+                "v": "connect",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "60",
+        "topic": "",
+        "x": 200,
+        "y": 300,
+        "wires": [
+            [
+                "0f989c13f4e0c1cb"
+            ]
+        ]
     },
     {
         "id": "c730d99f09571fa2",
@@ -1767,13 +1772,12 @@
         "rap": true,
         "rh": 0,
         "inputs": 1,
-        "x": 330,
-        "y": 260,
+        "x": 490,
+        "y": 200,
         "wires": [
             [
                 "2e518fac66237f3d",
-                "554aef77843aa777",
-                "ebad675731c9f853"
+                "f122ee5a2f45d4fd"
             ]
         ]
     },
@@ -1798,7 +1802,7 @@
         "type": "function",
         "z": "396cbecdd6c41306",
         "name": "订阅主题",
-        "func": "let topics = [\n    \"0x00158d0003539f17\",\n    \"0x00158d000353c53f\",\n    \"ESP8266x00c17ca1\"\n    ]\n\n\nnode.send({\n        action: \"unsubscribe\",\n        topic: topics\n})\n\nnode.send({\n        action: \"subscribe\",\n        topic: topics\n})\n",
+        "func": "let topics = [\n    \"0x00158d0003539f17\",\n    \"0x00158d000353c53f\",\n    \"ESP8266x00c17ca1\",\n    \"ESP8266x0098b1f8\",\n    \"ESP8266x00c22bf6\",\n    \"ESP8266x00c20638\"\n    ]\n\n\nnode.send({\n        action: \"unsubscribe\",\n        topic: topics\n})\n\nnode.send({\n        action: \"subscribe\",\n        topic: topics\n})\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1848,8 +1852,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 290,
-        "y": 400,
+        "x": 450,
+        "y": 420,
         "wires": [
             [
                 "3c5c174ae97a1079"
@@ -1878,8 +1882,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 310,
-        "y": 480,
+        "x": 470,
+        "y": 500,
         "wires": [
             [
                 "c4a4de242e3bade7"
@@ -1900,8 +1904,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 560,
-        "y": 460,
+        "x": 720,
+        "y": 480,
         "wires": [
             [
                 "f782abfd31d4bf71"
@@ -1919,8 +1923,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 790,
-        "y": 420,
+        "x": 950,
+        "y": 440,
         "wires": [
             [
                 "f2d3874c6b2d73f3",
@@ -1937,8 +1941,8 @@
         "links": [
             "774d0cb8ef787fc2"
         ],
-        "x": 945,
-        "y": 340,
+        "x": 1105,
+        "y": 360,
         "wires": []
     },
     {
@@ -1952,8 +1956,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 560,
-        "y": 380,
+        "x": 720,
+        "y": 400,
         "wires": [
             [
                 "f782abfd31d4bf71"
@@ -1972,9 +1976,117 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 930,
-        "y": 500,
+        "x": 1090,
+        "y": 520,
         "wires": []
+    },
+    {
+        "id": "6da42e39a2a7dfba",
+        "type": "switch",
+        "z": "396cbecdd6c41306",
+        "name": "空调",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "ESP8266x00c22bf6",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ESP8266x00c20638",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ESP8266x0098b1f8",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 450,
+        "y": 580,
+        "wires": [
+            [
+                "c03190c995601283"
+            ],
+            [
+                "c03190c995601283"
+            ],
+            [
+                "c03190c995601283"
+            ]
+        ]
+    },
+    {
+        "id": "f122ee5a2f45d4fd",
+        "type": "change",
+        "z": "396cbecdd6c41306",
+        "name": "设备分类",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 140,
+        "y": 500,
+        "wires": [
+            [
+                "554aef77843aa777",
+                "ebad675731c9f853",
+                "6da42e39a2a7dfba"
+            ]
+        ]
+    },
+    {
+        "id": "c03190c995601283",
+        "type": "function",
+        "z": "396cbecdd6c41306",
+        "name": "协议转换",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"set\"\n    },\n    sid: \"0\",\n    stp: 0\n}\n\nlet code= msg.payload;\nlet len = code.length;\nlet c0 = len > 0 ? code[0] : \"\";\nlet c1 = len > 1 ? code[1] : \"\";\nlet c2 = len > 2 ? code.substr(2, 2) : \"\";\nlet c3 = len > 4 ? code[4] : \"\";\n\nlet pld = { id : devId };\nif (c0==\"0\") pld.power = \"off\";\nif (c0==\"1\") pld.power = \"on\";\nif (c0==\"2\") hd.entry.id = \"get\";\nif (c0==\"3\") hd.entry.id = \"reboot\";\n\nif (c1 == \"0\") pld.mode = \"auto\";\nif (c1 == \"1\") pld.mode = \"cool\";\nif (c1 == \"2\") pld.mode = \"heat\";\nif (c1 == \"3\") pld.mode = \"fan\";\n\nif (c2) pld.temperature = parseInt(c2);\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 580,
+        "wires": [
+            [
+                "f782abfd31d4bf71"
+            ]
+        ]
+    },
+    {
+        "id": "d757b8e6f753702b",
+        "type": "inject",
+        "z": "396cbecdd6c41306",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 450,
+        "y": 820,
+        "wires": [
+            []
+        ]
     },
     {
         "id": "47446fad18d0c295",

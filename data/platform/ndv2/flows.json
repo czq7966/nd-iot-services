@@ -856,7 +856,7 @@
         "type": "function",
         "z": "1b87c586f8186580",
         "name": "自动连接",
-        "func": "let data = global.get(\"data\");\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: true\n}\nObject.assign(msg.broker, data.mqtt.broker);\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false\n}\nObject.assign(msg.broker, data.mqtt.broker);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1022,6 +1022,31 @@
         "x": 530,
         "y": 700,
         "wires": []
+    },
+    {
+        "id": "6abe85752f7acd88",
+        "type": "inject",
+        "z": "1b87c586f8186580",
+        "name": "定时检查连接",
+        "props": [
+            {
+                "p": "action",
+                "v": "connect",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "60",
+        "topic": "",
+        "x": 200,
+        "y": 300,
+        "wires": [
+            [
+                "85448a00b0560aa8"
+            ]
+        ]
     },
     {
         "id": "101dd8163641eae2",

@@ -51,7 +51,7 @@
         "type": "mqtt-broker",
         "name": "push",
         "broker": "push-access.sdp.101.com",
-        "port": "1780",
+        "port": "1111",
         "clientid": "",
         "autoConnect": false,
         "usetls": false,
@@ -1295,7 +1295,7 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "自动连接",
-        "func": "let data = global.get(\"data\");\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: true\n}\nObject.assign(msg.broker, data.mqtt.broker);\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false\n}\nObject.assign(msg.broker, data.mqtt.broker);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1410,6 +1410,31 @@
             ],
             [
                 "f40aa739a1831a4b"
+            ]
+        ]
+    },
+    {
+        "id": "6abe85752f7acd88",
+        "type": "inject",
+        "z": "e93bbc67912b9178",
+        "name": "定时检查连接",
+        "props": [
+            {
+                "p": "action",
+                "v": "connect",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "60",
+        "topic": "",
+        "x": 200,
+        "y": 300,
+        "wires": [
+            [
+                "0f989c13f4e0c1cb"
             ]
         ]
     },
@@ -2103,7 +2128,7 @@
         "type": "function",
         "z": "63bcc9db2b38df75",
         "name": "状态上线发布",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n        app: \"0\",\n        dom: \"0\"\n    },\n    from: {\n        type: \"\",\n        id: data.ids.dio\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dsp,\n    online: 1\n};\n\nreturn {\n    payload:{\n        hd: hd,\n        pld: pld\n    },\n    qos: 2,\n    retain: true\n};\n\n",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n        app: \"0\",\n        dom: \"0\"\n    },\n    from: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dio,\n    online: 1\n};\n\nreturn {\n    payload:{\n        hd: hd,\n        pld: pld\n    },\n    qos: 2,\n    retain: true\n};\n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
