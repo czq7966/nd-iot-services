@@ -52,35 +52,9 @@
         "type": "mqtt-broker",
         "name": "push",
         "broker": "push-access.sdp.101.com",
-        "port": "1780",
+        "port": "1111",
         "clientid": "",
         "autoConnect": false,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willPayload": "",
-        "willMsg": {},
-        "sessionExpiry": ""
-    },
-    {
-        "id": "8ca095982007a8dc",
-        "type": "mqtt-broker",
-        "name": "platform",
-        "broker": "172.24.135.38",
-        "port": "1883",
-        "clientid": "",
-        "autoConnect": true,
         "usetls": false,
         "protocolVersion": "4",
         "keepalive": "60",
@@ -765,7 +739,8 @@
         "mode": "link",
         "links": [
             "2ff5101df1ab6584",
-            "b293cfb8b41ad91f"
+            "b293cfb8b41ad91f",
+            "bcb80ed091975c9a"
         ],
         "x": 965,
         "y": 140,
@@ -1082,11 +1057,12 @@
         "rap": true,
         "rh": 0,
         "inputs": 1,
-        "x": 480,
-        "y": 340,
+        "x": 560,
+        "y": 180,
         "wires": [
             [
-                "b1f7e714e83d84ea"
+                "b1f7e714e83d84ea",
+                "d671d4a8896c5a1d"
             ]
         ]
     },
@@ -1101,8 +1077,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 310,
-        "y": 340,
+        "x": 390,
+        "y": 180,
         "wires": [
             [
                 "b8e2664d60c6e048"
@@ -1200,9 +1176,235 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 650,
-        "y": 340,
+        "x": 750,
+        "y": 220,
         "wires": []
+    },
+    {
+        "id": "bcb80ed091975c9a",
+        "type": "link in",
+        "z": "115f1d81a93b6fc4",
+        "name": "接口处理输入",
+        "links": [
+            "be8cd487c69c6c5a"
+        ],
+        "x": 185,
+        "y": 740,
+        "wires": [
+            [
+                "6c3478e3086ea54f"
+            ]
+        ]
+    },
+    {
+        "id": "6c3478e3086ea54f",
+        "type": "function",
+        "z": "115f1d81a93b6fc4",
+        "name": "设备事件请求",
+        "func": "let hd = msg.payload.hd;\nif (hd.stp == 0 && hd.entry.type == \"evt\" && hd.from.type == \"dev\" ) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 740,
+        "wires": [
+            [
+                "c271ccc69013308c"
+            ]
+        ]
+    },
+    {
+        "id": "c271ccc69013308c",
+        "type": "switch",
+        "z": "115f1d81a93b6fc4",
+        "name": "",
+        "property": "payload.hd.entry.id",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "report",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 560,
+        "y": 740,
+        "wires": [
+            [
+                "6baf77cc553a5ea8",
+                "b4ec6381c909de6a"
+            ]
+        ]
+    },
+    {
+        "id": "6baf77cc553a5ea8",
+        "type": "function",
+        "z": "115f1d81a93b6fc4",
+        "name": "上报事件处理",
+        "func": "let devices = flow.get(\"devices\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet did = hd.from.id;\nlet dev = devices[did];\nif (dev && dev.gid) {\n    let _hd = {\n        did: did,\n        gid: dev.gid,\n        cmd: 3,\n        stp: 1\n    };\n    \n\n    return {\n        payload: {\n            hd: _hd,\n            pld: pld\n        }\n    }\n    \n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 740,
+        "wires": [
+            [
+                "688a6f767ef40f7c"
+            ]
+        ]
+    },
+    {
+        "id": "b4ec6381c909de6a",
+        "type": "debug",
+        "z": "115f1d81a93b6fc4",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "179f92fdd0a3bd65",
+        "type": "mqtt out",
+        "z": "115f1d81a93b6fc4",
+        "name": "平台发布",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "4f298837cfcb1b75",
+        "x": 540,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "1b894aeb39234649",
+        "type": "link in",
+        "z": "115f1d81a93b6fc4",
+        "name": "平台发布输入",
+        "links": [
+            "688a6f767ef40f7c"
+        ],
+        "x": 165,
+        "y": 380,
+        "wires": [
+            [
+                "e701e2bb92b726f9"
+            ]
+        ]
+    },
+    {
+        "id": "e701e2bb92b726f9",
+        "type": "function",
+        "z": "115f1d81a93b6fc4",
+        "name": "平台上行主题",
+        "func": "if (!msg.topic)\n    msg.topic = \"business/svcgate/\" + msg.payload.hd.gid;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 380,
+        "wires": [
+            [
+                "179f92fdd0a3bd65",
+                "6eb54a769c7a2e43"
+            ]
+        ]
+    },
+    {
+        "id": "688a6f767ef40f7c",
+        "type": "link out",
+        "z": "115f1d81a93b6fc4",
+        "name": "平台发布输出",
+        "mode": "link",
+        "links": [
+            "1b894aeb39234649"
+        ],
+        "x": 1015,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "6eb54a769c7a2e43",
+        "type": "debug",
+        "z": "115f1d81a93b6fc4",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 530,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "d671d4a8896c5a1d",
+        "type": "link out",
+        "z": "115f1d81a93b6fc4",
+        "name": "平台请求输出",
+        "mode": "link",
+        "links": [
+            "62258abdab11f52c"
+        ],
+        "x": 1025,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "671e0f93a5f1665f",
+        "type": "function",
+        "z": "115f1d81a93b6fc4",
+        "name": "读写?",
+        "func": "let hd = msg.payload.hd;\nlet pld = msg.payload.pld;\n\nif (hd.stp == 2 || !hd.stp && (!pld || Object.keys(pld).length == 0 )) {\n    return [msg, null]\n} else {\n    return [null, msg]\n}\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 960,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "62258abdab11f52c",
+        "type": "link in",
+        "z": "115f1d81a93b6fc4",
+        "name": "平台请求输入",
+        "links": [
+            "d671d4a8896c5a1d"
+        ],
+        "x": 185,
+        "y": 960,
+        "wires": [
+            [
+                "671e0f93a5f1665f"
+            ]
+        ]
     },
     {
         "id": "c730d99f09571fa2",
@@ -1799,7 +2001,7 @@
         "links": [
             "be8cd487c69c6c5a"
         ],
-        "x": 165,
+        "x": 135,
         "y": 160,
         "wires": [
             [
@@ -1988,7 +2190,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 730,
-        "y": 300,
+        "y": 260,
         "wires": []
     },
     {

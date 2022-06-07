@@ -4275,7 +4275,7 @@
         "type": "function",
         "z": "02363c72749a98be",
         "name": "状态",
-        "func": "let device = msg.device\nif (device) {\n    let z2m = device.z2m && device.z2m.z2m;\n    if (z2m) {\n        z2m.online = msg.payload == \"online\" ? 1 : 0;\n    }\n}\n\nreturn msg;",
+        "func": "let device = msg.device\nif (device) {\n    let z2m = device.z2m && device.z2m.z2m;\n    if (z2m) {\n        z2m.online = msg.payload == \"online\" ? 1 : 0;\n        if ( z2m.online)\n            z2m.online_count = z2m.online_count ? (z2m.online_count + 1) : 1;\n        else\n            z2m.offline_count = z2m.offline_count ? (z2m.offline_count + 1) : 1;\n    }\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -4285,8 +4285,8 @@
         "y": 260,
         "wires": [
             [
-                "d30874e085dcd69d",
-                "fb44d80efd918ade"
+                "fb44d80efd918ade",
+                "d30874e085dcd69d"
             ]
         ]
     },
@@ -4302,8 +4302,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 930,
-        "y": 200,
+        "x": 970,
+        "y": 160,
         "wires": []
     },
     {
@@ -4388,11 +4388,11 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 1030,
+        "x": 990,
         "y": 240,
         "wires": [
             [
-                "4c8296c42e885144"
+                "576e43c4c093d86f"
             ]
         ]
     },
@@ -4883,6 +4883,25 @@
         "wires": [
             [
                 "8ffe717629a8bf5f"
+            ]
+        ]
+    },
+    {
+        "id": "576e43c4c093d86f",
+        "type": "function",
+        "z": "02363c72749a98be",
+        "name": "是否需要上传？",
+        "func": "let device = msg.device\nif (device) {\n    let z2m = device.z2m && device.z2m.z2m;\n    if (z2m && z2m.online_count <=2) {\n        return msg;\n    }\n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1140,
+        "y": 240,
+        "wires": [
+            [
+                "4c8296c42e885144"
             ]
         ]
     }
