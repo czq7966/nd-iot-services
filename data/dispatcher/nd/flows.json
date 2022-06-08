@@ -36,7 +36,7 @@
         "type": "mqtt-broker",
         "name": "push",
         "broker": "push-access.sdp.101.com",
-        "port": "1780",
+        "port": "11881",
         "clientid": "",
         "autoConnect": false,
         "usetls": false,

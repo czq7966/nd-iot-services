@@ -52,7 +52,7 @@
         "type": "mqtt-broker",
         "name": "push",
         "broker": "push-access.sdp.101.com",
-        "port": "1111",
+        "port": "11883",
         "clientid": "",
         "autoConnect": false,
         "usetls": false,
@@ -1010,7 +1010,9 @@
         "type": "link in",
         "z": "e93bbc67912b9178",
         "name": "中转输入",
-        "links": [],
+        "links": [
+            "154e87ad105afaf5"
+        ],
         "x": 235,
         "y": 860,
         "wires": [
@@ -1137,7 +1139,7 @@
         "type": "debug",
         "z": "115f1d81a93b6fc4",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1169,7 +1171,7 @@
         "type": "debug",
         "z": "115f1d81a93b6fc4",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1201,7 +1203,7 @@
         "type": "function",
         "z": "115f1d81a93b6fc4",
         "name": "设备事件请求",
-        "func": "let hd = msg.payload.hd;\nif (hd.stp == 0 && hd.entry.type == \"evt\" && hd.from.type == \"dev\" ) {\n    return msg;\n}",
+        "func": "let hd = msg.payload.hd;\nif (hd.stp == 0 && hd.entry.type == \"evt\" && hd.from.type == \"dev\" ||\n    hd.stp == 1 && hd.entry.id == \"get\" && hd.from.type == \"dev\"\n) {\n    return msg;\n}",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1227,17 +1229,25 @@
                 "t": "eq",
                 "v": "report",
                 "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "get",
+                "vt": "str"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 1,
+        "outputs": 2,
         "x": 560,
         "y": 740,
         "wires": [
             [
-                "6baf77cc553a5ea8",
-                "b4ec6381c909de6a"
+                "6baf77cc553a5ea8"
+            ],
+            [
+                "b4ec6381c909de6a",
+                "6baf77cc553a5ea8"
             ]
         ]
     },
@@ -1280,7 +1290,7 @@
         "id": "179f92fdd0a3bd65",
         "type": "mqtt out",
         "z": "115f1d81a93b6fc4",
-        "name": "平台发布",
+        "name": "平台/终端发布",
         "topic": "",
         "qos": "",
         "retain": "",
@@ -1290,7 +1300,7 @@
         "correl": "",
         "expiry": "",
         "broker": "4f298837cfcb1b75",
-        "x": 540,
+        "x": 560,
         "y": 380,
         "wires": []
     },
@@ -1339,7 +1349,7 @@
         "links": [
             "1b894aeb39234649"
         ],
-        "x": 1015,
+        "x": 955,
         "y": 740,
         "wires": []
     },
@@ -1355,8 +1365,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 530,
-        "y": 460,
+        "x": 650,
+        "y": 480,
         "wires": []
     },
     {
@@ -1386,8 +1396,12 @@
         "x": 330,
         "y": 960,
         "wires": [
-            [],
-            []
+            [
+                "de69da643345ab71"
+            ],
+            [
+                "f4a26dbffc626ca7"
+            ]
         ]
     },
     {
@@ -1400,6 +1414,109 @@
         ],
         "x": 185,
         "y": 960,
+        "wires": [
+            [
+                "671e0f93a5f1665f"
+            ]
+        ]
+    },
+    {
+        "id": "de69da643345ab71",
+        "type": "function",
+        "z": "115f1d81a93b6fc4",
+        "name": "查询终端",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.payload.hd.did;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"get\"\n    },\n    sid: \"0\",\n    stp: 0\n}\n\nlet pld = { id : devId };\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 920,
+        "wires": [
+            [
+                "154e87ad105afaf5",
+                "c9f2ac3500adce83"
+            ]
+        ]
+    },
+    {
+        "id": "f4a26dbffc626ca7",
+        "type": "function",
+        "z": "115f1d81a93b6fc4",
+        "name": "设置终端",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.payload.hd.did;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"set\"\n    },\n    sid: \"0\",\n    stp: 0\n}\n\nlet pld = { id : devId };\npld = Object.assign(pld, msg.playload.pld);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 980,
+        "wires": [
+            [
+                "154e87ad105afaf5"
+            ]
+        ]
+    },
+    {
+        "id": "154e87ad105afaf5",
+        "type": "link out",
+        "z": "115f1d81a93b6fc4",
+        "name": "读写输出",
+        "mode": "link",
+        "links": [
+            "eea822e040f44475"
+        ],
+        "x": 965,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "c9f2ac3500adce83",
+        "type": "debug",
+        "z": "115f1d81a93b6fc4",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "d1f6371e1863adc1",
+        "type": "inject",
+        "z": "115f1d81a93b6fc4",
+        "name": "",
+        "props": [
+            {
+                "p": "payload.hd.did",
+                "v": "ESP8266x00c20638",
+                "vt": "str"
+            },
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.hd.stp",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 1060,
         "wires": [
             [
                 "671e0f93a5f1665f"
