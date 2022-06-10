@@ -56,7 +56,7 @@ let startNGINX = () => {
                 console.error("nginx start error: %s , %s!", error, stderr);
         });  
     }
-    console.log("mqtt started");
+    console.log("nginx started");
 }
 
 
