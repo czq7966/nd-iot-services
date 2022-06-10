@@ -1,5 +1,5 @@
 服务 docker 镜像 生成命令：
-docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-amd64:0.0.3 .
+docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-amd64:0.0.5 .
 
 docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-armv7:0.0.2 .
 
