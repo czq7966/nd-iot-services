@@ -37,13 +37,20 @@ RUN mkdir -p /services \
     &&  cd /services/zigbee2mqtt \
     &&  npm install  
 
-COPY ./service/. /lib/systemd/system/.
+RUN cd /services \
+    && wget http://nginx.org/download/nginx-1.22.0.tar.gz   \
+    && tar -xvf nginx-1.22.0.tar.gz \
+    && cd /services/nginx-1.22.0 \
+    && ./configure && make && sudo make install
+
+COPY ./nginx/conf/. /usr/local/nginx/conf/.
+# COPY ./service/. /lib/systemd/system/.
 
 # RUN sudo systemctl enable nd-iot-mqtt-broker
 # RUN sudo systemctl enable nd-iot-service-dio
 # RUN sudo systemctl enable nd-iot-service-dsp
 # RUN sudo systemctl enable nd-iot-service-edg
-RUN sudo systemctl daemon-reload
+# RUN sudo systemctl daemon-reload
 
 RUN mkdir -p /services \
     &&  cd /services \

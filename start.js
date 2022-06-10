@@ -37,6 +37,29 @@ let updateServices = (sync) => {
     updateCode(codeDir, sync);
 }
 
+//本地NGINX服务
+let startNGINX = () => {
+    if (useSpawn) {
+        let cmd = "sudo"; 
+        let args = ["/usr/local/nginx/sbin/nginx"];
+        let child = spawn(cmd, args, { stdio: 'inherit'});         
+        child.on("close", (code, signal) => {
+            if (code != 0)
+                console.error("nginx start error: %d", code);
+            else 
+                console.info("nginx started");
+        });
+    }else {
+        let cmd = "sudo /usr/local/nginx/sbin/nginx"; 
+        exec(cmd, function(error, stdout, stderr) {
+            if (error || stderr)
+                console.error("nginx start error: %s , %s!", error, stderr);
+        });  
+    }
+    console.log("mqtt started");
+}
+
+
 //本地MQTT服务
 let startMQTT = () => {
     if (useSpawn) {
@@ -259,6 +282,10 @@ let testZ2M = (datadir) => {
 if (process.env.IOT_ENABLE_AUTO_UPDATE == "1") {
     updateZ2M(true);
     updateServices(true);
+}
+
+if (process.env.IOT_ENABLE_NGINX == "1") {
+    startNGINX();
 }
 
 if (process.env.IOT_ENABLE_MQTT == "1") {
