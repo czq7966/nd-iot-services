@@ -46,8 +46,8 @@ let updateServices = (sync) => {
 let startNGINX = () => {
     if (useSpawn) {
         let cmd = "sudo"; 
-        let conf = process.env.IOT_NGINX_CONF || "/services/nd-iot-services/docker/nginx/conf/nginx.conf";
-        let args = ["/usr/local/nginx/sbin/nginx", "-c", "conf"];
+        let conf = process.env.IOT_NGINX_CONF || "/usr/local/nginx/conf/nginx.conf";
+        let args = ["/usr/local/nginx/sbin/nginx", "-c", conf];
         let child = spawn(cmd, args, { stdio: 'inherit'});         
         child.on("close", (code, signal) => {
             if (code != 0)

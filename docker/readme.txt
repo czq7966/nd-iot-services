@@ -107,6 +107,6 @@ docker run -d -e IOT_CONFIG_FILE="/services/nd-iot-services/docker/config.json" 
 
 docker run -d -e IOT_CONFIG_FILE="/services/nd-iot-services/docker/config.json" -e IOT_CODE_BRANCH=dev -e IOT_ENABLE_AUTO_UPDATE=1 -p 8080:8080 -p 11881:11881 -p 11882:11882 -p 11883:11883 -p 18090:18090 -p 18091:18091 -p 18092:18092 -p 18093:18093 -p 18094:18094 -p 18095:18095 -p 18096:18096 -e IOT_APP_ID=ndiot -e IOT_ENABLE_MQTT=1 -e IOT_ENABLE_DSP=1 -e IOT_ENABLE_EDG=1 registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-amd64:0.0.3 
 
-//ND租户，在41服务器
-docker run -d -e IOT_CONFIG_FILE="/services/nd-iot-services/docker/config.json" -e IOT_CODE_BRANCH=dev -e IOT_ENABLE_AUTO_UPDATE=1 -p 11880:8080 -p 11881:11881 -p 11882:11882 -p 11883:11883 -p 11884:11884 -p 11885:11885 -p 11886:11886 -p 18090:18090 -p 18091:18091 -p 18092:18092 -p 18093:18093 -p 18094:18094 -p 18095:18095 -p 18096:18096 -p 18097:18097 -p 18098:18098 -p 18099:18099 -e IOT_APP_ID=ndiot -e IOT_ENABLE_MQTT=1 -e IOT_ENABLE_DSP=1 -e IOT_ENABLE_EDG=1 nd-iot-services-amd64:0.0.6 
+//ND租户
+docker run -it  -e IOT_CODE_BRANCH=dev -e IOT_ENABLE_AUTO_UPDATE=1  -e IOT_ENABLE_NGINX=1  -e IOT_ENABLE_MQTT=1 -e IOT_ENABLE_DSP=1 -e IOT_ENABLE_EDG=1 -e IOT_APP_ID=ndiot -e IOT_DSP_ID=ndiot-nd-dsp -e IOT_EDG_ID=ndiot-edg-nd nd-iot-services-amd64:0.0.2
 
