@@ -5,6 +5,11 @@ let execSync = require("child_process").execSync;
 let spawn = require("child_process").spawn;
 let useSpawn = true;
 
+let init = () => {
+    process.env.IOT_CONFIG_FILE = process.env.IOT_CONFIG_FILE || "/services/nd-iot-services/docker/config.json";
+    process.env.IOT_NGINX_CONF = process.env.IOT_NGINX_CONF || "/services/nd-iot-services/docker/nginx/conf/nginx.conf";  
+}
+
 let isWin32 = () => {
     return process.platform == "win32";
 }
@@ -41,7 +46,8 @@ let updateServices = (sync) => {
 let startNGINX = () => {
     if (useSpawn) {
         let cmd = "sudo"; 
-        let args = ["/usr/local/nginx/sbin/nginx"];
+        let conf = process.env.IOT_NGINX_CONF || "/services/nd-iot-services/docker/nginx/conf/nginx.conf";
+        let args = ["/usr/local/nginx/sbin/nginx", "-c", "conf"];
         let child = spawn(cmd, args, { stdio: 'inherit'});         
         child.on("close", (code, signal) => {
             if (code != 0)
@@ -279,39 +285,52 @@ let testZ2M = (datadir) => {
     });    
 };
 
+//初始化
+init();
+console.log(process.env);
+
+//更新代码
 if (process.env.IOT_ENABLE_AUTO_UPDATE == "1") {
     updateZ2M(true);
     updateServices(true);
 }
 
+//启动NGINX
 if (process.env.IOT_ENABLE_NGINX == "1") {
     startNGINX();
 }
 
+//启动MQTT
 if (process.env.IOT_ENABLE_MQTT == "1") {
     startMQTT();
 }
 
+//启动DIO
 if (process.env.IOT_ENABLE_DIO == "1") {
     startDIO();
 }
 
+//启动DSP
 if (process.env.IOT_ENABLE_DSP == "1") {
     startDSP();
 }
 
+//启动EDG
 if (process.env.IOT_ENABLE_EDG == "1") {
     startEDG();
 }
 
+//启动PLF-NDV1
 if (process.env.IOT_ENABLE_PLF_NDV1 == "1") {
     startPLF_NDV1();
 }  
 
+//启动PLF-NDV2
 if (process.env.IOT_ENABLE_PLF_NDV2 == "1") {
     startPLF_NDV2();
 }  
 
+//启动PLF-BFY
 if (process.env.IOT_ENABLE_PLF_BFY == "1") {
     startPLF_BFY();
 } 
@@ -323,5 +342,3 @@ if (process.env.IOT_ENABLE_PLF_BFY == "1") {
 
 require("./src/http-server.js");
 
-
-// console.log(process.env);

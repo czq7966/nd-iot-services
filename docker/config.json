@@ -4,7 +4,7 @@
             "global": {
                 "data":{
                     "app": {
-                        "id": "{APP_ID}",
+                        "id": "{app}",
                         "name": "网龙物联网",
                         "platform": {
                             "id": "{plf}",
@@ -53,7 +53,7 @@
                 "ids": {
                     "app": "{APP_ID}",
                     "dio": "{DIO_ID}",
-                    "plf": "ndv1-{HOSTNAME}"
+                    "plf": "{PLF_ID}-ndv1"
                 }
             }
         },     
@@ -61,7 +61,7 @@
             "global": {
                 "data":{
                     "app": {
-                        "id": "{APP_ID}",
+                        "id": "{app}",
                         "name": "网龙物联网",
                         "platform": {
                             "id": "{plf}",
@@ -126,7 +126,7 @@
                 "ids": {
                     "app": "{APP_ID}",
                     "dio": "{DIO_ID}",
-                    "plf": "ndv2-{HOSTNAME}"
+                    "plf": "{PLF_ID}-ndv2"
                 }             
             }
         },
@@ -183,7 +183,7 @@
                 "ids": {
                     "app": "{APP_ID}",
                     "dio": "{DIO_ID}",
-                    "plf": "bfy-{HOSTNAME}"
+                    "plf": "{PLF_ID}-bfy"
                 }
             }
         }                  
@@ -275,7 +275,7 @@
             "ids": {
                 "app": "{APP_ID}",
                 "dom": "{DOM_ID}",
-                "dsp": "{HOSTNAME}"
+                "dsp": "{DSP_ID}"
             }
         }
     },
@@ -361,7 +361,7 @@
                 "app": "{APP_ID}",
                 "dom": "{DOM_ID}",
                 "dsp": "{DSP_ID}",
-                "edg": "{HOSTNAME}"
+                "edg": "{EDG_ID}"
             }   
         }
     },
@@ -494,7 +494,7 @@
             "common": {},
             "ids": {
                 "app": "{APP_ID}",
-                "dio": "{APP_ID}-dio"
+                "dio": "{DIO_ID}"
             }
         }
     }
