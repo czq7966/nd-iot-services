@@ -40,12 +40,11 @@
         "env": []
     },
     {
-        "id": "4508900ef2a7b261",
+        "id": "6c26c442a4ace8d8",
         "type": "tab",
-        "label": "流程 1",
+        "label": "V1.0数据存储",
         "disabled": false,
-        "info": "",
-        "env": []
+        "info": ""
     },
     {
         "id": "4f298837cfcb1b75",
@@ -72,6 +71,27 @@
         "willPayload": "",
         "willMsg": {},
         "sessionExpiry": ""
+    },
+    {
+        "id": "5be5d1b391c81252",
+        "type": "mongodb",
+        "d": true,
+        "hostname": "m3.edu.pre-prod.mongod.sdp",
+        "topology": "direct",
+        "connectOptions": "autoConnectRetry=true&useUnifiedTopology=true",
+        "port": "34001",
+        "db": "preproduction_mdb_iot_data",
+        "name": "预生产环境"
+    },
+    {
+        "id": "54c1b214715143bb",
+        "type": "mongodb",
+        "hostname": "m1.all.dev2.mongod3.sdp",
+        "topology": "direct",
+        "connectOptions": "autoConnectRetry=true&useUnifiedTopology=true",
+        "port": "34004",
+        "db": "dev_mdb_iot_data",
+        "name": "开发环境"
     },
     {
         "id": "f544f205.d51a7",
@@ -2328,888 +2348,151 @@
         "wires": []
     },
     {
-        "id": "6ce42dab16237a85",
-        "type": "change",
-        "z": "4508900ef2a7b261",
-        "name": "DM3-39",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload.hd.did",
-                "pt": "msg",
-                "to": "ESP8266x00c22bf6",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 440,
-        "y": 320,
-        "wires": [
-            [
-                "db3f9cb72104ec3c"
-            ]
-        ]
-    },
-    {
-        "id": "d47cdbf8c10a2e0c",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "重启",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "7",
-                "vt": "num"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 210,
-        "y": 320,
-        "wires": [
-            [
-                "6ce42dab16237a85",
-                "7c3087c926c4fa30"
-            ]
-        ]
-    },
-    {
-        "id": "ecdfbc816da51494",
-        "type": "debug",
-        "z": "4508900ef2a7b261",
+        "id": "5a38a8340f752820",
+        "type": "mongodb out",
+        "z": "6c26c442a4ace8d8",
+        "mongodb": "54c1b214715143bb",
         "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "topic",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 960,
-        "y": 280,
+        "collection": "",
+        "payonly": true,
+        "upsert": false,
+        "multi": false,
+        "operation": "store",
+        "x": 720,
+        "y": 140,
         "wires": []
     },
     {
-        "id": "db3f9cb72104ec3c",
-        "type": "change",
-        "z": "4508900ef2a7b261",
-        "name": "topic",
-        "rules": [
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "\"cmdgate/device/\" & msg.payload.hd.did",
-                "tot": "jsonata"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 750,
-        "y": 320,
+        "id": "011d176a9b7de9af",
+        "type": "mqtt in",
+        "z": "6c26c442a4ace8d8",
+        "name": "边缘终端上行数据",
+        "topic": "business/svcgate/#",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "4f298837cfcb1b75",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 140,
         "wires": [
             [
-                "ecdfbc816da51494",
-                "ce312e3aaa942c51",
-                "c7b7c2d7a905a76d"
+                "89b35427f9d5e71d"
             ]
         ]
     },
     {
-        "id": "ce312e3aaa942c51",
+        "id": "5c71d0857e3cdefb",
+        "type": "function",
+        "z": "6c26c442a4ace8d8",
+        "name": "数据表",
+        "func": "let hd = msg.payload.hd;\nif (!hd.tpc) hd.tpc = msg.topic;\nif (!hd.gid) hd.gid = hd.tpc.substr(hd.tpc.lastIndexOf(\"/\") + 1);\n\nlet tm = new Date(msg.payload.tms)\nlet year = tm.getFullYear().toString()\nlet month = (tm.getMonth() + 101).toString().substr(1,2)\nlet date = (tm.getDate() + 100).toString().substr(1,2)\nmsg.collection=hd.gid + \"_\" + year+month+date\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 140,
+        "wires": [
+            [
+                "f95a89da34c591ed",
+                "5a38a8340f752820",
+                "1a2c22ac909e7f35"
+            ]
+        ]
+    },
+    {
+        "id": "f95a89da34c591ed",
         "type": "debug",
-        "z": "4508900ef2a7b261",
+        "z": "6c26c442a4ace8d8",
         "name": "",
-        "active": true,
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "89b35427f9d5e71d",
+        "type": "function",
+        "z": "6c26c442a4ace8d8",
+        "name": "时间戳",
+        "func": "let date = new Date()\nmsg.payload.tms=date.valueOf()\nmsg.payload.tm=date.toLocaleString()\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 140,
+        "wires": [
+            [
+                "5c71d0857e3cdefb"
+            ]
+        ]
+    },
+    {
+        "id": "1a2c22ac909e7f35",
+        "type": "debug",
+        "z": "6c26c442a4ace8d8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "collection",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "101e4bb6363fdf20",
+        "type": "mqtt in",
+        "z": "6c26c442a4ace8d8",
+        "name": "边缘网关下行数据",
+        "topic": "business/cmdgate/#",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "4f298837cfcb1b75",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 260,
+        "wires": [
+            [
+                "67dfda7c2a55af07",
+                "89b35427f9d5e71d"
+            ]
+        ]
+    },
+    {
+        "id": "67dfda7c2a55af07",
+        "type": "debug",
+        "z": "6c26c442a4ace8d8",
+        "name": "",
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 970,
-        "y": 340,
+        "x": 400,
+        "y": 320,
         "wires": []
-    },
-    {
-        "id": "c7b7c2d7a905a76d",
-        "type": "link out",
-        "z": "4508900ef2a7b261",
-        "name": "",
-        "mode": "link",
-        "links": [
-            "774d0cb8ef787fc2"
-        ],
-        "x": 985,
-        "y": 420,
-        "wires": []
-    },
-    {
-        "id": "7c3087c926c4fa30",
-        "type": "change",
-        "z": "4508900ef2a7b261",
-        "name": "DM3-40",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload.hd.did",
-                "pt": "msg",
-                "to": "ESP8266x00c20638",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 440,
-        "y": 400,
-        "wires": [
-            [
-                "db3f9cb72104ec3c"
-            ]
-        ]
-    },
-    {
-        "id": "bc266763500c0271",
-        "type": "function",
-        "z": "4508900ef2a7b261",
-        "name": "",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: \"0x00158d0003539f17\",\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        name: \"set\"\n    },\n    sid: \"0\",\n    stp: 0\n}\nlet pld = {\"state\":\"OFF\"}\n\n// let topic = \"ndiot/test/0/0/dev/ESP8266x00068a16/svc/request\";\n\nlet topic = common.getHDTopic({\n    pref: {app: ids.app, dom: \"0\"},\n    to: {type: \"dio\", id: ids.dio},\n    entry: {type: \"svc\", id: \"turn\"}\n    \n});\n\n\nreturn {\n    topic: topic,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 730,
-        "y": 820,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "2ae1ce46.12df62",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "查询",
-        "props": [
-            {
-                "p": "payload.hd.to.id",
-                "v": "ESP8266x00c22bf6",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 190,
-        "y": 620,
-        "wires": [
-            [
-                "a3091d4744cbaf9f"
-            ]
-        ]
-    },
-    {
-        "id": "768865ff.638f7c",
-        "type": "change",
-        "z": "4508900ef2a7b261",
-        "name": "设备ID",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload.hd.to.id",
-                "pt": "msg",
-                "to": "ESP8266x00c22bf6",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 510,
-        "y": 820,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "c6575cc3.32b1",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "开",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payloadType": "str",
-        "x": 190,
-        "y": 680,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "b8d477ee.74ae38",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "关",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "off",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payloadType": "str",
-        "x": 190,
-        "y": 720,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "fac00f08.8b768",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "开/制冷",
-        "props": [
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            },
-            {
-                "p": "payload.pld.mode",
-                "v": "cool",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 190,
-        "y": 820,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "173476ab.292a79",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "开/制热",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            },
-            {
-                "p": "payload.pld.mode",
-                "v": "heat",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 190,
-        "y": 860,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "cde39296.e1a7e",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "20度",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.temperature",
-                "v": "20",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payloadType": "str",
-        "x": 190,
-        "y": 960,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "d6a55f15.b65d9",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "25度",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.temperature",
-                "v": "25",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payloadType": "str",
-        "x": 190,
-        "y": 1000,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "3c19ea4f.823ac6",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "低风",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            },
-            {
-                "p": "payload.pld.fanSpeed",
-                "v": "low",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payloadType": "str",
-        "x": 190,
-        "y": 1120,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "90dc94f5.2fcd58",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "中风",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            },
-            {
-                "p": "payload.pld.fanSpeed",
-                "v": "medium",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 190,
-        "y": 1160,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "54b33bf1.9772d4",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "高风",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            },
-            {
-                "p": "payload.pld.fanSpeed",
-                "v": "high",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 190,
-        "y": 1200,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "cd9a2414.1e3838",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "重启",
-        "props": [
-            {
-                "p": "payload.hd.to.type",
-                "v": "dev",
-                "vt": "str"
-            },
-            {
-                "p": "payload.hd.to.id",
-                "v": "",
-                "vt": "str"
-            },
-            {
-                "p": "payload.hd.entry.type",
-                "v": "svc",
-                "vt": "str"
-            },
-            {
-                "p": "payload.hd.entry.id",
-                "v": "reboot",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 190,
-        "y": 480,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "fff63ccd.bee8d",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "10度",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.temperature",
-                "v": "10",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payloadType": "str",
-        "x": 190,
-        "y": 920,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "f067ddee.22573",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "摆风开",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            },
-            {
-                "p": "payload.pld.swing",
-                "v": "on",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 190,
-        "y": 1280,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "17f56d73.ce85b3",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "30度",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.temperature",
-                "v": "30",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 190,
-        "y": 1040,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "83815ab0.960708",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "开/自动",
-        "props": [
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            },
-            {
-                "p": "payload.pld.mode",
-                "v": "auto",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 190,
-        "y": 780,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "da3629b1.4224f8",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "24度",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.temperature",
-                "v": "24",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 430,
-        "y": 1060,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "2791e7fd.07a908",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "29度",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.temperature",
-                "v": "29",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 430,
-        "y": 1100,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "d3e8fb10.f7c238",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "18度",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.temperature",
-                "v": "18",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 430,
-        "y": 960,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "75a3224d.7e11cc",
-        "type": "inject",
-        "z": "4508900ef2a7b261",
-        "name": "19度",
-        "props": [
-            {
-                "p": "payload.hd.cmd",
-                "v": "3",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.temperature",
-                "v": "19",
-                "vt": "num"
-            },
-            {
-                "p": "payload.pld.power",
-                "v": "on",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 430,
-        "y": 1000,
-        "wires": [
-            [
-                "768865ff.638f7c"
-            ]
-        ]
-    },
-    {
-        "id": "f94a0b5e7acb66fb",
-        "type": "function",
-        "z": "4508900ef2a7b261",
-        "name": "查询",
-        "func": "\nlet hd = {\n    to: {\n        type: \"dev\",\n        id: msg.payload.hd.to.id,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"get\"\n    }\n}\n\n\nlet pld = msg.payload.pld\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 730,
-        "y": 640,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "a3091d4744cbaf9f",
-        "type": "change",
-        "z": "4508900ef2a7b261",
-        "name": "设备ID",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload.hd.to.id",
-                "pt": "msg",
-                "to": "ESP8266x00c22bf6",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 510,
-        "y": 640,
-        "wires": [
-            []
-        ]
     }
 ]
