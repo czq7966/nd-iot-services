@@ -337,7 +337,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据初始化",
-        "func": "let config = msg.payload.edge;\n\nlet _ids = global.get(\"ids\");\n\nObject.keys(config.global).forEach(key => {\n    global.set(key, config.global[key])\n})\n\nlet data = global.get(\"data\");\nif (_ids) global.set(\"ids\", _ids);\nlet ids = global.get(\"ids\");\n\n\n// let host = env.get(\"HOSTNAME\") || env.get(\"COMPUTERNAME\");\n// ids.edg = ids.edg.replace(\"{HOSTNAME}\", host);\n\nlet app = data.app;\nlet dom = app.domain;\nlet dsp = dom.dispatcher;\nlet edg = dsp.edge;\n\n\ndata.dispatcher = dsp;\ndata.edge = edg;\ndata.devices = edg.devices;\ndata.mqtt = edg.mqtt;\ndata.topics = edg.mqtt.topics;\ndata.ids = ids;\n\n\nreturn {payload: data};",
+        "func": "let config = msg.payload.edge;\n\nlet _ids = global.get(\"ids\");\n\nObject.keys(config.global).forEach(key => {\n    global.set(key, config.global[key])\n})\n\nlet data = global.get(\"data\");\nif (_ids) global.set(\"ids\", _ids);\nlet ids = global.get(\"ids\");\n\n\n// let host = env.get(\"HOSTNAME\") || env.get(\"COMPUTERNAME\");\n// ids.edg = ids.edg.replace(\"{HOSTNAME}\", host);\n\nlet app = data.app;\nlet dom = app.domain;\nlet dsp = dom.dispatcher;\nlet edg = dsp.edge;\n\n\ndata.dispatcher = dsp;\ndata.edge = edg;\ndata.devices = edg.devices;\ndata.mqtt = edg.mqtt;\ndata.topics = edg.mqtt.topics;\ndata.mongodb = edg.mongodb;\ndata.ids = ids;\n\n\nreturn {payload: data};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",

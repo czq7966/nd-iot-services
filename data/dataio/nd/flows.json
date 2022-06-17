@@ -260,7 +260,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据初始化",
-        "func": "let config = msg.payload;\n\n Object.keys(config).forEach(key => {\n    global.set(key, config[key])\n})\n\nlet data = global.get(\"data\");\nlet ids = global.get(\"ids\");\n\nlet app = data.app;\napp.domains = app.domains || {};\napp.platforms = app.platforms || {};\n\ndata.domains = app.domains;\ndata.platforms = app.platforms;\ndata.dispatchers = {};\ndata.edges = {};\ndata.devices = {};\ndata.mqtt = app.mqtt;\ndata.topics = app.mqtt.topics;\ndata.z2m = app.z2m;\ndata.ids = ids;\n\n\nreturn {payload: data};\n",
+        "func": "let config = msg.payload;\n\n Object.keys(config).forEach(key => {\n    global.set(key, config[key])\n})\n\nlet data = global.get(\"data\");\nlet ids = global.get(\"ids\");\n\nlet app = data.app;\napp.domains = app.domains || {};\napp.platforms = app.platforms || {};\n\ndata.domains = app.domains;\ndata.platforms = app.platforms;\ndata.dispatchers = {};\ndata.edges = {};\ndata.devices = {};\ndata.mqtt = app.mqtt;\ndata.mongodb = app.mongodb;\ndata.topics = app.mqtt.topics;\ndata.z2m = app.z2m;\ndata.ids = ids;\n\n\nreturn {payload: data};\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",

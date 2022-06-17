@@ -40,7 +40,21 @@
                                         }
                                     }
                                 }                            
-                            }            
+                            },
+                            "mongodb": {
+                                "develop": {
+                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m2.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                },
+                                "test": {
+                                    "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
+                                },
+                                "preproduct": {
+                                    "url": "mongodb://preproduction_mdb_iot_data:jBZsDUZSnnT0@m3.edu.pre-prod.mongod.sdp:34001/preproduction_mdb_iot_data?autoConnectRetry=true"
+                                },
+                                "product": {
+                                    "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
+                                }                                
+                            }         
                         }
                 
                     },
@@ -114,6 +128,20 @@
                                         }
                                     }
                                 }                            
+                            },
+                            "mongodb": {
+                                "develop": {
+                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m2.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                },
+                                "test": {
+                                    "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
+                                },
+                                "preproduct": {
+                                    "url": "mongodb://preproduction_mdb_iot_data:jBZsDUZSnnT0@m3.edu.pre-prod.mongod.sdp:34001/preproduction_mdb_iot_data?autoConnectRetry=true"
+                                },
+                                "product": {
+                                    "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
+                                }                                
                             }            
                         }
                 
@@ -172,6 +200,20 @@
                                         }
                                     }
                                 }                            
+                            },
+                            "mongodb": {
+                                "develop": {
+                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m2.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                },
+                                "test": {
+                                    "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
+                                },
+                                "preproduct": {
+                                    "url": "mongodb://preproduction_mdb_iot_data:jBZsDUZSnnT0@m3.edu.pre-prod.mongod.sdp:34001/preproduction_mdb_iot_data?autoConnectRetry=true"
+                                },
+                                "product": {
+                                    "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
+                                }                                
                             }            
                         }
                 
@@ -227,6 +269,20 @@
                                         "dsp_svc_login":     "+/+/+/+/dsp/{dsp}/svc/login"
                                     }
                                 }
+                            },
+                            "mongodb": {
+                                "develop": {
+                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m2.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                },
+                                "test": {
+                                    "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
+                                },
+                                "preproduct": {
+                                    "url": "mongodb://preproduction_mdb_iot_data:jBZsDUZSnnT0@m3.edu.pre-prod.mongod.sdp:34001/preproduction_mdb_iot_data?autoConnectRetry=true"
+                                },
+                                "product": {
+                                    "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
+                                }                                
                             },             
 
                             "z2m": {
@@ -338,6 +394,20 @@
                                             "dev_svc_handshake": "handshake"
                                         }
                                     }
+                                },
+                                "mongodb": {
+                                    "develop": {
+                                        "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m2.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                    },
+                                    "test": {
+                                        "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
+                                    },
+                                    "preproduct": {
+                                        "url": "mongodb://preproduction_mdb_iot_data:jBZsDUZSnnT0@m3.edu.pre-prod.mongod.sdp:34001/preproduction_mdb_iot_data?autoConnectRetry=true"
+                                    },
+                                    "product": {
+                                        "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
+                                    }                                
                                 },
                                 "z2m": {
                                     "tcpPort": 18190,
@@ -459,6 +529,20 @@
                                 "edg_svc_set_z2m_datafile": "{app}/+/edg/+/+/+/svc/set_z2m_datafile"
                             }
                         }                    
+                    },
+                    "mongodb": {
+                        "develop": {
+                            "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m2.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                        },
+                        "test": {
+                            "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
+                        },
+                        "preproduct": {
+                            "url": "mongodb://preproduction_mdb_iot_data:jBZsDUZSnnT0@m3.edu.pre-prod.mongod.sdp:34001/preproduction_mdb_iot_data?autoConnectRetry=true"
+                        },
+                        "product": {
+                            "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
+                        }                                
                     },
                     "z2m": {
                         "defaultDatafile": {

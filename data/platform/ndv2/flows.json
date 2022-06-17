@@ -283,7 +283,7 @@
         "type": "function",
         "z": "830e6099ab0b63c9",
         "name": "数据初始化",
-        "func": "let config = msg.payload;\n\nlet _ids = global.get(\"ids\");\n\nObject.keys(config).forEach(key => {\n    global.set(key, config[key])\n})\n\nlet data = global.get(\"data\");\nif (_ids) global.set(\"ids\", _ids);\nlet ids = global.get(\"ids\");\n\nlet app = data.app;\nlet plf = app.platform;\nplf.devices = plf.devices || {};\n\ndata.platform = plf\ndata.devices = plf.devices || {};\ndata.mqtt = plf.mqtt;\ndata.topics = plf.mqtt.topics;\ndata.ids = ids;\n\nreturn {payload: data};\n",
+        "func": "let config = msg.payload;\n\nlet _ids = global.get(\"ids\");\n\nObject.keys(config).forEach(key => {\n    global.set(key, config[key])\n})\n\nlet data = global.get(\"data\");\nif (_ids) global.set(\"ids\", _ids);\nlet ids = global.get(\"ids\");\n\nlet app = data.app;\nlet plf = app.platform;\nplf.devices = plf.devices || {};\n\ndata.platform = plf\ndata.devices = plf.devices || {};\ndata.mqtt = plf.mqtt;\ndata.topics = plf.mqtt.topics;\ndata.mongodb = plf.mongodb;\ndata.ids = ids;\n\nreturn {payload: data};\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",

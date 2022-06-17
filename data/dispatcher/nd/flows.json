@@ -314,7 +314,7 @@
         "type": "function",
         "z": "a2231b8bf9e5da49",
         "name": "数据初始化",
-        "func": "let config = msg.payload.dispatcher;\n\nlet _ids = global.get(\"ids\");\n\nObject.keys(config.global).forEach(key => {\n    global.set(key, config.global[key])\n})\n\nlet data = global.get(\"data\");\nif (_ids) global.set(\"ids\", _ids);\nlet ids = global.get(\"ids\");\n\n\nlet app = data.app;\nlet dom = app.domain;\nlet dsp = dom.dispatcher;\n\ndata.domain = dom;\ndata.dispatcher = dsp;\ndata.edges = dsp.edges;\ndata.devices = dsp.devices;\ndata.mqtt = dsp.mqtt;\ndata.topics = dsp.mqtt.topics;\ndata.z2m = dsp.z2m;\ndata.ids = ids;\n\nreturn {payload: data};\n",
+        "func": "let config = msg.payload.dispatcher;\n\nlet _ids = global.get(\"ids\");\n\nObject.keys(config.global).forEach(key => {\n    global.set(key, config.global[key])\n})\n\nlet data = global.get(\"data\");\nif (_ids) global.set(\"ids\", _ids);\nlet ids = global.get(\"ids\");\n\n\nlet app = data.app;\nlet dom = app.domain;\nlet dsp = dom.dispatcher;\n\ndata.domain = dom;\ndata.dispatcher = dsp;\ndata.edges = dsp.edges;\ndata.devices = dsp.devices;\ndata.mqtt = dsp.mqtt;\ndata.topics = dsp.mqtt.topics;\ndata.mongodb = dsp.mongodb;\ndata.z2m = dsp.z2m;\ndata.ids = ids;\n\nreturn {payload: data};\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
