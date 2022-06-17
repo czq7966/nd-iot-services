@@ -486,32 +486,6 @@
         ]
     },
     {
-        "id": "741bfe14448d5710",
-        "type": "change",
-        "z": "7c7a09edf982e2f4",
-        "name": "缓存原始配置",
-        "rules": [
-            {
-                "t": "set",
-                "p": "config",
-                "pt": "global",
-                "to": "payload",
-                "tot": "msg",
-                "dc": true
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1000,
-        "y": 200,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "ac60446b2e2fd797",
         "type": "link in",
         "z": "7c7a09edf982e2f4",
@@ -4765,7 +4739,7 @@
         "type": "debug",
         "z": "02363c72749a98be",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,

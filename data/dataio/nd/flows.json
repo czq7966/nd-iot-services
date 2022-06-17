@@ -66,25 +66,14 @@
         "sessionExpiry": ""
     },
     {
-        "id": "1156755863b3897c",
-        "type": "mongodb",
-        "d": true,
-        "hostname": "m1.all.dev2.mongod3.sdp",
+        "id": "ddc3fe4a88f96adf",
+        "type": "nd-mongodb",
+        "hostname": "mongodb",
         "topology": "direct",
-        "connectOptions": "autoConnectRetry=true&useUnifiedTopology=true",
-        "port": "34004",
-        "db": "dev_mdb_iot_data",
-        "name": "开发环境"
-    },
-    {
-        "id": "07e7b1954a01cc92",
-        "type": "mongodb",
-        "hostname": "m3.edu.pre-prod.mongod.sdp",
-        "topology": "direct",
-        "connectOptions": "autoConnectRetry=true&useUnifiedTopology=true",
-        "port": "34001",
-        "db": "preproduction_mdb_iot_data",
-        "name": "预生产环境"
+        "connectOptions": "",
+        "port": "27017",
+        "db": "",
+        "name": "mongodb"
     },
     {
         "id": "f544f205.d51a7",
@@ -202,7 +191,7 @@
         "payload": "data",
         "payloadType": "global",
         "x": 220,
-        "y": 740,
+        "y": 840,
         "wires": [
             [
                 "61299e55f08ac3e1"
@@ -222,7 +211,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 410,
-        "y": 740,
+        "y": 840,
         "wires": []
     },
     {
@@ -235,7 +224,7 @@
             "906bb62a708b4c0c"
         ],
         "x": 935,
-        "y": 560,
+        "y": 660,
         "wires": []
     },
     {
@@ -252,7 +241,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 470,
-        "y": 660,
+        "y": 760,
         "wires": []
     },
     {
@@ -260,15 +249,18 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据初始化",
-        "func": "let config = msg.payload;\n\n Object.keys(config).forEach(key => {\n    global.set(key, config[key])\n})\n\nlet data = global.get(\"data\");\nlet ids = global.get(\"ids\");\n\nlet app = data.app;\napp.domains = app.domains || {};\napp.platforms = app.platforms || {};\n\ndata.domains = app.domains;\ndata.platforms = app.platforms;\ndata.dispatchers = {};\ndata.edges = {};\ndata.devices = {};\ndata.mqtt = app.mqtt;\ndata.mongodb = app.mongodb;\ndata.topics = app.mqtt.topics;\ndata.z2m = app.z2m;\ndata.ids = ids;\n\n\nreturn {payload: data};\n",
-        "outputs": 1,
+        "func": "let config = msg.payload;\n\n Object.keys(config).forEach(key => {\n    global.set(key, config[key])\n})\n\nlet data = global.get(\"data\");\nlet ids = global.get(\"ids\");\n\nlet app = data.app;\napp.domains = app.domains || {};\napp.platforms = app.platforms || {};\n\ndata.domains = app.domains;\ndata.platforms = app.platforms;\ndata.dispatchers = {};\ndata.edges = {};\ndata.devices = {};\ndata.mqtt = app.mqtt;\ndata.mongodb = app.mongodb;\ndata.topics = app.mqtt.topics;\ndata.z2m = app.z2m;\ndata.ids = ids;\n\nlet _msg = {payload: data};\n\nif (env.get(\"IOT_CONFIG_FILE_FIRST\") == \"1\" || global.get(\"data_from_db\") == 1) {\n    return [null, _msg];\n}\nelse\n    return [_msg, null];\n\n",
+        "outputs": 2,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 390,
-        "y": 280,
+        "y": 374,
         "wires": [
+            [
+                "82d624e156acd716"
+            ],
             [
                 "0666cb29a70a9804"
             ]
@@ -286,7 +278,7 @@
         "finalize": "",
         "libs": [],
         "x": 400,
-        "y": 360,
+        "y": 460,
         "wires": [
             [
                 "de1af31ddcf813b0"
@@ -305,7 +297,7 @@
         "finalize": "",
         "libs": [],
         "x": 400,
-        "y": 400,
+        "y": 500,
         "wires": [
             [
                 "aea3af329e2e33ba"
@@ -324,7 +316,7 @@
         "finalize": "",
         "libs": [],
         "x": 410,
-        "y": 480,
+        "y": 580,
         "wires": [
             [
                 "2316a7453cae5a40"
@@ -343,7 +335,7 @@
         "finalize": "",
         "libs": [],
         "x": 400,
-        "y": 520,
+        "y": 620,
         "wires": [
             [
                 "fc89e9165d2ffb12"
@@ -362,7 +354,7 @@
         "finalize": "",
         "libs": [],
         "x": 400,
-        "y": 440,
+        "y": 540,
         "wires": [
             [
                 "5cddc77aa8c606cd"
@@ -381,7 +373,7 @@
         "finalize": "",
         "libs": [],
         "x": 380,
-        "y": 560,
+        "y": 660,
         "wires": [
             [
                 "806baee163cb44cc"
@@ -419,7 +411,7 @@
         "y": 180,
         "wires": [
             [
-                "398b864fe241772d"
+                "c0624055eec65ac4"
             ],
             []
         ]
@@ -435,8 +427,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 740,
-        "y": 160,
+        "x": 400,
+        "y": 180,
         "wires": [
             [
                 "387bc8ba683df91f"
@@ -451,11 +443,11 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 1070,
-        "y": 160,
+        "x": 730,
+        "y": 180,
         "wires": [
             [
-                "1924f7fd90ef314c"
+                "41508da4717ed53b"
             ]
         ]
     },
@@ -470,8 +462,8 @@
         "sendError": false,
         "encoding": "none",
         "allProps": false,
-        "x": 910,
-        "y": 160,
+        "x": 570,
+        "y": 180,
         "wires": [
             [
                 "874e2ff0304f3dd7"
@@ -490,6 +482,16 @@
                 "pt": "global",
                 "to": "0.0.1",
                 "tot": "str"
+            },
+            {
+                "t": "delete",
+                "p": "data_from_file",
+                "pt": "global"
+            },
+            {
+                "t": "delete",
+                "p": "data_from_db",
+                "pt": "global"
             }
         ],
         "action": "",
@@ -513,42 +515,11 @@
         "links": [
             "13a9b4457054c058"
         ],
-        "x": 115,
-        "y": 440,
+        "x": 175,
+        "y": 500,
         "wires": [
             [
-                "1924f7fd90ef314c"
-            ]
-        ]
-    },
-    {
-        "id": "398b864fe241772d",
-        "type": "switch",
-        "z": "7c7a09edf982e2f4",
-        "name": "是否有配置文件？",
-        "property": "IOT_CONFIG_FILE",
-        "propertyType": "env",
-        "rules": [
-            {
-                "t": "neq",
-                "v": "",
-                "vt": "str"
-            },
-            {
-                "t": "else"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 370,
-        "y": 180,
-        "wires": [
-            [
-                "bf0fd446d288a43e"
-            ],
-            [
-                "82d624e156acd716"
+                "b02e4a662da7d59c"
             ]
         ]
     },
@@ -572,10 +543,11 @@
         "to": "",
         "reg": false,
         "x": 580,
-        "y": 240,
+        "y": 340,
         "wires": [
             [
-                "ac13383ff111fbcf"
+                "ac13383ff111fbcf",
+                "87a29e8ed86c5747"
             ]
         ]
     },
@@ -583,45 +555,14 @@
         "id": "fcb9bbaa875f8ea9",
         "type": "link out",
         "z": "7c7a09edf982e2f4",
-        "name": "",
+        "name": "获取配置延迟输出",
         "mode": "link",
         "links": [
             "95f8abc4558b9fe4"
         ],
         "x": 935,
-        "y": 280,
+        "y": 380,
         "wires": []
-    },
-    {
-        "id": "bf0fd446d288a43e",
-        "type": "switch",
-        "z": "7c7a09edf982e2f4",
-        "name": "优先配置文件？",
-        "property": "IOT_CONFIG_FILE_FIRST",
-        "propertyType": "env",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "1",
-                "vt": "str"
-            },
-            {
-                "t": "else"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 580,
-        "y": 160,
-        "wires": [
-            [
-                "c0624055eec65ac4"
-            ],
-            [
-                "82d624e156acd716"
-            ]
-        ]
     },
     {
         "id": "ac13383ff111fbcf",
@@ -641,7 +582,7 @@
         "allowrate": false,
         "outputs": 1,
         "x": 780,
-        "y": 260,
+        "y": 380,
         "wires": [
             [
                 "fcb9bbaa875f8ea9"
@@ -660,7 +601,7 @@
         "finalize": "",
         "libs": [],
         "x": 160,
-        "y": 240,
+        "y": 340,
         "wires": [
             [
                 "82d624e156acd716"
@@ -676,15 +617,15 @@
         "type": "debug",
         "z": "7c7a09edf982e2f4",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 190,
-        "y": 320,
+        "x": 350,
+        "y": 280,
         "wires": []
     },
     {
@@ -699,7 +640,7 @@
         "finalize": "",
         "libs": [],
         "x": 780,
-        "y": 520,
+        "y": 620,
         "wires": [
             [
                 "c681ca1c09bbf5eb",
@@ -717,7 +658,7 @@
             "1fbea7baf2a0c450"
         ],
         "x": 935,
-        "y": 520,
+        "y": 620,
         "wires": []
     },
     {
@@ -734,7 +675,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1000,
-        "y": 420,
+        "y": 520,
         "wires": []
     },
     {
@@ -747,7 +688,7 @@
             "46c7be7c38c2cddc"
         ],
         "x": 935,
-        "y": 600,
+        "y": 700,
         "wires": []
     },
     {
@@ -768,7 +709,7 @@
         "allowrate": false,
         "outputs": 1,
         "x": 580,
-        "y": 600,
+        "y": 700,
         "wires": [
             [
                 "35ef90ce6fa2dfd3",
@@ -794,7 +735,7 @@
         "allowrate": false,
         "outputs": 1,
         "x": 780,
-        "y": 640,
+        "y": 740,
         "wires": [
             [
                 "9505a529442793c0"
@@ -811,7 +752,7 @@
             "cac9b036a1b34134"
         ],
         "x": 935,
-        "y": 640,
+        "y": 740,
         "wires": []
     },
     {
@@ -826,10 +767,77 @@
         "finalize": "",
         "libs": [],
         "x": 380,
-        "y": 320,
+        "y": 420,
         "wires": [
             [
                 "fe1774a6b4d68308"
+            ]
+        ]
+    },
+    {
+        "id": "87a29e8ed86c5747",
+        "type": "link out",
+        "z": "7c7a09edf982e2f4",
+        "name": "获取配置输出",
+        "mode": "link",
+        "links": [
+            "fbd24133642ac624"
+        ],
+        "x": 935,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "41508da4717ed53b",
+        "type": "change",
+        "z": "7c7a09edf982e2f4",
+        "name": "来源文件",
+        "rules": [
+            {
+                "t": "set",
+                "p": "data_from_file",
+                "pt": "global",
+                "to": "1",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 140,
+        "y": 300,
+        "wires": [
+            [
+                "1924f7fd90ef314c"
+            ]
+        ]
+    },
+    {
+        "id": "b02e4a662da7d59c",
+        "type": "change",
+        "z": "7c7a09edf982e2f4",
+        "name": "来源数据库",
+        "rules": [
+            {
+                "t": "set",
+                "p": "data_from_db",
+                "pt": "global",
+                "to": "1",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 150,
+        "y": 380,
+        "wires": [
+            [
+                "1924f7fd90ef314c"
             ]
         ]
     },
@@ -3185,52 +3193,6 @@
         "wires": []
     },
     {
-        "id": "77eacd4e3749925d",
-        "type": "mongodb in",
-        "z": "25fe735d371c65bb",
-        "mongodb": "07e7b1954a01cc92",
-        "name": "预生产查找",
-        "collection": "",
-        "operation": "find",
-        "x": 550,
-        "y": 220,
-        "wires": [
-            [
-                "d695b815466ad76c",
-                "272546c8bfd46694"
-            ]
-        ]
-    },
-    {
-        "id": "0397a839187b98d3",
-        "type": "mongodb out",
-        "z": "25fe735d371c65bb",
-        "mongodb": "07e7b1954a01cc92",
-        "name": "预生产增删改",
-        "collection": "",
-        "payonly": true,
-        "upsert": true,
-        "multi": false,
-        "operation": "insert",
-        "x": 560,
-        "y": 400,
-        "wires": []
-    },
-    {
-        "id": "95df2cdb0abd3d79",
-        "type": "link in",
-        "z": "25fe735d371c65bb",
-        "name": "增加数据输入",
-        "links": [],
-        "x": 205,
-        "y": 420,
-        "wires": [
-            [
-                "d0843460d726d6cf"
-            ]
-        ]
-    },
-    {
         "id": "9bfc8855190691e9",
         "type": "link in",
         "z": "25fe735d371c65bb",
@@ -3238,11 +3200,11 @@
         "links": [
             "1d7c8bf676bfd405"
         ],
-        "x": 205,
+        "x": 195,
         "y": 260,
         "wires": [
             [
-                "0276501b54d14509"
+                "a87fabeecac73db8"
             ]
         ]
     },
@@ -3255,153 +3217,8 @@
         "links": [
             "cfdf93b3e832d7d7"
         ],
-        "x": 815,
+        "x": 925,
         "y": 260,
-        "wires": []
-    },
-    {
-        "id": "d695b815466ad76c",
-        "type": "debug",
-        "z": "25fe735d371c65bb",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 810,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "0276501b54d14509",
-        "type": "switch",
-        "z": "25fe735d371c65bb",
-        "name": "",
-        "property": "POD_NAME",
-        "propertyType": "env",
-        "rules": [
-            {
-                "t": "cont",
-                "v": "-preproduct-",
-                "vt": "str"
-            },
-            {
-                "t": "else"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 350,
-        "y": 260,
-        "wires": [
-            [
-                "77eacd4e3749925d"
-            ],
-            [
-                "f72e9c3b3f9ec62a",
-                "048d83dd7bc6b9d2"
-            ]
-        ]
-    },
-    {
-        "id": "f72e9c3b3f9ec62a",
-        "type": "mongodb in",
-        "z": "25fe735d371c65bb",
-        "d": true,
-        "mongodb": "1156755863b3897c",
-        "name": "开发查找",
-        "collection": "",
-        "operation": "find",
-        "x": 540,
-        "y": 300,
-        "wires": [
-            [
-                "272546c8bfd46694",
-                "d695b815466ad76c"
-            ]
-        ]
-    },
-    {
-        "id": "d0843460d726d6cf",
-        "type": "switch",
-        "z": "25fe735d371c65bb",
-        "name": "",
-        "property": "POD_NAME",
-        "propertyType": "env",
-        "rules": [
-            {
-                "t": "cont",
-                "v": "-preproduct-",
-                "vt": "str"
-            },
-            {
-                "t": "else"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 350,
-        "y": 420,
-        "wires": [
-            [
-                "0397a839187b98d3"
-            ],
-            [
-                "e299c973e04b3e51"
-            ]
-        ]
-    },
-    {
-        "id": "e299c973e04b3e51",
-        "type": "mongodb out",
-        "z": "25fe735d371c65bb",
-        "d": true,
-        "mongodb": "1156755863b3897c",
-        "name": "开发增删改",
-        "collection": "",
-        "payonly": true,
-        "upsert": true,
-        "multi": false,
-        "operation": "insert",
-        "x": 550,
-        "y": 460,
-        "wires": []
-    },
-    {
-        "id": "048d83dd7bc6b9d2",
-        "type": "debug",
-        "z": "25fe735d371c65bb",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 490,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "b516ac92ea92032f",
-        "type": "mongodb out",
-        "z": "25fe735d371c65bb",
-        "mongodb": "07e7b1954a01cc92",
-        "name": "预生产改增",
-        "collection": "",
-        "payonly": true,
-        "upsert": true,
-        "multi": false,
-        "operation": "update",
-        "x": 550,
-        "y": 540,
         "wires": []
     },
     {
@@ -3412,59 +3229,96 @@
         "links": [
             "0cb53f3e7d0bd8cb"
         ],
-        "x": 205,
-        "y": 560,
+        "x": 195,
+        "y": 340,
         "wires": [
             [
-                "376ac808b1944c3f"
+                "46f6c14ebaa1abda"
             ]
         ]
     },
     {
-        "id": "376ac808b1944c3f",
-        "type": "switch",
+        "id": "3960aeb5f2e90e50",
+        "type": "function",
+        "z": "25fe735d371c65bb",
+        "name": "获取环境连接",
+        "func": "let data = global.get(\"data\");\n\nlet podname = env.get(\"POD_NAME\") || \"\";\nlet name = \"develop\";\nif (podname.indexOf(\"-preproduct-\") >=0 )\n    name = \"preproduct\";\nelse if (podname.indexOf(\"-product-\") >=0 )\n    name = \"product\";\nelse if (podname.indexOf(\"-test-\") >=0 )\n    name = \"test\";\n\n\nlet mgUrl = data.mongodb[name] || data.mongodb[develop];\n\nreturn {\n    action: \"connect\",\n    url: mgUrl.url\n};\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 160,
+        "wires": [
+            [
+                "46f6c14ebaa1abda",
+                "a87fabeecac73db8"
+            ]
+        ]
+    },
+    {
+        "id": "fbd24133642ac624",
+        "type": "link in",
         "z": "25fe735d371c65bb",
         "name": "",
-        "property": "POD_NAME",
-        "propertyType": "env",
-        "rules": [
-            {
-                "t": "cont",
-                "v": "-preproduct-",
-                "vt": "str"
-            },
-            {
-                "t": "else"
-            }
+        "links": [
+            "87a29e8ed86c5747"
         ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 350,
-        "y": 560,
+        "x": 195,
+        "y": 160,
         "wires": [
             [
-                "b516ac92ea92032f"
-            ],
-            [
-                "26a038e5e4d76110"
+                "3960aeb5f2e90e50"
             ]
         ]
     },
     {
-        "id": "26a038e5e4d76110",
-        "type": "mongodb out",
+        "id": "46f6c14ebaa1abda",
+        "type": "nd-mg-out",
         "z": "25fe735d371c65bb",
-        "d": true,
-        "mongodb": "1156755863b3897c",
-        "name": "开发改增",
+        "mongodb": "ddc3fe4a88f96adf",
+        "name": "nd-mg-out",
         "collection": "",
         "payonly": true,
         "upsert": true,
         "multi": false,
         "operation": "update",
-        "x": 540,
-        "y": 600,
+        "x": 670,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "a87fabeecac73db8",
+        "type": "nd-mg-in",
+        "z": "25fe735d371c65bb",
+        "mongodb": "ddc3fe4a88f96adf",
+        "name": "nd-mg-in",
+        "collection": "",
+        "operation": "find",
+        "x": 660,
+        "y": 260,
+        "wires": [
+            [
+                "272546c8bfd46694",
+                "0a9518d032f2664b"
+            ]
+        ]
+    },
+    {
+        "id": "0a9518d032f2664b",
+        "type": "debug",
+        "z": "25fe735d371c65bb",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 320,
         "wires": []
     }
 ]

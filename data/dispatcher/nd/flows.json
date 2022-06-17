@@ -284,7 +284,6 @@
         "y": 220,
         "wires": [
             [
-                "741bfe14448d5710",
                 "2ff588980447a955",
                 "4754da03d64fad4b"
             ]
@@ -445,33 +444,6 @@
                 "1188b78d61e6e2a8",
                 "effcf217acb43dfa"
             ]
-        ]
-    },
-    {
-        "id": "741bfe14448d5710",
-        "type": "change",
-        "z": "a2231b8bf9e5da49",
-        "d": true,
-        "name": "缓存原始配置",
-        "rules": [
-            {
-                "t": "set",
-                "p": "config",
-                "pt": "global",
-                "to": "payload",
-                "tot": "msg",
-                "dc": true
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 880,
-        "y": 220,
-        "wires": [
-            []
         ]
     },
     {

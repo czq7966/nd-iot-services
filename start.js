@@ -6,8 +6,8 @@ let spawn = require("child_process").spawn;
 let useSpawn = true;
 
 let init = () => {
-    process.env.IOT_CONFIG_FILE = process.env.IOT_CONFIG_FILE || "/services/nd-iot-services/docker/config.json";
-    process.env.IOT_NGINX_CONF = process.env.IOT_NGINX_CONF || "/services/nd-iot-services/docker/nginx/conf/nginx.conf";  
+    process.env.IOT_CONFIG_FILE = process.env.IOT_CONFIG_FILE || path.resolve(__dirname, "config.json");
+    process.env.IOT_NGINX_CONF = process.env.IOT_NGINX_CONF ||  path.resolve(__dirname, "docker/nginx/conf/nginx.conf");  
 }
 
 let isWin32 = () => {

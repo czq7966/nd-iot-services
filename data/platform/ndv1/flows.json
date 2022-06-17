@@ -2587,36 +2587,6 @@
         "wires": []
     },
     {
-        "id": "80a545c6b834aac8",
-        "type": "inject",
-        "z": "6c26c442a4ace8d8",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "collection",
-                "v": "test",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 430,
-        "y": 400,
-        "wires": [
-            [
-                "46f6c14ebaa1abda"
-            ]
-        ]
-    },
-    {
         "id": "707d40473e2f2394",
         "type": "debug",
         "z": "6c26c442a4ace8d8",
