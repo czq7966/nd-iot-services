@@ -250,7 +250,8 @@
         "mode": "link",
         "links": [
             "59181471dbc6175b",
-            "906bb62a708b4c0c"
+            "906bb62a708b4c0c",
+            "fbd24133642ac624"
         ],
         "x": 975,
         "y": 580,
@@ -2652,7 +2653,7 @@
         "type": "function",
         "z": "6c26c442a4ace8d8",
         "name": "获取环境连接",
-        "func": "let data = global.get(\"data\");\nlet ids = data.ids;\nif (ids.app && ids.dio) {\n    let podname = env.get(\"POD_NAME\");\n    let name = \"develop\";\n    if (podname.indexOf(\"-preproduct-\"))\n        name = \"preproduct\";\n    else if (podname.indexOf(\"-product-\"))\n        name = \"product\";\n    else if (podname.indexOf(\"-test-\"))\n        name = \"test\";\n    \n    \n    let url = data.mongodb[name] || data.mongodb[develop];\n    \n    return {\n        action: connect,\n        url: url\n    };\n}",
+        "func": "let data = global.get(\"data\");\nlet ids = data.ids;\n\nlet podname = env.get(\"POD_NAME\") || \"\";\nlet name = \"develop\";\nif (podname.indexOf(\"-preproduct-\"))\n    name = \"preproduct\";\nelse if (podname.indexOf(\"-product-\"))\n    name = \"product\";\nelse if (podname.indexOf(\"-test-\"))\n    name = \"test\";\n\n\nlet url = data.mongodb[name] || data.mongodb[develop];\n\nreturn {\n    action: \"connect\",\n    url: \"mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true\"\n};\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2714,7 +2715,9 @@
         "type": "link in",
         "z": "6c26c442a4ace8d8",
         "name": "",
-        "links": [],
+        "links": [
+            "1188b78d61e6e2a8"
+        ],
         "x": 95,
         "y": 80,
         "wires": [
