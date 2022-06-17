@@ -100,6 +100,16 @@
         "sessionExpiry": ""
     },
     {
+        "id": "976980e14ba09333",
+        "type": "mongodb",
+        "hostname": "127.0.0.1",
+        "topology": "direct",
+        "connectOptions": "",
+        "port": "27017",
+        "db": "",
+        "name": ""
+    },
+    {
         "id": "f544f205.d51a7",
         "type": "inject",
         "z": "7c7a09edf982e2f4",
@@ -281,10 +291,10 @@
         "finalize": "",
         "libs": [],
         "x": 230,
-        "y": 380,
+        "y": 340,
         "wires": [
             [
-                "fe1774a6b4d68308"
+                "0666cb29a70a9804"
             ]
         ]
     },
@@ -663,6 +673,25 @@
         ]
     },
     {
+        "id": "0666cb29a70a9804",
+        "type": "function",
+        "z": "7c7a09edf982e2f4",
+        "name": "GUID函数",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n   \nlet guid = function(len, start) {\n    let result = 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c){\n        let r = Math.random()*16|0;\n        let v = c == 'x' ? r : (r&0x3|0x8);\n        return v.toString(16);\n    })\n    len = len ? len : result.length;\n    return result.substr(start, len);\n}\n\ncommon.guid = guid;\n\nreturn {payload: data};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 340,
+        "wires": [
+            [
+                "fe1774a6b4d68308"
+            ]
+        ]
+    },
+    {
         "id": "0f989c13f4e0c1cb",
         "type": "mqtt in",
         "z": "e93bbc67912b9178",
@@ -863,7 +892,7 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "自动连接",
-        "func": "let data = global.get(\"data\");\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false\n}\nObject.assign(msg.broker, data.mqtt.broker);\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\ndata.mqtt.clientid = data.mqtt.clientid || (data.ids.plf + \"-\" + common.guid(8));\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false,\n    clientid: data.mqtt.clientid\n}\nObject.assign(msg.broker, data.mqtt.broker);\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1011,10 +1040,10 @@
         "wires": []
     },
     {
-        "id": "6abe85752f7acd88",
+        "id": "0a1080acec8b4c30",
         "type": "inject",
         "z": "e93bbc67912b9178",
-        "name": "定时检查连接",
+        "name": "连接",
         "props": [
             {
                 "p": "action",
@@ -1022,13 +1051,38 @@
                 "vt": "str"
             }
         ],
-        "repeat": "60",
+        "repeat": "",
         "crontab": "",
-        "once": true,
+        "once": false,
         "onceDelay": "60",
         "topic": "",
-        "x": 200,
+        "x": 230,
         "y": 300,
+        "wires": [
+            [
+                "0f989c13f4e0c1cb"
+            ]
+        ]
+    },
+    {
+        "id": "aa68c847c104a5e7",
+        "type": "inject",
+        "z": "e93bbc67912b9178",
+        "name": "断开",
+        "props": [
+            {
+                "p": "action",
+                "v": "disconnect",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "60",
+        "topic": "",
+        "x": 230,
+        "y": 360,
         "wires": [
             [
                 "0f989c13f4e0c1cb"
@@ -1776,7 +1830,7 @@
         "type": "function",
         "z": "396cbecdd6c41306",
         "name": "订阅主题",
-        "func": "let topics = [\n    \"0x00158d0003539f17\",\n    \"0x00158d000353c53f\",\n    \"ESP8266x00c17ca1\",\n    \"ESP8266x0098b1f8\",\n    \"ESP8266x00c22bf6\",\n    \"ESP8266x00c20638\",\n    \"ESP32x6dabf498\"\n    ]\n\n\nnode.send({\n        action: \"unsubscribe\",\n        topic: topics\n})\n\nnode.send({\n        action: \"subscribe\",\n        topic: topics\n})\n",
+        "func": "let topics = [\n    \"0x00158d0003539f17\",\n    \"0x00158d000353c53f\",\n    \"ESP8266x00c17ca1\",\n    \"ESP8266x0098b1f8\",\n    \"ESP8266x00c22bf6\",\n    \"ESP8266x00c20638\",\n    \"ESP32x6dabf498\",\n    \"ESP8266x00c1cd77\"\n    ]\n\n\nnode.send({\n        action: \"unsubscribe\",\n        topic: topics\n})\n\nnode.send({\n        action: \"subscribe\",\n        topic: topics\n})\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1872,7 +1926,7 @@
         "type": "function",
         "z": "396cbecdd6c41306",
         "name": "协议转换",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        func: \"set\"\n    },\n    sid: \"0\",\n    stp: 0\n}\nlet pld = {\"state\": msg.payload}\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        func: \"set\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\nlet pld = {\"state\": msg.payload}\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1924,7 +1978,7 @@
         "type": "function",
         "z": "396cbecdd6c41306",
         "name": "协议转换",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        func: \"permit_join\"\n    },\n    sid: \"0\",\n    stp: 0\n}\n\nlet value = msg.payload.toLowerCase() == \"on\" ? true : false;\n\nlet pld = {\"value\": value, \"time\": 254}\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        func: \"permit_join\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet value = msg.payload.toLowerCase() == \"on\" ? true : false;\n\nlet pld = {\"value\": value, \"time\": 254}\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2020,7 +2074,8 @@
             [
                 "554aef77843aa777",
                 "ebad675731c9f853",
-                "6da42e39a2a7dfba"
+                "6da42e39a2a7dfba",
+                "b8c30c195c0c7128"
             ]
         ]
     },
@@ -2029,7 +2084,7 @@
         "type": "function",
         "z": "396cbecdd6c41306",
         "name": "协议转换",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"set\"\n    },\n    sid: \"0\",\n    stp: 0\n}\n\nlet code= msg.payload;\nlet len = code.length;\nlet c0 = len > 0 ? code[0] : \"\";\nlet c1 = len > 1 ? code[1] : \"\";\nlet c2 = len > 2 ? code.substr(2, 2) : \"\";\nlet c3 = len > 4 ? code[4] : \"\";\n\nlet pld = { id : devId };\nif (c0==\"0\") pld.power = \"off\";\nif (c0==\"1\") pld.power = \"on\";\nif (c0==\"2\") hd.entry.id = \"get\";\nif (c0==\"3\") hd.entry.id = \"reboot\";\n\nif (c1 == \"0\") pld.mode = \"auto\";\nif (c1 == \"1\") pld.mode = \"cool\";\nif (c1 == \"2\") pld.mode = \"heat\";\nif (c1 == \"3\") pld.mode = \"fan\";\n\nif (c2) pld.temperature = parseInt(c2);\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"set\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet code= msg.payload;\nlet len = code.length;\nlet c0 = len > 0 ? code[0] : \"\";\nlet c1 = len > 1 ? code[1] : \"\";\nlet c2 = len > 2 ? code.substr(2, 2) : \"\";\nlet c3 = len > 4 ? code[4] : \"\";\n\nlet pld = { id : devId };\nif (c0==\"0\") pld.power = \"off\";\nif (c0==\"1\") pld.power = \"on\";\nif (c0==\"2\") hd.entry.id = \"get\";\nif (c0==\"3\") hd.entry.id = \"reboot\";\n\nif (c1 == \"0\") pld.mode = \"auto\";\nif (c1 == \"1\") pld.mode = \"cool\";\nif (c1 == \"2\") pld.mode = \"heat\";\nif (c1 == \"3\") pld.mode = \"fan\";\n\nif (c2) pld.temperature = parseInt(c2);\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2071,11 +2126,55 @@
         ]
     },
     {
+        "id": "b8c30c195c0c7128",
+        "type": "switch",
+        "z": "396cbecdd6c41306",
+        "name": "窗帘",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "ESP8266x00c1cd77",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 450,
+        "y": 700,
+        "wires": [
+            [
+                "88a6e59d31de8571"
+            ]
+        ]
+    },
+    {
+        "id": "88a6e59d31de8571",
+        "type": "function",
+        "z": "396cbecdd6c41306",
+        "name": "协议转换",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"set\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet pld = {id: devId};\n\nlet code= parseInt(msg.payload);\n\nswitch(code) {\n    case -1:   \n        hd.entry.id = \"get\"\n        break;    \n    case 101:   \n        hd.entry.name = \"open\"\n        break;\n    case 102:\n        hd.entry.name = \"close\"\n        break;   \n    case 103:\n        hd.entry.name = \"stop\"\n        break;  \n    case 200:\n        hd.entry.name = \"dir\"\n        pld.dir = 0;\n        break;\n    case 201:\n        hd.entry.name = \"dir\"\n        pld.dir = 1;\n        break;\n    case 210:\n        hd.entry.name = \"up_travel\"\n        break;  \n    case 211:\n        hd.entry.name = \"down_travel\"\n        break;\n    case 212:\n        hd.entry.name = \"del_travel\"\n        break;        \n    case 220:\n        hd.entry.name = \"power_on_prompt\"\n        pld.prompt = 0\n        break;        \n    case 221:\n        hd.entry.name = \"power_on_prompt\"\n        pld.prompt = 1\n        break;        \n    case 222:\n        hd.entry.name = \"power_on_prompt\"\n        pld.prompt = 2\n        break;        \n    case 223:\n        hd.entry.name = \"power_on_prompt\"\n        pld.prompt = 3\n        break;  \n    default:\n        pld.pos = code;\n        break;      \n}\n\n// pld.code = \"0x55FEFE030414E6ED\"\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 700,
+        "wires": [
+            [
+                "f782abfd31d4bf71"
+            ]
+        ]
+    },
+    {
         "id": "47446fad18d0c295",
         "type": "function",
         "z": "b772149e45b504b7",
         "name": "设备入网",
-        "func": "let data = global.get(\"data\")\nlet hd = {\n    pref: {\n        app: \"ndiot\",\n        dom: \"test\"\n    },\n    from: {\n        type :\"dev\",\n        id: \"test_joined\"\n    },\n    to: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    entry: {\n        type: \"evt\",\n        id: \"device_joined\"\n    }\n}\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: {}\n    }\n};",
+        "func": "let data = global.get(\"data\")\nlet hd = {\n    pref: {\n        app: \"ndiot\",\n        dom: msg.payload.dom_id\n    },\n    from: {\n        type :\"dev\",\n        id: msg.payload.id\n    },\n    to: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    entry: {\n        type: \"evt\",\n        id: \"device_joined\"\n    }\n}\n\nlet pld = {\n    id: msg.payload.id\n}\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2095,7 +2194,18 @@
         "type": "inject",
         "z": "b772149e45b504b7",
         "name": "",
-        "props": [],
+        "props": [
+            {
+                "p": "payload.id",
+                "v": "ESP8266x00c1cd77",
+                "vt": "str"
+            },
+            {
+                "p": "payload.dom_id",
+                "v": "test",
+                "vt": "str"
+            }
+        ],
         "repeat": "",
         "crontab": "",
         "once": false,

@@ -340,5 +340,5 @@ if (process.env.IOT_ENABLE_PLF_BFY == "1") {
 // testZ2M("E:/iotdata/zigbee2mqtt/data/ESP8266x0006cf1d");
 
 
-require("./src/http-server.js");
+// require("./src/http-server.js");
 

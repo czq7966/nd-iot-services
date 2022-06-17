@@ -209,7 +209,7 @@
             "906bb62a708b4c0c"
         ],
         "x": 825,
-        "y": 560,
+        "y": 600,
         "wires": []
     },
     {
@@ -347,7 +347,7 @@
         "y": 360,
         "wires": [
             [
-                "32b635bc5bbe8de1"
+                "0666cb29a70a9804"
             ]
         ]
     },
@@ -364,7 +364,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 870,
-        "y": 640,
+        "y": 680,
         "wires": []
     },
     {
@@ -379,7 +379,7 @@
         "finalize": "",
         "libs": [],
         "x": 440,
-        "y": 360,
+        "y": 400,
         "wires": [
             [
                 "28f0789e7c6d7af0"
@@ -398,7 +398,7 @@
         "finalize": "",
         "libs": [],
         "x": 440,
-        "y": 400,
+        "y": 440,
         "wires": [
             [
                 "b15bbbcec428c762"
@@ -420,7 +420,7 @@
         "finalize": "",
         "libs": [],
         "x": 440,
-        "y": 440,
+        "y": 480,
         "wires": [
             [
                 "c983ab7963d0f975"
@@ -439,7 +439,7 @@
         "finalize": "",
         "libs": [],
         "x": 450,
-        "y": 480,
+        "y": 520,
         "wires": [
             [
                 "a135c4a79efe2dc9"
@@ -458,7 +458,7 @@
         "finalize": "",
         "libs": [],
         "x": 460,
-        "y": 520,
+        "y": 560,
         "wires": [
             [
                 "f77d15f0cc88c3d7"
@@ -477,7 +477,7 @@
         "finalize": "",
         "libs": [],
         "x": 420,
-        "y": 560,
+        "y": 600,
         "wires": [
             [
                 "068d75ddb00dcc52",
@@ -586,7 +586,7 @@
             "1fbea7baf2a0c450"
         ],
         "x": 825,
-        "y": 400,
+        "y": 440,
         "wires": []
     },
     {
@@ -601,10 +601,29 @@
         "finalize": "",
         "libs": [],
         "x": 660,
-        "y": 400,
+        "y": 440,
         "wires": [
             [
                 "2a5bed3b693562e4"
+            ]
+        ]
+    },
+    {
+        "id": "0666cb29a70a9804",
+        "type": "function",
+        "z": "7c7a09edf982e2f4",
+        "name": "GUID函数",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n   \nlet guid = function(len, start) {\n    let result = 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c){\n        let r = Math.random()*16|0;\n        let v = c == 'x' ? r : (r&0x3|0x8);\n        return v.toString(16);\n    })\n    len = len ? len : result.length;\n    return result.substr(start, len);\n}\n\ncommon.guid = guid;\n\nreturn {payload: data};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 360,
+        "wires": [
+            [
+                "32b635bc5bbe8de1"
             ]
         ]
     },
@@ -902,28 +921,11 @@
         ]
     },
     {
-        "id": "b920e31b90166791",
-        "type": "function",
-        "z": "e93bbc67912b9178",
-        "name": "出生消息",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n        app: \"0\",\n        dom: \"0\"\n    },\n    from: {\n        type: \"edg\",\n        id: data.ids.edg\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.edg,\n    online: 1\n};\n\nlet topic = common.getHDTopic(hd);\n\n\nlet birth = {\n    topic: topic,\n    qos: 2,\n    retain: true,\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n}\n\n\nmsg.broker.birth = birth;\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 680,
-        "y": 360,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "e4534314a7bcd4b3",
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "自动连接",
-        "func": "let data = global.get(\"data\");\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false,\n    // clientid: \"edg_\" + data.ids.edg\n}\n\nObject.assign(msg.broker, data.mqtt.broker);\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\ndata.mqtt.clientid = data.mqtt.clientid || (data.ids.edg + \"-\" + common.guid(8));\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false,\n    clientid: data.mqtt.clientid\n}\nObject.assign(msg.broker, data.mqtt.broker);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1138,48 +1140,6 @@
         ]
     },
     {
-        "id": "8f351621757399ad",
-        "type": "function",
-        "z": "e93bbc67912b9178",
-        "name": "断开",
-        "func": "\nmsg = {};\nmsg.action = \"disconnect\";\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 270,
-        "y": 360,
-        "wires": [
-            [
-                "e631c502013e282a"
-            ]
-        ]
-    },
-    {
-        "id": "e631c502013e282a",
-        "type": "delay",
-        "z": "e93bbc67912b9178",
-        "name": "",
-        "pauseType": "delay",
-        "timeout": "1",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 460,
-        "y": 360,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "952a21e20fa16b35",
         "type": "function",
         "z": "e93bbc67912b9178",
@@ -1300,7 +1260,7 @@
         "id": "6abe85752f7acd88",
         "type": "inject",
         "z": "e93bbc67912b9178",
-        "name": "定时检查连接",
+        "name": "连接",
         "props": [
             {
                 "p": "action",
@@ -1308,13 +1268,38 @@
                 "vt": "str"
             }
         ],
-        "repeat": "60",
+        "repeat": "",
         "crontab": "",
-        "once": true,
+        "once": false,
         "onceDelay": "60",
         "topic": "",
-        "x": 280,
-        "y": 300,
+        "x": 290,
+        "y": 320,
+        "wires": [
+            [
+                "0f989c13f4e0c1cb"
+            ]
+        ]
+    },
+    {
+        "id": "83416af01ce6927c",
+        "type": "inject",
+        "z": "e93bbc67912b9178",
+        "name": "断开",
+        "props": [
+            {
+                "p": "action",
+                "v": "disconnect",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "60",
+        "topic": "",
+        "x": 290,
+        "y": 380,
         "wires": [
             [
                 "0f989c13f4e0c1cb"
@@ -3744,7 +3729,7 @@
         "type": "debug",
         "z": "95249172.4f419",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -4267,7 +4252,10 @@
                 "c59f99a72669659e",
                 "1398e2fd637fae3f"
             ],
-            []
+            [
+                "c59f99a72669659e",
+                "20d8181325000f53"
+            ]
         ]
     },
     {
@@ -4505,27 +4493,29 @@
         "type": "switch",
         "z": "02363c72749a98be",
         "name": "服务响应",
-        "property": "payload.type",
+        "property": "topics[3]",
         "propertyType": "msg",
         "rules": [
             {
                 "t": "eq",
-                "v": "response/permit_join",
+                "v": "permit_join",
                 "vt": "str"
             },
             {
                 "t": "eq",
-                "v": "response/device/remove",
+                "v": "device",
                 "vt": "str"
             }
         ],
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 780,
+        "x": 800,
         "y": 580,
         "wires": [
-            [],
+            [
+                "0a34a06027fb8655"
+            ],
             []
         ]
     },
@@ -4709,7 +4699,9 @@
         "y": 1120,
         "wires": [
             [],
-            []
+            [
+                "89c8b1107bfd070a"
+            ]
         ]
     },
     {
@@ -4717,7 +4709,7 @@
         "type": "function",
         "z": "02363c72749a98be",
         "name": "等待响应队列",
-        "func": "let topic = msg.payload.transaction;\nif (topic) {\n    return {\n        topic: topic,\n        payload: msg\n    }\n}",
+        "func": "let trans = flow.get(\"transactions\") || {};\nlet topic = msg.payload.transaction;\nif (topic) {\n    trans[topic] = msg;\n    flow.set(\"transactions\", trans)\n    return {\n        topic: topic,\n        payload: msg\n    }\n}",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -4773,15 +4765,15 @@
         "type": "debug",
         "z": "02363c72749a98be",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 570,
-        "y": 500,
+        "x": 490,
+        "y": 580,
         "wires": []
     },
     {
@@ -4902,6 +4894,58 @@
         "wires": [
             [
                 "4c8296c42e885144"
+            ]
+        ]
+    },
+    {
+        "id": "89c8b1107bfd070a",
+        "type": "function",
+        "z": "02363c72749a98be",
+        "name": "超时删除",
+        "func": "let trans = flow.get(\"transactions\") || {};\ndelete trans[msg.topic];\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1280,
+        "y": 1120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0a34a06027fb8655",
+        "type": "function",
+        "z": "02363c72749a98be",
+        "name": "响应处理",
+        "func": "let trans = flow.get(\"transactions\") || {};\nlet topic = msg.payload.transaction;\nif (topic && trans[topic]) {\n    let _msg = trans[topic];\n    delete trans[topic];\n    let hd = _msg._payload.hd;\n    let _hd = Object.assign({}, hd);\n    let _pld = msg.payload;\n    _hd.from = hd.to;\n    _hd.to = hd.from;\n    _hd.stp = 1;\n    delete _hd.tm;\n    delete _hd.tms;\n    delete _hd.tpc;\n\n    return {\n        payload: {\n            hd: _hd,\n            pld: _pld\n        }\n    }\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1000,
+        "y": 580,
+        "wires": [
+            [
+                "f25dd30a6d3bf86b"
+            ]
+        ]
+    },
+    {
+        "id": "20d8181325000f53",
+        "type": "json",
+        "z": "02363c72749a98be",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 670,
+        "y": 580,
+        "wires": [
+            [
+                "bc35260b44f4813e"
             ]
         ]
     }

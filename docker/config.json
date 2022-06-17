@@ -25,7 +25,8 @@
                                         "dev_svc_set":      "{app}/+/dev/+/+/+/svc/set",
                                         "dev_svc_reboot":   "{app}/+/dev/+/+/+/svc/reboot",
                                         "dev_svc_login":    "{app}/+/dev/+/0/0/svc/login",                        
-                                        "dev_svc_handshake":"{app}/+/dev/+/+/+/svc/handshake"                                        
+                                        "dev_svc_handshake":"{app}/+/dev/+/+/+/svc/handshake",
+                                        "z3co_svc_request": "{app}/+/dev/+/+/+/svc/request"                                      
                                     },
                                     "dysubs": {
                                         "dev_evt_status":   "0/0/dev/{dev}/0/0/evt/status"
@@ -87,7 +88,8 @@
                                         "dev_svc_set":      "{app}/+/dev/+/+/+/svc/set",
                                         "dev_svc_reboot":   "{app}/+/dev/+/+/+/svc/reboot",
                                         "dev_svc_login":    "{app}/+/dev/+/0/0/svc/login",                        
-                                        "dev_svc_handshake":"{app}/+/dev/+/+/+/svc/handshake"                                       
+                                        "dev_svc_handshake":"{app}/+/dev/+/+/+/svc/handshake",
+                                        "z3co_svc_request": "{app}/+/dev/+/+/+/svc/request"                                     
                                     },
                                     "dysubs": {
                                         "dev_evt_status":   "0/0/dev/{dev}/0/0/evt/status"
@@ -155,7 +157,8 @@
                                         "dev_svc_set":      "{app}/+/dev/+/+/+/svc/set",
                                         "dev_svc_reboot":   "{app}/+/dev/+/+/+/svc/reboot",
                                         "dev_svc_login":    "{app}/+/dev/+/0/0/svc/login",                        
-                                        "dev_svc_handshake":"{app}/+/dev/+/+/+/svc/handshake"                                        
+                                        "dev_svc_handshake":"{app}/+/dev/+/+/+/svc/handshake",
+                                        "z3co_svc_request": "{app}/+/dev/+/+/+/svc/request"                                        
                                     },
                                     "dysubs": {
                                         "dev_evt_status":   "0/0/dev/{dev}/0/0/evt/status"

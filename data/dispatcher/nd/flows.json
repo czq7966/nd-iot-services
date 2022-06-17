@@ -321,10 +321,10 @@
         "finalize": "",
         "libs": [],
         "x": 190,
-        "y": 400,
+        "y": 360,
         "wires": [
             [
-                "fe1774a6b4d68308"
+                "0666cb29a70a9804"
             ]
         ]
     },
@@ -626,6 +626,25 @@
         "x": 955,
         "y": 440,
         "wires": []
+    },
+    {
+        "id": "0666cb29a70a9804",
+        "type": "function",
+        "z": "a2231b8bf9e5da49",
+        "name": "GUID函数",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n   \nlet guid = function(len, start) {\n    let result = 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c){\n        let r = Math.random()*16|0;\n        let v = c == 'x' ? r : (r&0x3|0x8);\n        return v.toString(16);\n    })\n    len = len ? len : result.length;\n    return result.substr(start, len);\n}\n\ncommon.guid = guid;\n\nreturn {payload: data};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 360,
+        "wires": [
+            [
+                "fe1774a6b4d68308"
+            ]
+        ]
     },
     {
         "id": "7890d1121e8c800a",
@@ -1100,7 +1119,7 @@
         "type": "function",
         "z": "bbc788f5f9e280ee",
         "name": "自动连接",
-        "func": "let data = global.get(\"data\");\n  \n    msg = {};\n    msg.action = \"connect\";\n    msg.broker = {\n        autoConnect: true,\n        force: false,\n        // clientid: \"dsp_\" + data.ids.dsp\n    }\n    \n    \n    Object.assign(msg.broker, data.mqtt.broker);\n    \n    return msg;\n",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\ndata.mqtt.clientid = data.mqtt.clientid || (data.ids.dsp + \"-\" + common.guid(8));\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false,\n    clientid: data.mqtt.clientid\n}\nObject.assign(msg.broker, data.mqtt.broker);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1151,31 +1170,6 @@
         ]
     },
     {
-        "id": "6abe85752f7acd88",
-        "type": "inject",
-        "z": "bbc788f5f9e280ee",
-        "name": "定时检查连接",
-        "props": [
-            {
-                "p": "action",
-                "v": "connect",
-                "vt": "str"
-            }
-        ],
-        "repeat": "60",
-        "crontab": "",
-        "once": true,
-        "onceDelay": "60",
-        "topic": "",
-        "x": 200,
-        "y": 260,
-        "wires": [
-            [
-                "7890d1121e8c800a"
-            ]
-        ]
-    },
-    {
         "id": "66838c4235fa4e3f",
         "type": "debug",
         "z": "bbc788f5f9e280ee",
@@ -1190,6 +1184,56 @@
         "x": 410,
         "y": 260,
         "wires": []
+    },
+    {
+        "id": "6abe85752f7acd88",
+        "type": "inject",
+        "z": "bbc788f5f9e280ee",
+        "name": "连接",
+        "props": [
+            {
+                "p": "action",
+                "v": "connect",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "60",
+        "topic": "",
+        "x": 230,
+        "y": 260,
+        "wires": [
+            [
+                "7890d1121e8c800a"
+            ]
+        ]
+    },
+    {
+        "id": "83416af01ce6927c",
+        "type": "inject",
+        "z": "bbc788f5f9e280ee",
+        "name": "断开",
+        "props": [
+            {
+                "p": "action",
+                "v": "disconnect",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "60",
+        "topic": "",
+        "x": 230,
+        "y": 320,
+        "wires": [
+            [
+                "7890d1121e8c800a"
+            ]
+        ]
     },
     {
         "id": "59181471dbc6175b",
