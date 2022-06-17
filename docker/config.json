@@ -43,7 +43,7 @@
                             },
                             "mongodb": {
                                 "develop": {
-                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m2.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m1.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
                                 },
                                 "test": {
                                     "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
@@ -131,7 +131,7 @@
                             },
                             "mongodb": {
                                 "develop": {
-                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m2.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m1.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
                                 },
                                 "test": {
                                     "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
@@ -203,7 +203,7 @@
                             },
                             "mongodb": {
                                 "develop": {
-                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m2.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m1.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
                                 },
                                 "test": {
                                     "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
@@ -272,7 +272,7 @@
                             },
                             "mongodb": {
                                 "develop": {
-                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m2.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m1.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
                                 },
                                 "test": {
                                     "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
@@ -397,7 +397,7 @@
                                 },
                                 "mongodb": {
                                     "develop": {
-                                        "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m2.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                        "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m1.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
                                     },
                                     "test": {
                                         "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
@@ -532,7 +532,7 @@
                     },
                     "mongodb": {
                         "develop": {
-                            "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m2.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                            "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m1.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
                         },
                         "test": {
                             "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
