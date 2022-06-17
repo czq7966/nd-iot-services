@@ -43,7 +43,7 @@
         "id": "6c26c442a4ace8d8",
         "type": "tab",
         "label": "V1.0数据存储",
-        "disabled": false,
+        "disabled": true,
         "info": ""
     },
     {
@@ -1501,7 +1501,7 @@
         "type": "function",
         "z": "115f1d81a93b6fc4",
         "name": "查询终端",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.payload.hd.did;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"get\"\n    },\n    sid: \"0\",\n    stp: 0\n}\n\nlet pld = { id : devId };\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};\n\n\n",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.payload.hd.did;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"plf\",\n        id: ids.plf\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"get\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet pld = { id : devId };\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};\n\n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1521,7 +1521,7 @@
         "type": "function",
         "z": "115f1d81a93b6fc4",
         "name": "设置终端",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.payload.hd.did;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"set\"\n    },\n    sid: \"0\",\n    stp: 0\n}\n\nlet pld = { id : devId };\npld = Object.assign(pld, msg.payload.pld);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};\n\n\n",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.payload.hd.did;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"plf\",\n        id: ids.plf\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"set\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet pld = { id : devId };\npld = Object.assign(pld, msg.payload.pld);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};\n\n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",

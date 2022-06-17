@@ -1,6 +1,6 @@
 服务 docker 镜像 生成命令：
 docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-amd64:0.0.6 .
-docker build -t nd-iot-services-amd64:0.0.7 .
+docker build -t nd-iot-services-amd64:0.0.9 .
 
 docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-armv7:0.0.2 .
 
@@ -35,8 +35,8 @@ set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_COD
 //启动DIO
 set IOT_APP_ID=ndiot&& set IOT_DIO_ID=ndiot-dio-1&& set IOT_ENABLE_DIO=1&& npm start
 
-//启动PLF_BFY+PLF_NDV1+PLF_NDV2平台
-set IOT_APP_ID=ndiot&& set IOT_PLF_ID={HOSTNAME}&& set IOT_ENABLE_PLF_NDV1=1&& set IOT_ENABLE_PLF_NDV2=1&& set IOT_ENABLE_PLF_BFY=1&& npm start
+//启动PLF_BFY+PLF_NDV1+PLF_NDV2平台 + LOG
+set IOT_APP_ID=ndiot&& set IOT_PLF_ID={HOSTNAME}&& set IOT_ENABLE_PLF_NDV1=1&& set IOT_ENABLE_PLF_NDV2=1&& set IOT_ENABLE_PLF_BFY=1&& set IOT_ENABLE_LOG=1&& npm start
 
 
 //启动DSP+EDG+PLF_BFY+PLF_NDV1+PLF_NDV2平台

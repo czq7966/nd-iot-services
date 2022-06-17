@@ -272,6 +272,35 @@ let startPLF_BFY = () => {
     console.log("platform bfy started");
 }
 
+//数据采集服务LOG
+let startLOG = () => {    
+    if (useSpawn) {
+        let cmd = "node"; 
+        let args = ["./index.js", "-u", "./data/log/nd"];
+        let cwd = path.resolve(__dirname);
+
+        let child = spawn(cmd, args, { stdio: 'inherit', cwd: cwd});    
+        child.on("error", (code) => {
+            console.error("log error: " + code);
+        })       
+        child.on("close", (code, signal) => {
+                console.error("log closed");
+                setTimeout(() => {
+                    startLOG();               
+                }, 1000);
+        });
+    }else {
+        let cmd = "npm run nd:log:start";
+        exec(cmd, function(error, stdout, stderr) {
+            if (error || stderr)
+                console.error("log service error: %s , %s!", error, stderr);
+
+            if (isWin32()) 
+                console.error("log service stopped");
+        });
+    }
+    console.log("log started");
+}
 
 let testZ2M = (datadir) => {
     process.env.ZIGBEE2MQTT_DATA = datadir;
@@ -334,6 +363,11 @@ if (process.env.IOT_ENABLE_PLF_NDV2 == "1") {
 if (process.env.IOT_ENABLE_PLF_BFY == "1") {
     startPLF_BFY();
 } 
+
+//启动LOG
+if (process.env.IOT_ENABLE_LOG == "1") {
+    startLOG();
+}
 
 // testZ2M("E:/iotdata/zigbee2mqtt/data/ESP8266x00c17ca1");
 // process.env.ZIGBEE2MQTT_DATA = "";

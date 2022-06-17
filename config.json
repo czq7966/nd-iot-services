@@ -584,5 +584,45 @@
                 "dio": "{DIO_ID}"
             }
         }
+    },
+    "log": {
+        "global": {
+            "data": {
+                "app": {
+                    "id": "{app}",
+                    "name": "网龙物联网",
+                    "mqtt": {
+                        "broker" : {
+                            "url": "mqtt://push-access.sdp.101.com:1780",
+                            "username": "ioe",
+                            "password": ""
+                        },
+                        "topics":{
+                            "subs": {
+                                "app_mqtt": "{app}/+/+/+/+/+/+/+"
+                            }
+                        }                    
+                    },
+                    "mongodb": {
+                        "develop": {
+                            "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m1.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                        },
+                        "test": {
+                            "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
+                        },
+                        "preproduct": {
+                            "url": "mongodb://preproduction_mdb_iot_data:jBZsDUZSnnT0@m3.edu.pre-prod.mongod.sdp:34001/preproduction_mdb_iot_data?autoConnectRetry=true"
+                        },
+                        "product": {
+                            "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
+                        }                                
+                    } 
+                }                            
+            },
+            "common": {},
+            "ids": {
+                "app": "{APP_ID}"
+            }
+        }
     }
 }

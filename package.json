@@ -24,7 +24,9 @@
     "nd:platform:bfy:install": "cd ./data/platform/bfy && npm i",
     "nd:platform:bfy:start": "node ./index.js -u ./data/platform/bfy",
     "nd:platform:bfy:service:start": "sudo systemctl start nd-iot-service-plf-bfy",
-    "nd:install": "npm i && npm run nd:dataio:install && npm run nd:dispatcher:install && npm run nd:edge:install && npm run nd:platform:ndv1:install && npm run nd:platform:ndv2:install && npm run nd:platform:bfy:install",
+    "nd:log:install": "cd ./data/log/nd && npm i",
+    "nd:log:start": "node ./index.js -u ./data/log/nd",
+    "nd:install": "npm i && npm run nd:dataio:install && npm run nd:dispatcher:install && npm run nd:edge:install && npm run nd:platform:ndv1:install && npm run nd:platform:ndv2:install && npm run nd:platform:bfy:install && npm run nd:log:install",
     "start": "node ./start.js"
   },
   "author": "CZQ",
