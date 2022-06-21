@@ -40,13 +40,6 @@
         "env": []
     },
     {
-        "id": "6c26c442a4ace8d8",
-        "type": "tab",
-        "label": "V1.0数据存储",
-        "disabled": true,
-        "info": ""
-    },
-    {
         "id": "4f298837cfcb1b75",
         "type": "mqtt-broker",
         "name": "push",
@@ -1604,7 +1597,7 @@
         "type": "debug",
         "z": "115f1d81a93b6fc4",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1614,6 +1607,194 @@
         "x": 470,
         "y": 1060,
         "wires": []
+    },
+    {
+        "id": "ca7b64f7a11036ae",
+        "type": "inject",
+        "z": "115f1d81a93b6fc4",
+        "name": "PM2-F07",
+        "props": [
+            {
+                "p": "payload.hd.did",
+                "v": "ESP8266x00c1a22a",
+                "vt": "str"
+            },
+            {
+                "p": "payload.hd.cmd",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "p": "payload.hd.stp",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 800,
+        "y": 1400,
+        "wires": [
+            [
+                "2f1e0be79d502f38"
+            ]
+        ]
+    },
+    {
+        "id": "2f1e0be79d502f38",
+        "type": "change",
+        "z": "115f1d81a93b6fc4",
+        "name": "off",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.pld.power",
+                "pt": "msg",
+                "to": "off",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1010,
+        "y": 1400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7eac4d53051c310c",
+        "type": "change",
+        "z": "115f1d81a93b6fc4",
+        "name": "on",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.pld.power",
+                "pt": "msg",
+                "to": "on",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1010,
+        "y": 1460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "795813f97ee2cc7f",
+        "type": "change",
+        "z": "115f1d81a93b6fc4",
+        "name": "PM2-F07",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.hd.did",
+                "pt": "msg",
+                "to": "ESP8266x00c1a22a",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.hd.cmd",
+                "pt": "msg",
+                "to": "3",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 1280,
+        "wires": [
+            [
+                "671e0f93a5f1665f"
+            ]
+        ]
+    },
+    {
+        "id": "e14eb0d3def5f9d6",
+        "type": "inject",
+        "z": "115f1d81a93b6fc4",
+        "name": "off",
+        "props": [
+            {
+                "p": "payload.pld.power",
+                "v": "off",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 1300,
+        "wires": [
+            [
+                "795813f97ee2cc7f"
+            ]
+        ]
+    },
+    {
+        "id": "721c966f507955cb",
+        "type": "inject",
+        "z": "115f1d81a93b6fc4",
+        "name": "on",
+        "props": [
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 1380,
+        "wires": [
+            [
+                "795813f97ee2cc7f"
+            ]
+        ]
+    },
+    {
+        "id": "9aa323b2bb3227e1",
+        "type": "inject",
+        "z": "115f1d81a93b6fc4",
+        "name": "get",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 1460,
+        "wires": [
+            [
+                "795813f97ee2cc7f"
+            ]
+        ]
     },
     {
         "id": "c730d99f09571fa2",
@@ -2203,6 +2384,48 @@
         ]
     },
     {
+        "id": "13473487472bf060",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "reboot",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"test\"\n    },\n    // pref: {\n    //     app: \"0\",\n    //     dom: \"0\"\n    // },    \n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: msg.payload.id,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"reboot\"\n    },\n    sid: \"0\",\n    stp: 0\n}\nlet pld = {id: msg.payload.id}\n\n\n\nreturn {\n\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 1400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7f11d48874c4bf86",
+        "type": "inject",
+        "z": "46a5ba0d798d87c3",
+        "name": "PM2-F07",
+        "props": [
+            {
+                "p": "payload.id",
+                "v": "ESP8266x00c22bf6",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 520,
+        "y": 1400,
+        "wires": [
+            [
+                "13473487472bf060"
+            ]
+        ]
+    },
+    {
         "id": "b293cfb8b41ad91f",
         "type": "link in",
         "z": "f7e96a32e56d72eb",
@@ -2400,207 +2623,6 @@
         "statusType": "auto",
         "x": 730,
         "y": 260,
-        "wires": []
-    },
-    {
-        "id": "011d176a9b7de9af",
-        "type": "mqtt in",
-        "z": "6c26c442a4ace8d8",
-        "name": "边缘终端上行数据",
-        "topic": "business/svcgate/#",
-        "qos": "2",
-        "datatype": "json",
-        "broker": "4f298837cfcb1b75",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 170,
-        "y": 140,
-        "wires": [
-            [
-                "89b35427f9d5e71d"
-            ]
-        ]
-    },
-    {
-        "id": "5c71d0857e3cdefb",
-        "type": "function",
-        "z": "6c26c442a4ace8d8",
-        "name": "数据表",
-        "func": "let hd = msg.payload.hd;\nif (!hd.tpc) hd.tpc = msg.topic;\nif (!hd.gid) hd.gid = hd.tpc.substr(hd.tpc.lastIndexOf(\"/\") + 1);\n\nlet tm = new Date(msg.payload.tms)\nlet year = tm.getFullYear().toString()\nlet month = (tm.getMonth() + 101).toString().substr(1,2)\nlet date = (tm.getDate() + 100).toString().substr(1,2)\nmsg.collection=hd.gid + \"_\" + year+month+date\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 490,
-        "y": 140,
-        "wires": [
-            [
-                "f95a89da34c591ed",
-                "1a2c22ac909e7f35",
-                "46f6c14ebaa1abda"
-            ]
-        ]
-    },
-    {
-        "id": "f95a89da34c591ed",
-        "type": "debug",
-        "z": "6c26c442a4ace8d8",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 640,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "89b35427f9d5e71d",
-        "type": "function",
-        "z": "6c26c442a4ace8d8",
-        "name": "时间戳",
-        "func": "let date = new Date()\nmsg.payload.tms=date.valueOf()\nmsg.payload.tm=date.toLocaleString()\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 350,
-        "y": 140,
-        "wires": [
-            [
-                "5c71d0857e3cdefb"
-            ]
-        ]
-    },
-    {
-        "id": "1a2c22ac909e7f35",
-        "type": "debug",
-        "z": "6c26c442a4ace8d8",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "collection",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 660,
-        "y": 320,
-        "wires": []
-    },
-    {
-        "id": "101e4bb6363fdf20",
-        "type": "mqtt in",
-        "z": "6c26c442a4ace8d8",
-        "name": "边缘网关下行数据",
-        "topic": "business/cmdgate/#",
-        "qos": "2",
-        "datatype": "json",
-        "broker": "4f298837cfcb1b75",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 170,
-        "y": 260,
-        "wires": [
-            [
-                "67dfda7c2a55af07",
-                "89b35427f9d5e71d"
-            ]
-        ]
-    },
-    {
-        "id": "67dfda7c2a55af07",
-        "type": "debug",
-        "z": "6c26c442a4ace8d8",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 400,
-        "y": 320,
-        "wires": []
-    },
-    {
-        "id": "3960aeb5f2e90e50",
-        "type": "function",
-        "z": "6c26c442a4ace8d8",
-        "name": "获取环境连接",
-        "func": "let data = global.get(\"data\");\nlet ids = data.ids;\n\nlet podname = env.get(\"POD_NAME\") || \"\";\nlet name = \"develop\";\nif (podname.indexOf(\"-preproduct-\") >=0 )\n    name = \"preproduct\";\nelse if (podname.indexOf(\"-product-\") >=0 )\n    name = \"product\";\nelse if (podname.indexOf(\"-test-\") >=0 )\n    name = \"test\";\n\n\nlet mgUrl = data.mongodb[name] || data.mongodb[develop];\n\nreturn {\n    action: \"connect\",\n    url: mgUrl.url\n};\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 80,
-        "wires": [
-            [
-                "46f6c14ebaa1abda",
-                "707d40473e2f2394"
-            ]
-        ]
-    },
-    {
-        "id": "fbd24133642ac624",
-        "type": "link in",
-        "z": "6c26c442a4ace8d8",
-        "name": "",
-        "links": [
-            "1188b78d61e6e2a8"
-        ],
-        "x": 95,
-        "y": 80,
-        "wires": [
-            [
-                "3960aeb5f2e90e50"
-            ]
-        ]
-    },
-    {
-        "id": "46f6c14ebaa1abda",
-        "type": "nd-mg-out",
-        "z": "6c26c442a4ace8d8",
-        "mongodb": "ddc3fe4a88f96adf",
-        "name": "",
-        "collection": "",
-        "payonly": true,
-        "upsert": false,
-        "multi": false,
-        "operation": "store",
-        "x": 700,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "707d40473e2f2394",
-        "type": "debug",
-        "z": "6c26c442a4ace8d8",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "url",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 600,
-        "y": 60,
         "wires": []
     }
 ]
