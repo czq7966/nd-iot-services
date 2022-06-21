@@ -5,3 +5,4 @@ package-lock.json
 demo
 .config.*.json
 *.backup
+.sessions.json
