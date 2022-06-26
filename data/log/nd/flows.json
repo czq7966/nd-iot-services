@@ -695,7 +695,7 @@
         "type": "function",
         "z": "e93bbc67912b9178",
         "name": "数据表",
-        "func": "if (msg.topics.length == 8 && msg.topics[7] == \"penet\")\n    return;\n\nlet table = msg.topics[0];\nif (table == \"0\")\n    table = global.get(\"data\").ids.app;\n\nlet tm = new Date(msg.payload.tms || msg.payload.hd.tms)\nlet year = tm.getFullYear().toString()\nlet month = (tm.getMonth() + 101).toString().substr(1,2)\nlet date = (tm.getDate() + 100).toString().substr(1,2)\nmsg.collection=table + \"_\" + year+month+date\n\nreturn msg;",
+        "func": "if (msg.topics.length == 8 && \n    (msg.topics[7] == \"penet\" || msg.topics[7] == \"set_z2m_datafile\")) {\n    return;\n}\n\nlet table = msg.topics[0];\nif (table == \"0\")\n    table = global.get(\"data\").ids.app;\n\nlet tm = new Date(msg.payload.tms || msg.payload.hd.tms)\nlet year = tm.getFullYear().toString()\nlet month = (tm.getMonth() + 101).toString().substr(1,2)\nlet date = (tm.getDate() + 100).toString().substr(1,2)\nmsg.collection=table + \"_\" + year+month+date\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",

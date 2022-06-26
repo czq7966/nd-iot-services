@@ -1004,8 +1004,7 @@
             "a6df7d880adde7dd",
             "eda86a17cbf189f0",
             "d9ded5bff98b6d8d",
-            "28a5d4729e59f380",
-            "b41b12708ccf38fc"
+            "28a5d4729e59f380"
         ],
         "x": 225,
         "y": 420,
@@ -1600,7 +1599,7 @@
                 "b136be555d0b9756"
             ],
             [
-                "083a3a66372b8a7e"
+                "605abd3b667aff19"
             ]
         ]
     },
@@ -2232,7 +2231,7 @@
         "type": "function",
         "z": "63bcc9db2b38df75",
         "name": "自定义查询数据",
-        "func": "let _msg = msg.payload.pld;\n_msg.operation = \"find\";\n\n_msg._topic =  \"custom_find\";\n_msg._payload = msg.payload;\nreturn _msg;",
+        "func": "msg.operation = msg.operation || \"find\";\nmsg._topic = msg._topic ||  \"custom_find\";\nmsg._payload = msg._payload || msg.payload;\nmsg._msg = msg._msg || msg;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2252,7 +2251,8 @@
         "z": "63bcc9db2b38df75",
         "name": "自定义查询数据输入",
         "links": [
-            "396f6c335713be25"
+            "396f6c335713be25",
+            "d40518fc1ce83c76"
         ],
         "x": 105,
         "y": 460,
@@ -2274,25 +2274,42 @@
         "finalize": "",
         "libs": [],
         "x": 520,
-        "y": 840,
+        "y": 920,
         "wires": [
-            [
-                "b41b12708ccf38fc"
-            ]
+            []
         ]
     },
     {
         "id": "b41b12708ccf38fc",
         "type": "link out",
         "z": "63bcc9db2b38df75",
-        "name": "",
+        "name": "自定义查询数据输出",
         "mode": "link",
         "links": [
-            "f4460e5db856239e"
+            "8781379974d5e7ea"
         ],
         "x": 665,
         "y": 840,
         "wires": []
+    },
+    {
+        "id": "605abd3b667aff19",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "自定义查询返回处理",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 840,
+        "wires": [
+            [
+                "b41b12708ccf38fc"
+            ]
+        ]
     },
     {
         "id": "2ff5101df1ab6584",
@@ -3028,7 +3045,7 @@
         "type": "function",
         "z": "f7e96a32e56d72eb",
         "name": "更新设备",
-        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet dev = data.devices[pld.id];\nlet _pld = {\n    id: pld.id,\n    pid: pld.pid,\n    name: dev.name ? dev.name : pld.id,\n    app_id: dev.app_id,\n    dom_id: dev.dom_id,\n    vendor: pld.vendor,\n    model:  pld.model,\n    disabled: dev.disabled\n}\n\nObject.assign(dev, _pld)\n\nreturn {\n    payload: {\n        pld: _pld\n    }\n};",
+        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet dev = data.devices[pld.id];\nlet _pld = {\n    id: pld.id,\n    pid: pld.pid,\n    name: dev.name ? dev.name : pld.id,\n    app_id: dev.app_id,\n    dom_id: dev.dom_id,\n    vendor: pld.vendor,\n    model:  pld.model,\n    type: dev.type,\n    disabled: dev.disabled\n}\n\nObject.assign(dev, _pld)\n\nreturn {\n    payload: {\n        pld: _pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -3060,7 +3077,7 @@
         "type": "function",
         "z": "f7e96a32e56d72eb",
         "name": "更新设备",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet id = hd.from.cid ? hd.from.cid : hd.from.id;\nlet pid = hd.from.cid ? hd.from.id : null;\nlet dev = data.devices[id] || {};\n\nlet _pld = {\n    id: id,\n    pid: pid,\n    name: dev.name ? dev.name : id,\n    app_id: hd.pref.app,\n    dom_id: hd.pref.dom,\n    vendor: dev.vendor,\n    model:  dev.model,\n    disabled: dev.disabled\n}\n\ndev = Object.assign(dev, _pld)\ncommon.fixUpDev(dev, false, false);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: _pld\n    },\n    device: dev\n};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet id = hd.from.cid ? hd.from.cid : hd.from.id;\nlet pid = hd.from.cid ? hd.from.id : null;\nlet dev = data.devices[id] || {};\n\nlet _pld = {\n    id: id,\n    pid: pid,\n    name: dev.name ? dev.name : id,\n    app_id: hd.pref.app,\n    dom_id: hd.pref.dom,\n    vendor: dev.vendor,\n    model:  dev.model,\n    type: dev.type,\n    disabled: dev.disabled\n}\n\ndev = Object.assign(dev, _pld)\ncommon.fixUpDev(dev, false, false);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: _pld\n    },\n    device: dev\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -3080,7 +3097,7 @@
         "type": "function",
         "z": "f7e96a32e56d72eb",
         "name": "更新设备",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet id = hd.from.cid ? hd.from.cid : hd.from.id;\nlet pid = hd.from.cid ? hd.from.id : null;\nlet dev = data.devices[id] || {};\nlet devBak = Object.assign({}, dev);\n\n\nlet _pld = {\n    id: id,\n    pid: null,\n    name: dev.name ? dev.name : id,\n    app_id: hd.pref.app,\n    dom_id: null,\n    vendor: dev.vendor,\n    model:  dev.model,\n    disabled: dev.disabled\n}\n\n\ndev = Object.assign(dev, _pld)\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: _pld\n    },\n    device: devBak\n};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet id = hd.from.cid ? hd.from.cid : hd.from.id;\nlet pid = hd.from.cid ? hd.from.id : null;\nlet dev = data.devices[id] || {};\nlet devBak = Object.assign({}, dev);\n\n\nlet _pld = {\n    id: id,\n    pid: null,\n    name: dev.name ? dev.name : id,\n    app_id: hd.pref.app,\n    dom_id: null,\n    vendor: dev.vendor,\n    model:  dev.model,\n    type: dev.type,\n    disabled: dev.disabled\n}\n\n\ndev = Object.assign(dev, _pld)\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: _pld\n    },\n    device: devBak\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -3113,7 +3130,7 @@
         "type": "function",
         "z": "f7e96a32e56d72eb",
         "name": "更新设备",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet id = hd.from.cid;\nlet pid = hd.from.id\nlet dev = data.devices[id] || {};\nlet def = pld.definition;\nif (!def) \n    return;\n\n\nlet _pld = {\n    id: id,\n    pid: pid,\n    name: dev.name ? dev.name : id,\n    app_id: hd.pref.app,\n    dom_id: hd.pref.dom,\n    vendor: def.vendor,\n    model:  def.model,\n    disabled: dev.disabled\n}\n\ndev = Object.assign(dev, _pld)\ncommon.fixUpDev(dev, false, false);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: _pld\n    },\n    device: dev\n};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet id = hd.from.cid;\nlet pid = hd.from.id\nlet dev = data.devices[id] || {};\nlet def = pld.definition;\nif (!def) \n    return;\n\n\nlet _pld = {\n    id: id,\n    pid: pid,\n    name: dev.name ? dev.name : id,\n    app_id: hd.pref.app,\n    dom_id: hd.pref.dom,\n    vendor: def.vendor,\n    model:  def.model,\n    type: dev.type,\n    disabled: dev.disabled\n}\n\ndev = Object.assign(dev, _pld)\ncommon.fixUpDev(dev, false, false);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: _pld\n    },\n    device: dev\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -3161,6 +3178,34 @@
         "wires": []
     },
     {
+        "id": "b75d0bc4c45f0f96",
+        "type": "http in",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "url": "/get_devices",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 440,
+        "y": 1300,
+        "wires": [
+            [
+                "3da016f939391ad1"
+            ]
+        ]
+    },
+    {
+        "id": "d66ad5fa038ffe5e",
+        "type": "http response",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1250,
+        "y": 1360,
+        "wires": []
+    },
+    {
         "id": "6ceef64b7c4cebcc",
         "type": "change",
         "z": "f7e96a32e56d72eb",
@@ -3174,13 +3219,30 @@
         "x": 740,
         "y": 640,
         "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3da016f939391ad1",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "func": "let data = global.get(\"data\");\nmsg.collection = \"ndiot_devices\";\nmsg.operation = \"find\";\nmsg.payload = {\n    \"app_id\": data.ids.app,\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 1300,
+        "wires": [
             [
-                "396f6c335713be25"
+                "d40518fc1ce83c76"
             ]
         ]
     },
     {
-        "id": "396f6c335713be25",
+        "id": "d40518fc1ce83c76",
         "type": "link out",
         "z": "f7e96a32e56d72eb",
         "name": "",
@@ -3188,9 +3250,70 @@
         "links": [
             "800621f0c9f46a27"
         ],
-        "x": 1295,
-        "y": 640,
+        "x": 1275,
+        "y": 1300,
         "wires": []
+    },
+    {
+        "id": "8781379974d5e7ea",
+        "type": "link in",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "links": [
+            "b41b12708ccf38fc"
+        ],
+        "x": 385,
+        "y": 1360,
+        "wires": [
+            [
+                "136ec1e85ac29df5"
+            ]
+        ]
+    },
+    {
+        "id": "4b8b06c944271024",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "/get_devices",
+        "func": "return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 1360,
+        "wires": [
+            [
+                "d66ad5fa038ffe5e"
+            ]
+        ]
+    },
+    {
+        "id": "136ec1e85ac29df5",
+        "type": "switch",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "property": "req.url",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "/get_devices",
+                "vt": "str",
+                "case": false
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 1360,
+        "wires": [
+            [
+                "4b8b06c944271024"
+            ]
+        ]
     },
     {
         "id": "9bfc8855190691e9",

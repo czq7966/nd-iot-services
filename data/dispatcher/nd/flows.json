@@ -619,6 +619,73 @@
         ]
     },
     {
+        "id": "eebfa4a1c61487fb",
+        "type": "switch",
+        "z": "a2231b8bf9e5da49",
+        "name": "",
+        "property": "req.url",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "/get_devices",
+                "vt": "str",
+                "case": true
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 570,
+        "y": 880,
+        "wires": [
+            [
+                "8931b88b3e607808"
+            ]
+        ]
+    },
+    {
+        "id": "62746c74c6d585a1",
+        "type": "inject",
+        "z": "a2231b8bf9e5da49",
+        "name": "",
+        "props": [
+            {
+                "p": "req.url",
+                "v": "/get_devices?abc=123",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 290,
+        "y": 880,
+        "wires": [
+            [
+                "eebfa4a1c61487fb"
+            ]
+        ]
+    },
+    {
+        "id": "8931b88b3e607808",
+        "type": "debug",
+        "z": "a2231b8bf9e5da49",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 790,
+        "y": 880,
+        "wires": []
+    },
+    {
         "id": "7890d1121e8c800a",
         "type": "mqtt in",
         "z": "bbc788f5f9e280ee",
