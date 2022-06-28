@@ -1307,7 +1307,7 @@
         "type": "function",
         "z": "115f1d81a93b6fc4",
         "name": "上报事件处理",
-        "func": "let fdevices = flow.get(\"devices\");\nlet gdevices = global.get(\"data\").devices;\n\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet did = hd.from.id;\n\nlet fdev = fdevices[did];\nlet gdev = gdevices[did];\n\nlet gid = fdev && fdev.gid ? fdev.gid : \"CMDGATE_NDIOT\";\nlet cmd = gdev && gdev.type === \"CT\" ? 4 : 3;\n\n\nlet _hd = {\n    did: did,\n    gid: gid,\n    cmd: cmd,\n    stp: 1\n};\n\n\nreturn {\n    payload: {\n        hd: _hd,\n        pld: pld\n    }\n}\n    \n\n",
+        "func": "let fdevices = flow.get(\"devices\");\nlet gdevices = global.get(\"data\").devices;\n\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet did = hd.from.id;\n\nlet fdev = fdevices[did];\nlet gdev = gdevices[did];\n\nlet gid = fdev && fdev.gid ? fdev.gid : \"CMDGATE_NDIOT\";\n// let cmd = gdev && gdev.type === \"CT\" ? 4 : 3;\nlet cmd = 3;\n\n\nlet _hd = {\n    did: did,\n    gid: gid,\n    cmd: cmd,\n    stp: 1\n};\n\n\nreturn {\n    payload: {\n        hd: _hd,\n        pld: pld\n    }\n}\n    \n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
