@@ -1867,7 +1867,8 @@
         "name": "更新设备数据输入",
         "links": [
             "34aa83c186d592f9",
-            "e9fd3750de45be3f"
+            "e9fd3750de45be3f",
+            "a18386423e629bcb"
         ],
         "x": 85,
         "y": 1320,
@@ -2864,7 +2865,7 @@
         "type": "debug",
         "z": "f7e96a32e56d72eb",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -3028,7 +3029,7 @@
         "type": "debug",
         "z": "f7e96a32e56d72eb",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -3077,7 +3078,7 @@
         "type": "function",
         "z": "f7e96a32e56d72eb",
         "name": "更新设备",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet id = hd.from.cid ? hd.from.cid : hd.from.id;\nlet pid = hd.from.cid ? hd.from.id : null;\nlet dev = data.devices[id] || {};\n\nlet _pld = {\n    id: id,\n    pid: pid,\n    name: dev.name ? dev.name : id,\n    app_id: hd.pref.app,\n    dom_id: hd.pref.dom,\n    vendor: dev.vendor,\n    model:  dev.model,\n    type: dev.type,\n    disabled: dev.disabled\n}\n\ndev = Object.assign(dev, _pld)\ncommon.fixUpDev(dev, false, false);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: _pld\n    },\n    device: dev\n};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet id = hd.from.cid ? hd.from.cid : hd.from.id;\nlet pid = hd.from.cid ? hd.from.id : null;\nlet dev = data.devices[id] || {};\n\nlet _pld = {\n    id: id,\n    pid: pid,\n    name: dev.name || id,\n    app_id: hd.pref.app,\n    dom_id: hd.pref.dom,\n    vendor: dev.vendor,\n    model:  dev.model,\n    type:   dev.type,\n    disabled: dev.disabled\n}\n\nif (pld.id === id) {\n    _pld.name = pld.name || _pld.name;\n    _pld.pid = pld.pid || _pld.pid;\n    _pld.app_id = pld.app_id || _pld.app_id;\n    _pld.dom_id = pld.dom_id || _pld.dom_id;\n    _pld.vendor = pld.vendor || _pld.vendor;\n    _pld.model = pld.model || _pld.model;\n    _pld.type = pld.type || _pld.type;\n}\n\n\ndev = Object.assign(dev, _pld)\ncommon.fixUpDev(dev, false, false);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: _pld\n    },\n    device: dev\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -3130,7 +3131,7 @@
         "type": "function",
         "z": "f7e96a32e56d72eb",
         "name": "更新设备",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet id = hd.from.cid;\nlet pid = hd.from.id\nlet dev = data.devices[id] || {};\nlet def = pld.definition;\nif (!def) \n    return;\n\n\nlet _pld = {\n    id: id,\n    pid: pid,\n    name: dev.name ? dev.name : id,\n    app_id: hd.pref.app,\n    dom_id: hd.pref.dom,\n    vendor: def.vendor,\n    model:  def.model,\n    type: dev.type,\n    disabled: dev.disabled\n}\n\ndev = Object.assign(dev, _pld)\ncommon.fixUpDev(dev, false, false);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: _pld\n    },\n    device: dev\n};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet id = hd.from.cid;\nlet pid = hd.from.id\nlet dev = data.devices[id] || {};\nlet def = pld.data.definition;\nif (!def) \n    return;\n\n\nlet _pld = {\n    id: id,\n    pid: pid,\n    name: dev.name ? dev.name : id,\n    app_id: hd.pref.app,\n    dom_id: hd.pref.dom,\n    vendor: def.vendor,\n    model:  def.model,\n    type: dev.type,\n    disabled: dev.disabled\n}\n\ndev = Object.assign(dev, _pld)\ncommon.fixUpDev(dev, false, false);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: _pld\n    },\n    device: dev\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -3314,6 +3315,56 @@
                 "4b8b06c944271024"
             ]
         ]
+    },
+    {
+        "id": "f60b76d3477e91c3",
+        "type": "http in",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "url": "/upsert_device",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 450,
+        "y": 1480,
+        "wires": [
+            [
+                "16b2499c9347c2a9"
+            ]
+        ]
+    },
+    {
+        "id": "16b2499c9347c2a9",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "更新设备",
+        "func": "let data = global.get(\"data\");\nlet ids = data.ids;\nlet common = global.get(\"common\");\nlet pld = msg.payload;\nlet id = pld.id;\nif (!id) return;\n\nlet dev = data.devices[id] || {};\n\nlet _pld = {\n    id: id,\n    pid: pld.pid || dev.pid,\n    name: pld.name || dev.name || id,\n    app_id: pld.app_id || dev.app_id || ids.app,\n    dom_id: pld.dom_id || dev.dom_id,\n    vendor: pld.vendor || dev.vendor,\n    model:  pld.model || dev.model,\n    type:   pld.type || dev.type\n}\n\ndev = Object.assign(dev, _pld)\ncommon.fixUpDev(dev, false, false);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: _pld\n    },\n    device: dev\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 1480,
+        "wires": [
+            [
+                "a18386423e629bcb",
+                "d66ad5fa038ffe5e"
+            ]
+        ]
+    },
+    {
+        "id": "a18386423e629bcb",
+        "type": "link out",
+        "z": "f7e96a32e56d72eb",
+        "name": "device_joined",
+        "mode": "link",
+        "links": [
+            "2b33ccdffdb43c37"
+        ],
+        "x": 1275,
+        "y": 1480,
+        "wires": []
     },
     {
         "id": "9bfc8855190691e9",

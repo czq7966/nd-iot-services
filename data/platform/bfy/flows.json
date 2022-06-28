@@ -1922,7 +1922,7 @@
         "type": "debug",
         "z": "396cbecdd6c41306",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2042,7 +2042,7 @@
         "type": "function",
         "z": "396cbecdd6c41306",
         "name": "子设备_协议转换",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        func: \"set\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\nlet pld = {\"state\": msg.payload}\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        func: \"set\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\n\nlet c= msg.payload;\nlet len = c.length;\nlet pld = {};\n\n//插座，1路开关\nif (c == \"0\" || c ==\"1\" || c ==\"2\") {\n    let name = \"state\";\n    pld[name] = c == \"0\" ? \"off\" : \n                c == \"1\" ? \"on\"  : \"\";\n            \n}\n\n//多路开关\nif (len == 2) {\n    let name;\n    let c0 = c[0];\n    let c1 = c[1];\n    if (c0 == \"1\" || c0 == \"2\" || c0 == \"3\") {\n        name = \"state_\" + c0;\n        pld[name] = c1 == \"0\" ? \"off\" : \n                    c1 == \"1\" ? \"on\"  : \"\";\n    }\n    \n    if (c0 == \"l\" || c0 == \"c\" || c0 == \"r\") {\n        name = \"state_\" + (c0 == \"l\" ? \"left\" : c0 == \"r\" ? \"right\" : \"center\");\n        pld[name] = c1 == \"0\" ? \"off\" : \n                    c1 == \"1\" ? \"on\"  : \"\";\n    }\n    \n}\n\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2113,7 +2113,7 @@
         "type": "debug",
         "z": "396cbecdd6c41306",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2386,7 +2386,12 @@
             },
             {
                 "t": "eq",
-                "v": "CO_DEV",
+                "v": "CO_PL",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "CO_SW",
                 "vt": "str"
             },
             {
@@ -2405,12 +2410,15 @@
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 5,
+        "outputs": 6,
         "x": 170,
         "y": 460,
         "wires": [
             [
                 "3c5c174ae97a1079"
+            ],
+            [
+                "c4a4de242e3bade7"
             ],
             [
                 "c4a4de242e3bade7"
@@ -2448,7 +2456,7 @@
         "type": "function",
         "z": "b772149e45b504b7",
         "name": "设备入网",
-        "func": "let data = global.get(\"data\")\nlet hd = {\n    pref: {\n        app: \"ndiot\",\n        dom: msg.payload.dom_id\n    },\n    from: {\n        type :\"dev\",\n        id: msg.payload.id\n    },\n    to: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    entry: {\n        type: \"evt\",\n        id: \"device_joined\"\n    }\n}\n\nlet pld = {\n    id: msg.payload.id\n}\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "func": "let data = global.get(\"data\")\nlet pld = msg.payload.pld;\nlet hd = {\n    pref: {\n        app: \"ndiot\",\n        dom:pld.dom_id\n    },\n    from: {\n        type :\"dev\",\n        id:pld.id\n    },\n    to: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    entry: {\n        type: \"evt\",\n        id: \"device_joined\"\n    }\n}\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2467,16 +2475,26 @@
         "id": "4bbfc7a04824f358",
         "type": "inject",
         "z": "b772149e45b504b7",
-        "name": "ESP8266x00c1cbb8",
+        "name": "",
         "props": [
             {
-                "p": "payload.id",
-                "v": "ESP8266x005dc48d",
+                "p": "payload.pld.id",
+                "v": "ESP8266x00491ed3",
                 "vt": "str"
             },
             {
-                "p": "payload.dom_id",
+                "p": "payload.pld.dom_id",
                 "v": "nd",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.name",
+                "v": "长乐/JD会议室/窗帘/20号",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.type",
+                "v": "CT",
                 "vt": "str"
             }
         ],
@@ -2485,8 +2503,8 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 170,
-        "y": 140,
+        "x": 130,
+        "y": 180,
         "wires": [
             [
                 "47446fad18d0c295"
@@ -2557,36 +2575,6 @@
         "wires": [
             [
                 "422b622465d8ef43"
-            ]
-        ]
-    },
-    {
-        "id": "af63cc36471e5949",
-        "type": "inject",
-        "z": "b772149e45b504b7",
-        "name": "ESP8266x00c1ad5e",
-        "props": [
-            {
-                "p": "payload.id",
-                "v": "ESP8266x00c1ad5e",
-                "vt": "str"
-            },
-            {
-                "p": "payload.dom_id",
-                "v": "nd",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 170,
-        "y": 200,
-        "wires": [
-            [
-                "47446fad18d0c295"
             ]
         ]
     }
