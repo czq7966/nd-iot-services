@@ -2462,8 +2462,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 360,
-        "y": 180,
+        "x": 540,
+        "y": 200,
         "wires": [
             [
                 "250ffb893d37d89a",
@@ -2475,11 +2475,11 @@
         "id": "4bbfc7a04824f358",
         "type": "inject",
         "z": "b772149e45b504b7",
-        "name": "",
+        "name": "20",
         "props": [
             {
                 "p": "payload.pld.id",
-                "v": "ESP8266x00491ed3",
+                "v": "ESP8266x00c1ddd1",
                 "vt": "str"
             },
             {
@@ -2489,12 +2489,12 @@
             },
             {
                 "p": "payload.pld.name",
-                "v": "长乐/JD会议室/窗帘/20号",
+                "v": "福州/飘渺庄/3楼空调/PM3-F20",
                 "vt": "str"
             },
             {
                 "p": "payload.pld.type",
-                "v": "CT",
+                "v": "AC",
                 "vt": "str"
             }
         ],
@@ -2503,8 +2503,8 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 130,
-        "y": 180,
+        "x": 170,
+        "y": 80,
         "wires": [
             [
                 "47446fad18d0c295"
@@ -2523,8 +2523,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 670,
-        "y": 200,
+        "x": 850,
+        "y": 220,
         "wires": []
     },
     {
@@ -2536,8 +2536,8 @@
         "links": [
             "774d0cb8ef787fc2"
         ],
-        "x": 555,
-        "y": 160,
+        "x": 735,
+        "y": 180,
         "wires": []
     },
     {
@@ -2551,8 +2551,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 360,
-        "y": 280,
+        "x": 540,
+        "y": 300,
         "wires": [
             [
                 "250ffb893d37d89a"
@@ -2570,12 +2570,394 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 130,
-        "y": 280,
+        "x": 290,
+        "y": 660,
         "wires": [
             [
                 "422b622465d8ef43"
             ]
+        ]
+    },
+    {
+        "id": "bea5514a79261742",
+        "type": "function",
+        "z": "b772149e45b504b7",
+        "name": "",
+        "func": "let ids = [];\n\nids.forEach(id => {\n    let pld = {\n        id: id,\n        dom_id: \"nd\",\n        name: \"福州/飘渺庄/2楼空调/PM2-F21\",\n        type: \"AC\"\n    }\n    node.send({\n        payload: {pld: pld}\n    })\n})\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 560,
+        "wires": [
+            [
+                "47446fad18d0c295"
+            ]
+        ]
+    },
+    {
+        "id": "9db97e4b3fecee27",
+        "type": "inject",
+        "z": "b772149e45b504b7",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 290,
+        "y": 620,
+        "wires": [
+            [
+                "bea5514a79261742"
+            ]
+        ]
+    },
+    {
+        "id": "6d249e4d0b90f239",
+        "type": "inject",
+        "z": "b772149e45b504b7",
+        "name": "25",
+        "props": [
+            {
+                "p": "payload.pld.id",
+                "v": "ESP8266x00c1d473",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.dom_id",
+                "v": "nd",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.name",
+                "v": "福州/飘渺庄/3楼空调/PM3-F25",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.type",
+                "v": "AC",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 120,
+        "wires": [
+            [
+                "47446fad18d0c295"
+            ]
+        ]
+    },
+    {
+        "id": "c05b8c2d0bb3da7c",
+        "type": "inject",
+        "z": "b772149e45b504b7",
+        "name": "17",
+        "props": [
+            {
+                "p": "payload.pld.id",
+                "v": "ESP8266x00c1a6be",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.dom_id",
+                "v": "nd",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.name",
+                "v": "福州/飘渺庄/3楼空调/PM3-F17",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.type",
+                "v": "AC",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fea21f57bb30bd88",
+        "type": "inject",
+        "z": "b772149e45b504b7",
+        "name": "18",
+        "props": [
+            {
+                "p": "payload.pld.id",
+                "v": "ESP8266x00c20c2c",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.dom_id",
+                "v": "nd",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.name",
+                "v": "福州/飘渺庄/3楼空调/PM3-F18",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.type",
+                "v": "AC",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a0219347277027c7",
+        "type": "inject",
+        "z": "b772149e45b504b7",
+        "name": "19",
+        "props": [
+            {
+                "p": "payload.pld.id",
+                "v": "ESP8266x00c1d4dc",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.dom_id",
+                "v": "nd",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.name",
+                "v": "福州/飘渺庄/3楼空调/PM3-F19",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.type",
+                "v": "AC",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c75d0c7bcbb13119",
+        "type": "inject",
+        "z": "b772149e45b504b7",
+        "name": "22",
+        "props": [
+            {
+                "p": "payload.pld.id",
+                "v": "ESP8266x00c1ceca",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.dom_id",
+                "v": "nd",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.name",
+                "v": "福州/飘渺庄/2楼空调/PM2-F22",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.type",
+                "v": "AC",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "31ed2ea7f633a82d",
+        "type": "inject",
+        "z": "b772149e45b504b7",
+        "name": "22",
+        "props": [
+            {
+                "p": "payload.pld.id",
+                "v": "ESP8266x00c1ceca",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.dom_id",
+                "v": "nd",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.name",
+                "v": "福州/飘渺庄/2楼空调/PM2-F22",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.type",
+                "v": "AC",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cadbb5f45e1ae196",
+        "type": "inject",
+        "z": "b772149e45b504b7",
+        "name": "22",
+        "props": [
+            {
+                "p": "payload.pld.id",
+                "v": "ESP8266x00c1ceca",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.dom_id",
+                "v": "nd",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.name",
+                "v": "福州/飘渺庄/2楼空调/PM2-F22",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.type",
+                "v": "AC",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "720bf4f048bf86dd",
+        "type": "inject",
+        "z": "b772149e45b504b7",
+        "name": "22",
+        "props": [
+            {
+                "p": "payload.pld.id",
+                "v": "ESP8266x00c1ceca",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.dom_id",
+                "v": "nd",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.name",
+                "v": "福州/飘渺庄/2楼空调/PM2-F22",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.type",
+                "v": "AC",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6c8fd973bd5a3093",
+        "type": "inject",
+        "z": "b772149e45b504b7",
+        "name": "22",
+        "props": [
+            {
+                "p": "payload.pld.id",
+                "v": "ESP8266x00c1ceca",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.dom_id",
+                "v": "nd",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.name",
+                "v": "福州/飘渺庄/2楼空调/PM2-F22",
+                "vt": "str"
+            },
+            {
+                "p": "payload.pld.type",
+                "v": "AC",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 460,
+        "wires": [
+            []
         ]
     }
 ]
