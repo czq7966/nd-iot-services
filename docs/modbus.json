@@ -1,0 +1,29 @@
+{
+    "CLXZMSGACGREEPENET":{
+        "defaultAddress": 1,
+        "table": {
+            "power": {
+                "addr": 1,
+                "value": {
+                    "on": 1,
+                    "off": 0
+                }
+            },
+            "mode": {
+                "addr": 45002,
+                "value": {
+                    "fan": 0,
+                    "cool": 1,
+                    "heat": 2
+                }
+            },
+            "temperature": {
+                "addr": 40009,
+                "value": 0.1
+            },
+            "fanSpeed": {
+                "addr": 40028
+            }
+        }
+    }
+}

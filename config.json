@@ -374,6 +374,8 @@
                                         "dysubs": {     
                                             "dev_evt_status": "0/0/dev/{dev}/0/0/evt/status",
                                             "dev_evt_penet": "{app}/{dom}/dev/{dev}/edg/{edg}/evt/penet",
+                                            "dev_svc_get":"{app}/{dom}/+/+/dev/{dev}/svc/get",
+                                            "dev_svc_set":"{app}/{dom}/+/+/dev/{dev}/svc/set",
                                             "z3co_svc_request": "{app}/{dom}/0/0/dev/{dev}/svc/request"                                          
                                         },                                       
                                         "services": {

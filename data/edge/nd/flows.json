@@ -47,6 +47,14 @@
         "env": []
     },
     {
+        "id": "b2205e0aea657466",
+        "type": "tab",
+        "label": "串口透传",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "73824c52c204153b",
         "type": "mqtt-broker",
         "name": "push",
@@ -461,7 +469,7 @@
         "y": 560,
         "wires": [
             [
-                "f77d15f0cc88c3d7"
+                "37b0602a95288c0b"
             ]
         ]
     },
@@ -477,7 +485,7 @@
         "finalize": "",
         "libs": [],
         "x": 420,
-        "y": 600,
+        "y": 640,
         "wires": [
             [
                 "068d75ddb00dcc52",
@@ -598,6 +606,25 @@
         "wires": [
             [
                 "32b635bc5bbe8de1"
+            ]
+        ]
+    },
+    {
+        "id": "37b0602a95288c0b",
+        "type": "function",
+        "z": "7c7a09edf982e2f4",
+        "name": "Modbus解析函数",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\n\nvar CRCMaster = {\n    StringToCheck: \"\",\n    CleanedString: \"\",\n    CRCTableDNP: [],\n    init: function() {\n        this.CRCDNPInit();\n    },\n    CleanString: function(inputType) {\n        if (inputType == \"ASCII\") {\n            this.CleanedString = this.StringToCheck;\n        } else {\n            if (this.StringToCheck.match(/^[0-9A-F \\t]+$/gi) !== null) {\n                this.CleanedString = this._hexStringToString(this.StringToCheck.toUpperCase().replace(/[\\t ]/g, ''));\n            } else {\n                window.alert(\"String doesn't seem to be a valid Hex input.\");\n                return false;\n            }\n        }\n        return true;\n    },\n    CRCDNPInit: function() {\n        var i, j, crc, c;\n        for (i = 0; i < 256; i++) {\n            crc = 0;\n            c = i;\n            for (j = 0; j < 8; j++) {\n                if ((crc ^ c) & 0x0001) crc = (crc >> 1) ^ 0xA6BC;\n                else crc = crc >> 1;\n                c = c >> 1;\n            }\n            this.CRCTableDNP[i] = crc;\n        }\n    },\n    CRC16Modbus: function() {\n        var crc = 0xFFFF;\n        var str = this.CleanedString;\n        for (var pos = 0; pos < str.length; pos++) {\n            crc ^= str.charCodeAt(pos);\n            for (var i = 8; i !== 0; i--) {\n                if ((crc & 0x0001) !== 0) {\n                    crc >>= 1;\n                    crc ^= 0xA001;\n                } else\n                    crc >>= 1;\n            }\n        }\n        return crc;\n    },\n    _stringToBytes: function(str) {\n        var ch, st, re = [];\n        for (var i = 0; i < str.length; i++) {\n            ch = str.charCodeAt(i); // get char\n            st = []; // set up \"stack\"\n            do {\n                st.push(ch & 0xFF); // push byte to stack\n                ch = ch >> 8; // shift value down by 1 byte\n            }\n            while (ch);\n            // add stack contents to result\n            // done because chars have \"wrong\" endianness\n            re = re.concat(st.reverse());\n        }\n        // return an array of bytes\n        return re;\n    },\n    _byteToHexString: function(byte) {\n        let hex =\"00\" + byte.toString(16).toUpperCase();\n        hex = hex.substr(hex.length - 2);\n        return hex;\n    }, \n    _bytesToHexString: function(bytes) {\n        let str = \"\";\n        bytes.forEach(byte => {\n           str = str + \" \" + this._byteToHexString(byte);\n        })\n        return str.trim();\n    },    \n    _hexStringToString: function(inputstr) {\n        var hex = inputstr.toString(); //force conversion\n        var str = '';\n        for (var i = 0; i < hex.length; i += 2)\n            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));\n        return str;\n    },\n    CalculateStr: function(str, inputType) {\n        this.StringToCheck = str;\n        if (this.CleanString(inputType)) {\n            let crc = this.CRC16Modbus();\n            return {\n                low: crc & 0xFF,\n                high: crc >> 8 & 0xFF\n            }\n        }\n    },\n    CalculateBytes: function(bytes) {\n        let str = this._bytesToHexString(bytes);\n        return this.CalculateStr(str, \"HEX\");\n    }    \n};\n\nCRCMaster.init();\n\nlet splitRegAddr = function(regAddr, writeOffset ) {\n    let type = Math.floor(regAddr / 10000);\n    let addr = regAddr % 10000;\n    let func = -1;\n\n    if (writeOffset >=0) {\n        if (type == 0) func = 5 + writeOffset;\n        else if (type == 4) func = 6 + writeOffset;\n    } else {\n        if (type == 0) func = 1;\n        else if (type == 1) func = 2;\n        else if (type == 3) func = 4;\n        else if (type == 4) func = 3;\n    }\n\n    return {\n        func: func,\n        addr: addr\n    };\n}\n\n\nlet getRegOne = function(modAddr, regAddr) {\n    let funcAddr = splitRegAddr(regAddr, -1);\n    if (funcAddr.func != -1) {\n        let bytes = [];\n        bytes.push(modAddr);\n        bytes.push(funcAddr.func);\n        bytes.push(funcAddr.addr >> 8 & 0xFF);\n        bytes.push(funcAddr.addr & 0xFF);\n        bytes.push(0);\n        bytes.push(1);\n        let sum = common.CRC16.CalculateBytes(bytes);\n        bytes.push(sum.low);\n        bytes.push(sum.high);\n        return Buffer.from(bytes);\n    }\n    return funcAddr;\n}\n\n\n\ncommon.CRC16 = CRCMaster;\ncommon.modbus = {};\ncommon.modbus.splitRegAddr = splitRegAddr;\ncommon.modbus.getRegOne = getRegOne;\ncommon.modbus.setRegOne = null;\n\n\n\nreturn {payload: common};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 600,
+        "wires": [
+            [
+                "f77d15f0cc88c3d7"
             ]
         ]
     },
@@ -2611,7 +2638,8 @@
         "name": "握手请求输出",
         "mode": "link",
         "links": [
-            "aa6930a5c2fc2bf5"
+            "aa6930a5c2fc2bf5",
+            "0bc9874503b7e0b2"
         ],
         "x": 995,
         "y": 500,
@@ -4922,5 +4950,415 @@
                 "bc35260b44f4813e"
             ]
         ]
+    },
+    {
+        "id": "0bc9874503b7e0b2",
+        "type": "link in",
+        "z": "b2205e0aea657466",
+        "name": "启动协调器输入",
+        "links": [
+            "0c75cd8a739aa826",
+            "c9e9d547ed815f9a"
+        ],
+        "x": 165,
+        "y": 140,
+        "wires": [
+            [
+                "4b3b0a6534ecc277"
+            ]
+        ]
+    },
+    {
+        "id": "4b3b0a6534ecc277",
+        "type": "switch",
+        "z": "b2205e0aea657466",
+        "name": "透传型号",
+        "property": "payload.pld.model",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "CLXZMSGACGREEPENET",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 320,
+        "y": 140,
+        "wires": [
+            [
+                "9f790c3ec17a1d3a"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "297f926e543a1f8d",
+        "type": "function",
+        "z": "b2205e0aea657466",
+        "name": "上行透传主题",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet topics = data.topics;\nlet device = msg.device;\nlet topic = common.expandTopic.expand(topics.dysubs.dev_evt_penet, {dev: device.id});\n\nnode.send({\n    action: \"subscribe\",\n    topic: topic,\n    device: device\n})",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 140,
+        "wires": [
+            [
+                "918c93763e252ffa"
+            ]
+        ]
+    },
+    {
+        "id": "9f790c3ec17a1d3a",
+        "type": "function",
+        "z": "b2205e0aea657466",
+        "name": "初始化设备数据",
+        "func": "let data = global.get(\"data\");\nlet modbus = global.get(\"modbus\");\nlet pld = msg.payload.pld;\nlet device = data.devices[pld.id];\nif (!device.hasOwnProperty(\"modbus\")) {\n    device.modbus = modbus[pld.model]\n    return {device: device}\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 140,
+        "wires": [
+            [
+                "297f926e543a1f8d",
+                "56180d1a4a992b63"
+            ]
+        ]
+    },
+    {
+        "id": "918c93763e252ffa",
+        "type": "mqtt in",
+        "z": "b2205e0aea657466",
+        "name": "mqtt订阅",
+        "topic": "",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "73824c52c204153b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 900,
+        "y": 140,
+        "wires": [
+            [
+                "cd6d370e5b7162b3"
+            ]
+        ]
+    },
+    {
+        "id": "cd6d370e5b7162b3",
+        "type": "base64",
+        "z": "b2205e0aea657466",
+        "name": "",
+        "action": "",
+        "property": "payload.pld.raw",
+        "x": 1080,
+        "y": 140,
+        "wires": [
+            [
+                "ca0c0ecc14ccba09"
+            ]
+        ]
+    },
+    {
+        "id": "ca0c0ecc14ccba09",
+        "type": "function",
+        "z": "b2205e0aea657466",
+        "name": "上行数据",
+        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nmsg.device = data.devices[hd.from.id]\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1240,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "56180d1a4a992b63",
+        "type": "function",
+        "z": "b2205e0aea657466",
+        "name": "下行设置主题",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet topics = data.topics;\nlet device = msg.device;\nlet getTopic = common.expandTopic.expand(topics.dysubs.dev_svc_get, {dev: device.id});\nlet setTopic = common.expandTopic.expand(topics.dysubs.dev_svc_set, {dev: device.id});\n\nnode.send({\n    action: \"subscribe\",\n    topic: [getTopic, setTopic],\n    device: device\n})",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 200,
+        "wires": [
+            [
+                "af242aa7ef087a98"
+            ]
+        ]
+    },
+    {
+        "id": "af242aa7ef087a98",
+        "type": "mqtt in",
+        "z": "b2205e0aea657466",
+        "name": "mqtt订阅",
+        "topic": "",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "73824c52c204153b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 900,
+        "y": 200,
+        "wires": [
+            [
+                "7cb35940bbf6a9e8"
+            ]
+        ]
+    },
+    {
+        "id": "28adb335cb4c2134",
+        "type": "change",
+        "z": "b2205e0aea657466",
+        "name": "数据初始化",
+        "rules": [
+            {
+                "t": "set",
+                "p": "modbus",
+                "pt": "global",
+                "to": "{\"CLXZMSGACGREEPENET\":{\"table\":{\"power\":{\"addr\":2,\"value\":{\"on\":1,\"off\":0}},\"mode\":{\"addr\":45003,\"value\":{\"fan\":0,\"cool\":1,\"heat\":2}},\"temperature\":{\"addr\":40010,\"value\":0.1},\"fanSpeed\":{\"addr\":40029}}}}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 390,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ddea0cdd2f2cc76d",
+        "type": "inject",
+        "z": "b2205e0aea657466",
+        "name": "初始化",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 200,
+        "y": 60,
+        "wires": [
+            [
+                "28adb335cb4c2134"
+            ]
+        ]
+    },
+    {
+        "id": "7cb35940bbf6a9e8",
+        "type": "function",
+        "z": "b2205e0aea657466",
+        "name": "是否Modbus?",
+        "func": "let data = global.get(\"data\");\nlet hd = msg.payload.hd;\nlet device = data.devices[hd.to.id]\nif (device) {\n    msg.device = device;\n    if (device.modbus) {\n        return [msg, null]\n    } else {\n        return [null, msg]\n    }\n}\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1100,
+        "y": 200,
+        "wires": [
+            [
+                "61f66cdbf68aa2e4"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "b9e5b85da599d0fd",
+        "type": "function",
+        "z": "b2205e0aea657466",
+        "name": "Modbus处理-Get",
+        "func": "let common = global.get(\"common\");\nlet device = msg.device;\nlet table = device.modbus.table;\nlet pld = msg.payload.pld;\nlet modAddr = pld[\"address\"] || table.defaultAddress || 1;\n\nObject.keys(pld).forEach(key => {\n    let item  = table[key];\n    if (item) {\n        let buf = common.CRC16.getRegOne(modAddr, item.addr);\n        node.send({payload: buf})\n    }\n})\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "61f66cdbf68aa2e4",
+        "type": "switch",
+        "z": "b2205e0aea657466",
+        "name": "",
+        "property": "payload.hd.entry.id",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "get",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "set",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 290,
+        "y": 360,
+        "wires": [
+            [
+                "b9e5b85da599d0fd"
+            ],
+            [
+                "e276fd93ce1075d5"
+            ]
+        ]
+    },
+    {
+        "id": "e276fd93ce1075d5",
+        "type": "function",
+        "z": "b2205e0aea657466",
+        "name": "Modbus处理-Set",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "548eb097d389122a",
+        "type": "inject",
+        "z": "b2205e0aea657466",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 250,
+        "y": 680,
+        "wires": [
+            [
+                "685d53fdf1321c27"
+            ]
+        ]
+    },
+    {
+        "id": "685d53fdf1321c27",
+        "type": "function",
+        "z": "b2205e0aea657466",
+        "name": "",
+        "func": "let common = global.get(\"common\");\nlet buffer = new ArrayBuffer(6)\nlet bytes = new Uint8Array(buffer)\nbytes[0] = 0x03\nbytes[1] = 0x04\nbytes[2] = 0x13\nbytes[3] = 0x87\nbytes[4] = 0x00\nbytes[5] = 0x19\n\n\n// let pld = common.CRC16.CalculateBytes(bytes)\nlet pld = common.modbus.getRegOne(1, 2);\n\nreturn {payload: pld};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 680,
+        "wires": [
+            [
+                "b46efeee285aaa73"
+            ]
+        ]
+    },
+    {
+        "id": "a017ea0438eb42c4",
+        "type": "debug",
+        "z": "b2205e0aea657466",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "b46efeee285aaa73",
+        "type": "base64",
+        "z": "b2205e0aea657466",
+        "name": "",
+        "action": "",
+        "property": "payload",
+        "x": 640,
+        "y": 700,
+        "wires": [
+            [
+                "a017ea0438eb42c4",
+                "e3fabd5897163d15"
+            ]
+        ]
+    },
+    {
+        "id": "e3fabd5897163d15",
+        "type": "base64",
+        "z": "b2205e0aea657466",
+        "name": "",
+        "action": "",
+        "property": "payload",
+        "x": 840,
+        "y": 680,
+        "wires": [
+            [
+                "3475efdb59f20429"
+            ]
+        ]
+    },
+    {
+        "id": "3475efdb59f20429",
+        "type": "debug",
+        "z": "b2205e0aea657466",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 660,
+        "wires": []
     }
 ]
