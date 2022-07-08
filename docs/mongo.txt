@@ -1,0 +1,20 @@
+// 福州/飘渺庄空调 离线检测
+
+let deviceStr = `SELECT * FROM ndiot_devices where "model" = 'FZPMZF2ACGREE'`
+let offTms = new Date().valueOf() - 1000 * 60 * 2 ;
+mb.runSQLQuery(deviceStr)
+.forEach(dev => {
+    print(dev.name)
+    let str = `select * from ndiot_20220708 where "pld.id" = '` + dev.id + "'";
+    mb.runSQLQuery(str)
+    .sort({_id:-1})
+    .limit(1)
+    .forEach( x => {
+        if (x.hd.tms < offTms || x.pld.offline === 0) {
+            print("************************************: ", "离线", x.hd.tm)
+        } else {
+            print("---------------------------: ", "在线", x.hd.tm)
+            
+        }
+    });
+})
