@@ -31,6 +31,14 @@
         "env": []
     },
     {
+        "id": "05ab6743f31497ca",
+        "type": "tab",
+        "label": "其它",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "4f298837cfcb1b75",
         "type": "mqtt-broker",
         "name": "push",
@@ -918,7 +926,8 @@
         "wires": [
             [
                 "ecd4b9fb7586dc9f",
-                "3a662ea2a5b96e5e"
+                "3a662ea2a5b96e5e",
+                "fd6b9aa1bce027a4"
             ]
         ]
     },
@@ -944,13 +953,13 @@
         "type": "nd-mg-out",
         "z": "edb25e171bdb8773",
         "mongodb": "8652d5d20cc13242",
-        "name": "",
+        "name": "save",
         "collection": "",
         "payonly": true,
         "upsert": false,
         "multi": false,
         "operation": "store",
-        "x": 780,
+        "x": 770,
         "y": 200,
         "wires": []
     },
@@ -970,5 +979,143 @@
                 "ecd4b9fb7586dc9f"
             ]
         ]
+    },
+    {
+        "id": "fd6b9aa1bce027a4",
+        "type": "nd-mg-out",
+        "z": "edb25e171bdb8773",
+        "mongodb": "8652d5d20cc13242",
+        "name": "upset",
+        "collection": "",
+        "payonly": true,
+        "upsert": true,
+        "multi": false,
+        "operation": "update",
+        "x": 750,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "3af1abc48fae5f0c",
+        "type": "link in",
+        "z": "edb25e171bdb8773",
+        "name": "更新或新增",
+        "links": [
+            "8733b4729c2b3329"
+        ],
+        "x": 315,
+        "y": 560,
+        "wires": [
+            [
+                "fd6b9aa1bce027a4"
+            ]
+        ]
+    },
+    {
+        "id": "9c88fd5568c36785",
+        "type": "http request",
+        "z": "05ab6743f31497ca",
+        "name": "http获取设备",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://iot-mqtt.beta.ndaeweb.com/dio/get_devices",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 560,
+        "y": 320,
+        "wires": [
+            [
+                "728f165358bdc6bc",
+                "35cf1e9005e8cb0a"
+            ]
+        ]
+    },
+    {
+        "id": "3b2f3e44ab9a8250",
+        "type": "inject",
+        "z": "05ab6743f31497ca",
+        "name": "同步设备数据",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 310,
+        "y": 340,
+        "wires": [
+            [
+                "9c88fd5568c36785"
+            ]
+        ]
+    },
+    {
+        "id": "728f165358bdc6bc",
+        "type": "debug",
+        "z": "05ab6743f31497ca",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "35cf1e9005e8cb0a",
+        "type": "function",
+        "z": "05ab6743f31497ca",
+        "name": "设备补全",
+        "func": "let devices = msg.payload;\ndevices.forEach(device => {\n    delete device._id;\n    let _msg = {};\n    _msg.collection = \"ndiot_devices\";\n    _msg.operation = \"update\";\n    \n    _msg.payload = device;\n    _msg.query = {\n        \"id\": device.id\n    }\n    \n    node.send(_msg)\n})\n\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 320,
+        "wires": [
+            [
+                "7b365c51d1bfe085",
+                "8733b4729c2b3329"
+            ]
+        ]
+    },
+    {
+        "id": "7b365c51d1bfe085",
+        "type": "debug",
+        "z": "05ab6743f31497ca",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1030,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "8733b4729c2b3329",
+        "type": "link out",
+        "z": "05ab6743f31497ca",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "3af1abc48fae5f0c"
+        ],
+        "x": 1015,
+        "y": 260,
+        "wires": []
     }
 ]
