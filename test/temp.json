@@ -1,0 +1,11 @@
+{
+    "hd":{
+        "did": "设备ID",
+        "cmd": 3,
+        "stp": 0
+    },
+    "pld":{
+        "state_left": "on/off",     // 左路开关
+        "state_right": "on/off"     //右路开关
+    }
+}

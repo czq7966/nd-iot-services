@@ -27,7 +27,8 @@
     "nd:log:install": "cd ./data/log/nd && npm i",
     "nd:log:start": "node ./index.js -u ./data/log/nd",
     "nd:install": "npm i && npm run nd:dataio:install && npm run nd:dispatcher:install && npm run nd:edge:install && npm run nd:platform:ndv1:install && npm run nd:platform:ndv2:install && npm run nd:platform:bfy:install && npm run nd:log:install",
-    "start": "node ./start.js"
+    "start": "node ./start.js",
+    "test": "node ./index.js -u ./data/test"
   },
   "author": "CZQ",
   "license": "ISC",

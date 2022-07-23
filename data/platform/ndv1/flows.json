@@ -968,7 +968,8 @@
             "f2d3874c6b2d73f3",
             "250ffb893d37d89a",
             "c7b7c2d7a905a76d",
-            "e555fa7ff42ed40e"
+            "e555fa7ff42ed40e",
+            "21290856fdc17bf5"
         ],
         "x": 225,
         "y": 540,
@@ -1036,7 +1037,8 @@
         "z": "e93bbc67912b9178",
         "name": "中转输入",
         "links": [
-            "154e87ad105afaf5"
+            "154e87ad105afaf5",
+            "aba9c53c961e20ad"
         ],
         "x": 235,
         "y": 860,
@@ -1437,8 +1439,9 @@
         "id": "671e0f93a5f1665f",
         "type": "function",
         "z": "115f1d81a93b6fc4",
+        "d": true,
         "name": "读写?",
-        "func": "let fdevices = flow.get(\"devices\");\nlet gdevices = global.get(\"data\").devices;\n\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet did = hd.did;\n\nlet fdev = fdevices[did];\nlet gdev = gdevices[did];\n\n\n\nif (hd.stp == 2 || \n    !hd.stp && (!pld || Object.keys(pld).length == 0) ||\n    gdev && gdev.type === \"CT\" && pld.open == -1\n    ) {\n    return [msg, null]\n} else {\n    \n    if (gdev && gdev.type === \"CT\" && (pld.open || pld.open === 0))\n        pld.pos = pld.open\n    \n    return [null, msg]\n}\n",
+        "func": "let fdevices = flow.get(\"devices\");\nlet gdevices = global.get(\"data\").devices;\n\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet did = hd.did;\n\nlet fdev = fdevices[did];\nlet gdev = gdevices[did];\n\nmsg.device = gdev;\n\nif (hd.stp == 2 || \n    !hd.stp && (!pld || Object.keys(pld).length == 0) ||\n    gdev && gdev.type === \"CT\" && pld.open == -1\n    ) {\n    return [msg, null]\n} else {\n    \n    if (gdev && gdev.type === \"CT\" && (pld.open || pld.open === 0))\n        pld.pos = pld.open\n    \n    return [null, msg]\n}\n",
         "outputs": 2,
         "noerr": 0,
         "initialize": "",
@@ -1646,9 +1649,227 @@
             [],
             [],
             [
-                "671e0f93a5f1665f"
+                "671e0f93a5f1665f",
+                "ff90cb592cd61f80"
             ]
         ]
+    },
+    {
+        "id": "3ce2b7ede245f34a",
+        "type": "switch",
+        "z": "115f1d81a93b6fc4",
+        "name": "",
+        "property": "device.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "CO",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "CO_PL",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "CO_SW",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "AC",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "CT",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 6,
+        "x": 470,
+        "y": 1380,
+        "wires": [
+            [
+                "3c5c174ae97a1079"
+            ],
+            [
+                "c4a4de242e3bade7"
+            ],
+            [
+                "c4a4de242e3bade7"
+            ],
+            [
+                "c03190c995601283"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "3c5c174ae97a1079",
+        "type": "function",
+        "z": "115f1d81a93b6fc4",
+        "name": "协调器_协议转换",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet dev = msg.device\n\nif (msg.payload.hd.iotype != \"set\") \n    return;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: dev ? dev.dom_id : \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: dev.id,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        func: \"permit_join\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet value = msg.payload.pld.state == \"on\" ? true : false;\n\nlet pld = {\"value\": value, \"time\": 254}\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 1320,
+        "wires": [
+            [
+                "b613bebcd921f34b"
+            ]
+        ]
+    },
+    {
+        "id": "c4a4de242e3bade7",
+        "type": "function",
+        "z": "115f1d81a93b6fc4",
+        "name": "子设备_协议转换",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet dev = msg.device\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: dev.id\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        func: msg.payload.hd.iotype\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet pld = {}\npld = Object.assign(pld, msg.payload.pld);\nif (Object.keys(pld).length == 0) {\n    pld = {\n        state : \"\"\n    }\n}\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 1360,
+        "wires": [
+            [
+                "b613bebcd921f34b",
+                "5cfa146dfda29055"
+            ]
+        ]
+    },
+    {
+        "id": "c03190c995601283",
+        "type": "function",
+        "z": "115f1d81a93b6fc4",
+        "name": "空调_协议转换",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet dev = msg.device\n\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: dev ? dev.dom_id : \"\"\n    },\n    from: {\n        type: \"plf\",\n        id: ids.plf\n    },\n    to: {\n        type: \"dev\",\n        id: dev.id,\n    },\n    entry: {\n        type: \"svc\",\n        id: msg.payload.hd.iotype\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet pld = { id : dev.id };\npld = Object.assign(pld, msg.payload.pld);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};\n\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1000,
+        "y": 1400,
+        "wires": [
+            [
+                "b613bebcd921f34b",
+                "07a7b09b5dc35a5e"
+            ]
+        ]
+    },
+    {
+        "id": "ff90cb592cd61f80",
+        "type": "function",
+        "z": "115f1d81a93b6fc4",
+        "name": "读写?",
+        "func": "let fdevices = flow.get(\"devices\");\nlet gdevices = global.get(\"data\").devices;\n\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet did = hd.did;\n\nlet fdev = fdevices[did];\nlet gdev = gdevices[did];\n\nmsg.device = gdev;\n\nif (hd.stp == 2 || \n    !hd.stp && (!pld || Object.keys(pld).length == 0) ||\n    gdev && gdev.type === \"CT\" && pld.open == -1\n    ) {\n    hd.iotype = \"get\"\n} else {\n    \n    if (gdev && gdev.type === \"CT\" && (pld.open || pld.open === 0))\n        pld.pos = pld.open\n    hd.iotype = \"set\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 1380,
+        "wires": [
+            [
+                "3ce2b7ede245f34a"
+            ]
+        ]
+    },
+    {
+        "id": "aba9c53c961e20ad",
+        "type": "link out",
+        "z": "115f1d81a93b6fc4",
+        "name": "读写输出",
+        "mode": "link",
+        "links": [
+            "eea822e040f44475"
+        ],
+        "x": 1415,
+        "y": 1380,
+        "wires": []
+    },
+    {
+        "id": "b613bebcd921f34b",
+        "type": "function",
+        "z": "115f1d81a93b6fc4",
+        "name": "中转？",
+        "func": "let hd = msg.payload.hd;\nif (hd.pref.dom)\n    return [msg, null];\nelse\n    return [null, msg];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1280,
+        "y": 1360,
+        "wires": [
+            [
+                "21290856fdc17bf5"
+            ],
+            [
+                "aba9c53c961e20ad"
+            ]
+        ]
+    },
+    {
+        "id": "21290856fdc17bf5",
+        "type": "link out",
+        "z": "115f1d81a93b6fc4",
+        "name": "读写输出",
+        "mode": "link",
+        "links": [
+            "774d0cb8ef787fc2"
+        ],
+        "x": 1415,
+        "y": 1340,
+        "wires": []
+    },
+    {
+        "id": "5cfa146dfda29055",
+        "type": "debug",
+        "z": "115f1d81a93b6fc4",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1210,
+        "y": 1440,
+        "wires": []
+    },
+    {
+        "id": "07a7b09b5dc35a5e",
+        "type": "debug",
+        "z": "115f1d81a93b6fc4",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1210,
+        "y": 1480,
+        "wires": []
     },
     {
         "id": "59181471dbc6175b",

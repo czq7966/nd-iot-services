@@ -614,7 +614,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "Modbus解析函数",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\n\nvar CRCMaster = {\n    StringToCheck: \"\",\n    CleanedString: \"\",\n    CRCTableDNP: [],\n    init: function() {\n        this.CRCDNPInit();\n    },\n    CleanString: function(inputType) {\n        if (inputType == \"ASCII\") {\n            this.CleanedString = this.StringToCheck;\n        } else {\n            if (this.StringToCheck.match(/^[0-9A-F \\t]+$/gi) !== null) {\n                this.CleanedString = this._hexStringToString(this.StringToCheck.toUpperCase().replace(/[\\t ]/g, ''));\n            } else {\n                window.alert(\"String doesn't seem to be a valid Hex input.\");\n                return false;\n            }\n        }\n        return true;\n    },\n    CRCDNPInit: function() {\n        var i, j, crc, c;\n        for (i = 0; i < 256; i++) {\n            crc = 0;\n            c = i;\n            for (j = 0; j < 8; j++) {\n                if ((crc ^ c) & 0x0001) crc = (crc >> 1) ^ 0xA6BC;\n                else crc = crc >> 1;\n                c = c >> 1;\n            }\n            this.CRCTableDNP[i] = crc;\n        }\n    },\n    CRC16Modbus: function() {\n        var crc = 0xFFFF;\n        var str = this.CleanedString;\n        for (var pos = 0; pos < str.length; pos++) {\n            crc ^= str.charCodeAt(pos);\n            for (var i = 8; i !== 0; i--) {\n                if ((crc & 0x0001) !== 0) {\n                    crc >>= 1;\n                    crc ^= 0xA001;\n                } else\n                    crc >>= 1;\n            }\n        }\n        return crc;\n    },\n    _stringToBytes: function(str) {\n        var ch, st, re = [];\n        for (var i = 0; i < str.length; i++) {\n            ch = str.charCodeAt(i); // get char\n            st = []; // set up \"stack\"\n            do {\n                st.push(ch & 0xFF); // push byte to stack\n                ch = ch >> 8; // shift value down by 1 byte\n            }\n            while (ch);\n            // add stack contents to result\n            // done because chars have \"wrong\" endianness\n            re = re.concat(st.reverse());\n        }\n        // return an array of bytes\n        return re;\n    },\n    _byteToHexString: function(byte) {\n        let hex =\"00\" + byte.toString(16).toUpperCase();\n        hex = hex.substr(hex.length - 2);\n        return hex;\n    }, \n    _bytesToHexString: function(bytes) {\n        let str = \"\";\n        bytes.forEach(byte => {\n           str = str + \" \" + this._byteToHexString(byte);\n        })\n        return str.trim();\n    },    \n    _hexStringToString: function(inputstr) {\n        var hex = inputstr.toString(); //force conversion\n        var str = '';\n        for (var i = 0; i < hex.length; i += 2)\n            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));\n        return str;\n    },\n    CalculateStr: function(str, inputType) {\n        this.StringToCheck = str;\n        if (this.CleanString(inputType)) {\n            let crc = this.CRC16Modbus();\n            return {\n                low: crc & 0xFF,\n                high: crc >> 8 & 0xFF\n            }\n        }\n    },\n    CalculateBytes: function(bytes) {\n        let str = this._bytesToHexString(bytes);\n        return this.CalculateStr(str, \"HEX\");\n    }    \n};\n\nCRCMaster.init();\n\nlet splitRegAddr = function(regAddr, writeOffset ) {\n    let type = Math.floor(regAddr / 10000);\n    let addr = regAddr % 10000;\n    let func = -1;\n\n    if (writeOffset >=0) {\n        if (type == 0) func = 5 + writeOffset;\n        else if (type == 4) func = 6 + writeOffset;\n    } else {\n        if (type == 0) func = 1;\n        else if (type == 1) func = 2;\n        else if (type == 3) func = 4;\n        else if (type == 4) func = 3;\n    }\n\n    return {\n        func: func,\n        addr: addr\n    };\n}\n\n\nlet getRegOne = function(modAddr, regAddr) {\n    let funcAddr = splitRegAddr(regAddr, -1);\n    if (funcAddr.func != -1) {\n        let bytes = [];\n        bytes.push(modAddr);\n        bytes.push(funcAddr.func);\n        bytes.push(funcAddr.addr >> 8 & 0xFF);\n        bytes.push(funcAddr.addr & 0xFF);\n        bytes.push(0);\n        bytes.push(1);\n        let sum = common.CRC16.CalculateBytes(bytes);\n        bytes.push(sum.low);\n        bytes.push(sum.high);\n        return Buffer.from(bytes);\n    }\n    return funcAddr;\n}\n\n\n\ncommon.CRC16 = CRCMaster;\ncommon.modbus = {};\ncommon.modbus.splitRegAddr = splitRegAddr;\ncommon.modbus.getRegOne = getRegOne;\ncommon.modbus.setRegOne = null;\n\n\n\nreturn {payload: common};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\n\nvar CRCMaster = {\n    StringToCheck: \"\",\n    CleanedString: \"\",\n    CRCTableDNP: [],\n    init: function() {\n        this.CRCDNPInit();\n    },\n    CleanString: function(inputType) {\n        if (inputType == \"ASCII\") {\n            this.CleanedString = this.StringToCheck;\n        } else {\n            if (this.StringToCheck.match(/^[0-9A-F \\t]+$/gi) !== null) {\n                this.CleanedString = this._hexStringToString(this.StringToCheck.toUpperCase().replace(/[\\t ]/g, ''));\n            } else {\n                window.alert(\"String doesn't seem to be a valid Hex input.\");\n                return false;\n            }\n        }\n        return true;\n    },\n    CRCDNPInit: function() {\n        var i, j, crc, c;\n        for (i = 0; i < 256; i++) {\n            crc = 0;\n            c = i;\n            for (j = 0; j < 8; j++) {\n                if ((crc ^ c) & 0x0001) crc = (crc >> 1) ^ 0xA6BC;\n                else crc = crc >> 1;\n                c = c >> 1;\n            }\n            this.CRCTableDNP[i] = crc;\n        }\n    },\n    CRC16Modbus: function() {\n        var crc = 0xFFFF;\n        var str = this.CleanedString;\n        for (var pos = 0; pos < str.length; pos++) {\n            crc ^= str.charCodeAt(pos);\n            for (var i = 8; i !== 0; i--) {\n                if ((crc & 0x0001) !== 0) {\n                    crc >>= 1;\n                    crc ^= 0xA001;\n                } else\n                    crc >>= 1;\n            }\n        }\n        return crc;\n    },\n    _stringToBytes: function(str) {\n        var ch, st, re = [];\n        for (var i = 0; i < str.length; i++) {\n            ch = str.charCodeAt(i); // get char\n            st = []; // set up \"stack\"\n            do {\n                st.push(ch & 0xFF); // push byte to stack\n                ch = ch >> 8; // shift value down by 1 byte\n            }\n            while (ch);\n            // add stack contents to result\n            // done because chars have \"wrong\" endianness\n            re = re.concat(st.reverse());\n        }\n        // return an array of bytes\n        return re;\n    },\n    _byteToHexString: function(byte) {\n        let hex =\"00\" + byte.toString(16).toUpperCase();\n        hex = hex.substr(hex.length - 2);\n        return hex;\n    }, \n    _bytesToHexString: function(bytes) {\n        let str = \"\";\n        bytes.forEach(byte => {\n           str = str + \" \" + this._byteToHexString(byte);\n        })\n        return str.trim();\n    },    \n    _hexStringToString: function(inputstr) {\n        var hex = inputstr.toString(); //force conversion\n        var str = '';\n        for (var i = 0; i < hex.length; i += 2)\n            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));\n        return str;\n    },\n    CalculateStr: function(str, inputType) {\n        this.StringToCheck = str;\n        if (this.CleanString(inputType)) {\n            let crc = this.CRC16Modbus();\n            return {\n                low: crc & 0xFF,\n                high: crc >> 8 & 0xFF\n            }\n        }\n    },\n    CalculateBytes: function(bytes) {\n        let str = this._bytesToHexString(bytes);\n        return this.CalculateStr(str, \"HEX\");\n    }    \n};\n\nCRCMaster.init();\n\nlet splitRegAddr = function(regAddr, writeOffset ) {\n    let type = Math.floor(regAddr / 10000);\n    let addr = regAddr % 10000;\n    let func = -1;\n\n    if (writeOffset >=0) {\n        if (type == 0) func = 5 + writeOffset;\n        else if (type == 4) func = 6 + writeOffset;\n    } else {\n        if (type == 0) func = 1;\n        else if (type == 1) func = 2;\n        else if (type == 3) func = 4;\n        else if (type == 4) func = 3;\n    }\n\n    return {\n        func: func,\n        addr: addr\n    };\n}\n\n\nlet getRegOne = function(modAddr, regAddr) {\n    let funcAddr = splitRegAddr(regAddr, -1);\n    if (funcAddr.func != -1) {\n        let bytes = [];\n        bytes.push(modAddr);\n        bytes.push(funcAddr.func);\n        bytes.push(funcAddr.addr >> 8 & 0xFF);\n        bytes.push(funcAddr.addr & 0xFF);\n        bytes.push(0);\n        bytes.push(1);\n        let sum = common.CRC16.CalculateBytes(bytes);\n        bytes.push(sum.low);\n        bytes.push(sum.high);\n        return Buffer.from(bytes);\n    }\n    return funcAddr;\n}\n\n\nlet Modbus = function() {\n    this.addr = 1;\n    this.func = 0;\n    this.err = 0;\n    this.regs={};\n}\n\nModbus.prototype.CRC16 = CRCMaster;\nModbus.prototype.getRaw = function() {\n    \n};\n\ncommon.CRC16 = CRCMaster;\ncommon.modbus = {};\ncommon.modbus.splitRegAddr = splitRegAddr;\ncommon.modbus.getRegOne = getRegOne;\ncommon.modbus.setRegOne = null;\n\n\n\nreturn {payload: common};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -787,7 +787,8 @@
             "cecd0debcb823e0f",
             "005af7c67cff4282",
             "c9eb4957d50481a9",
-            "f25dd30a6d3bf86b"
+            "f25dd30a6d3bf86b",
+            "7488588607a06862"
         ],
         "x": 205,
         "y": 520,
@@ -4982,15 +4983,23 @@
                 "vt": "str"
             },
             {
+                "t": "eq",
+                "v": "HCPC-H2MIC",
+                "vt": "str"
+            },
+            {
                 "t": "else"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 2,
+        "outputs": 3,
         "x": 320,
         "y": 140,
         "wires": [
+            [
+                "9f790c3ec17a1d3a"
+            ],
             [
                 "9f790c3ec17a1d3a"
             ],
@@ -5188,7 +5197,7 @@
         "y": 200,
         "wires": [
             [
-                "61f66cdbf68aa2e4"
+                "0d08b529f6459a8f"
             ],
             []
         ]
@@ -5204,8 +5213,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 470,
-        "y": 340,
+        "x": 1250,
+        "y": 420,
         "wires": [
             []
         ]
@@ -5232,8 +5241,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 290,
-        "y": 360,
+        "x": 1070,
+        "y": 440,
         "wires": [
             [
                 "b9e5b85da599d0fd"
@@ -5254,8 +5263,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 460,
-        "y": 400,
+        "x": 1240,
+        "y": 480,
         "wires": [
             []
         ]
@@ -5360,5 +5369,88 @@
         "x": 1050,
         "y": 660,
         "wires": []
+    },
+    {
+        "id": "0d08b529f6459a8f",
+        "type": "function",
+        "z": "b2205e0aea657466",
+        "name": "转二进制",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1300,
+        "y": 200,
+        "wires": [
+            [
+                "7973b02bb152706a"
+            ]
+        ]
+    },
+    {
+        "id": "6ae61357f37b350c",
+        "type": "function",
+        "z": "b2205e0aea657466",
+        "name": "下行数据",
+        "func": "\nlet hd = {\n    to: {\n        type: \"dev\",\n        id: msg.topic\n    },\n    entry: {\n        type: \"svc\",\n        id: \"penet\"\n    }\n}\nlet pld = {\n    raw: msg.payload\n}\n\nreturn {\n    payload:{\n        hd: hd, \n        pld: pld\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1460,
+        "y": 260,
+        "wires": [
+            [
+                "7488588607a06862",
+                "4d926c7e3ccc8130"
+            ]
+        ]
+    },
+    {
+        "id": "7488588607a06862",
+        "type": "link out",
+        "z": "b2205e0aea657466",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "f4460e5db856239e"
+        ],
+        "x": 1615,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "4d926c7e3ccc8130",
+        "type": "debug",
+        "z": "b2205e0aea657466",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1690,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "7973b02bb152706a",
+        "type": "base64",
+        "z": "b2205e0aea657466",
+        "name": "",
+        "action": "",
+        "property": "payload.pld.raw",
+        "x": 1460,
+        "y": 200,
+        "wires": [
+            [
+                "6ae61357f37b350c"
+            ]
+        ]
     }
 ]

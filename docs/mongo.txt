@@ -5,7 +5,7 @@ let offTms = new Date().valueOf() - 1000 * 60 * 2 ;
 mb.runSQLQuery(deviceStr)
 .forEach(dev => {
     print(dev.name)
-    let str = `select * from ndiot_20220708 where "pld.id" = '` + dev.id + "'";
+    let str = `select * from ndiot_20220718 where "hd.entry.id" = 'report' and "pld.id" = '` + dev.id + "'";
     mb.runSQLQuery(str)
     .sort({_id:-1})
     .limit(1)

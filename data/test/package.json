@@ -5,8 +5,13 @@
     "private": true,
     "dependencies": {
         "@prescient-devices/node-red-contrib-home-dir": "~1.0.0",
+        "node-red-contrib-filesystem": "~1.0.0",
         "node-red-contrib-os": "~0.2.1",
-        "node-red-nd-mtcp-server": "0.0.2",
+        "node-red-contrib-watchdirectory": "~1.0.14",
+        "node-red-nd-mongodb": "^0.0.5",
+        "node-red-nd-mtcp-server": "0.0.6",
+        "node-red-nd-device-shadow": "0.0.1",
+        "node-red-nd-set-env": "^0.0.1",
         "node-red-node-base64": "~0.3.0",
         "node-red-node-mongodb": "^0.2.5"
     }

@@ -40,6 +40,14 @@
         "env": []
     },
     {
+        "id": "b7b9b4f87ca81b1c",
+        "type": "tab",
+        "label": "影子设备",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "4f298837cfcb1b75",
         "type": "mqtt-broker",
         "name": "push",
@@ -1883,7 +1891,7 @@
         "type": "debug",
         "z": "63bcc9db2b38df75",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2253,7 +2261,8 @@
         "name": "自定义查询数据输入",
         "links": [
             "396f6c335713be25",
-            "d40518fc1ce83c76"
+            "d40518fc1ce83c76",
+            "b48d540577e24698"
         ],
         "x": 105,
         "y": 460,
@@ -2287,7 +2296,8 @@
         "name": "自定义查询数据输出",
         "mode": "link",
         "links": [
-            "8781379974d5e7ea"
+            "8781379974d5e7ea",
+            "889ecc71f326a9bd"
         ],
         "x": 665,
         "y": 840,
@@ -2551,7 +2561,7 @@
         "type": "debug",
         "z": "f7e96a32e56d72eb",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2694,7 +2704,7 @@
         "type": "debug",
         "z": "f7e96a32e56d72eb",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2710,7 +2720,7 @@
         "type": "debug",
         "z": "f7e96a32e56d72eb",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -3203,7 +3213,7 @@
         "statusCode": "",
         "headers": {},
         "x": 1250,
-        "y": 1360,
+        "y": 1440,
         "wires": []
     },
     {
@@ -3227,7 +3237,7 @@
         "id": "3da016f939391ad1",
         "type": "function",
         "z": "f7e96a32e56d72eb",
-        "name": "",
+        "name": "查询",
         "func": "let data = global.get(\"data\");\nmsg.collection = \"ndiot_devices\";\nmsg.operation = \"find\";\nmsg.payload = {\n    \"app_id\": data.ids.app,\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
@@ -3251,8 +3261,8 @@
         "links": [
             "800621f0c9f46a27"
         ],
-        "x": 1275,
-        "y": 1300,
+        "x": 1265,
+        "y": 1320,
         "wires": []
     },
     {
@@ -3264,7 +3274,7 @@
             "b41b12708ccf38fc"
         ],
         "x": 385,
-        "y": 1360,
+        "y": 1440,
         "wires": [
             [
                 "136ec1e85ac29df5"
@@ -3282,8 +3292,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 690,
-        "y": 1360,
+        "x": 710,
+        "y": 1420,
         "wires": [
             [
                 "d66ad5fa038ffe5e"
@@ -3303,16 +3313,26 @@
                 "v": "/get_devices",
                 "vt": "str",
                 "case": false
+            },
+            {
+                "t": "regex",
+                "v": "/get_z2m_datafile",
+                "vt": "str",
+                "case": false
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 1,
+        "outputs": 2,
         "x": 510,
-        "y": 1360,
+        "y": 1440,
         "wires": [
             [
                 "4b8b06c944271024"
+            ],
+            [
+                "b0a055f22e6a7ef0",
+                "cbcbf4e5f5be89dc"
             ]
         ]
     },
@@ -3326,7 +3346,7 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 450,
-        "y": 1480,
+        "y": 1580,
         "wires": [
             [
                 "16b2499c9347c2a9"
@@ -3345,7 +3365,7 @@
         "finalize": "",
         "libs": [],
         "x": 740,
-        "y": 1480,
+        "y": 1580,
         "wires": [
             [
                 "a18386423e629bcb",
@@ -3363,7 +3383,134 @@
             "2b33ccdffdb43c37"
         ],
         "x": 1275,
-        "y": 1480,
+        "y": 1580,
+        "wires": []
+    },
+    {
+        "id": "bfc05ae1676c600b",
+        "type": "http in",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "url": "/upsert_z2m_datafile",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 470,
+        "y": 1640,
+        "wires": [
+            [
+                "d17264d587906886"
+            ]
+        ]
+    },
+    {
+        "id": "d17264d587906886",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "Z2M设置请求",
+        "func": "let common = global.get(\"common\");\nlet payload = msg.payload;\n\npayload.id = payload.pld.id;\ncommon.keyDot2DUnder(payload, true);\n\nreturn {\n    payload: payload\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 1640,
+        "wires": [
+            [
+                "a18386423e629bcb",
+                "d66ad5fa038ffe5e"
+            ]
+        ]
+    },
+    {
+        "id": "40e71f800956fbed",
+        "type": "http in",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "url": "/get_z2m_datafile",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 460,
+        "y": 1340,
+        "wires": [
+            [
+                "4729e8938163a219",
+                "d6debc5a1aa3743d"
+            ]
+        ]
+    },
+    {
+        "id": "4729e8938163a219",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "查询",
+        "func": "let data = global.get(\"data\");\nlet id = msg.payload.id;\nmsg.collection = \"ndiot_z2m_datafile\";\nmsg.operation = \"find\";\nmsg.payload = {\n    \"pld.id\": id,\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 1340,
+        "wires": [
+            [
+                "d40518fc1ce83c76"
+            ]
+        ]
+    },
+    {
+        "id": "d6debc5a1aa3743d",
+        "type": "debug",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "b0a055f22e6a7ef0",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "/get_z2m_datafile",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet _payload = msg._payload;\nlet _pld = _payload;\n\nlet device = data.devices[_pld.id];\nlet z2m = device.z2m || {};\ndevice.z2m = z2m;\nlet _msg = {};\n\nif (msg.payload) {\n    if (msg.payload[0]) {\n        let pld = msg.payload[0].pld;\n        common.keyDUnder2Dot(pld, true);\n        z2m.datafile = pld.datafile;\n        _msg.result = 1;\n    } else {\n        z2m.defaultDatafile = data.z2m.defaultDatafile;\n        _msg.result = 0;\n    }\n    \n    \n    _msg.payload = {\n        pld: {\n            id: pld.id,\n            datafile: z2m.datafile,\n            defaultDatafile: z2m.defaultDatafile\n        }\n    }\n\n    return _msg;\n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 1460,
+        "wires": [
+            [
+                "d66ad5fa038ffe5e",
+                "cbcbf4e5f5be89dc"
+            ]
+        ]
+    },
+    {
+        "id": "cbcbf4e5f5be89dc",
+        "type": "debug",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "_payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 1380,
         "wires": []
     },
     {
@@ -3494,5 +3641,260 @@
         "x": 890,
         "y": 320,
         "wires": []
+    },
+    {
+        "id": "964acd93ebf1e118",
+        "type": "http in",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "",
+        "url": "/shadows_get_plugins",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 310,
+        "y": 440,
+        "wires": [
+            [
+                "98a36bcacf2ba435"
+            ]
+        ]
+    },
+    {
+        "id": "805382e936c84350",
+        "type": "http response",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1090,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "01576f8d65769792",
+        "type": "function",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "ND--20200609EVI",
+        "func": "msg.collection = \"ndiot_devices\";\nmsg.operation = \"find\";\nmsg.payload = {\n    \"app_id\": \"ndiot\",\n    \"dom_id\": \"test\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 300,
+        "wires": [
+            [
+                "b48d540577e24698"
+            ]
+        ]
+    },
+    {
+        "id": "b48d540577e24698",
+        "type": "link out",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "800621f0c9f46a27"
+        ],
+        "x": 1105,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "889ecc71f326a9bd",
+        "type": "link in",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "",
+        "links": [
+            "b41b12708ccf38fc"
+        ],
+        "x": 195,
+        "y": 540,
+        "wires": [
+            [
+                "9421c0903de71a95"
+            ]
+        ]
+    },
+    {
+        "id": "d9487b8639a82be2",
+        "type": "function",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "/shadows_get_devices",
+        "func": "return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 520,
+        "wires": [
+            [
+                "805382e936c84350",
+                "40463dd668190178"
+            ]
+        ]
+    },
+    {
+        "id": "9421c0903de71a95",
+        "type": "switch",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "",
+        "property": "req.url",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "/shadows_get_devices",
+                "vt": "str",
+                "case": false
+            },
+            {
+                "t": "regex",
+                "v": "/shadows_get_plugins",
+                "vt": "str",
+                "case": false
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 310,
+        "y": 540,
+        "wires": [
+            [
+                "d9487b8639a82be2"
+            ],
+            [
+                "0fc3f1b496539a20"
+            ]
+        ]
+    },
+    {
+        "id": "98a36bcacf2ba435",
+        "type": "function",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "查询",
+        "func": "msg.collection = \"ndiot_plugins\";\nmsg.operation = \"find\";\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 440,
+        "wires": [
+            [
+                "b48d540577e24698"
+            ]
+        ]
+    },
+    {
+        "id": "0fc3f1b496539a20",
+        "type": "function",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "/shadows_get_plugins",
+        "func": "    return msg;\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 560,
+        "wires": [
+            [
+                "805382e936c84350",
+                "40463dd668190178"
+            ]
+        ]
+    },
+    {
+        "id": "40463dd668190178",
+        "type": "debug",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "_payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "4d63e449837668dc",
+        "type": "switch",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "",
+        "property": "payload.edg_id",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "ND--20200609EVI",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 530,
+        "y": 340,
+        "wires": [
+            [
+                "01576f8d65769792"
+            ],
+            [
+                "805382e936c84350"
+            ]
+        ]
+    },
+    {
+        "id": "a6a27b93008af219",
+        "type": "inject",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 530,
+        "y": 180,
+        "wires": [
+            [
+                "01576f8d65769792",
+                "98a36bcacf2ba435"
+            ]
+        ]
+    },
+    {
+        "id": "97c78617c67cf130",
+        "type": "http in",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "",
+        "url": "/shadows_get_devices",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 320,
+        "y": 360,
+        "wires": [
+            [
+                "4d63e449837668dc"
+            ]
+        ]
     }
 ]
