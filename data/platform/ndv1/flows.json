@@ -48,6 +48,14 @@
         "env": []
     },
     {
+        "id": "8790bac5eca885ba",
+        "type": "tab",
+        "label": "影子协议",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "4f298837cfcb1b75",
         "type": "mqtt-broker",
         "name": "push",
@@ -55,6 +63,32 @@
         "port": "11883",
         "clientid": "",
         "autoConnect": false,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "b5ef31a7a90ee4e8",
+        "type": "mqtt-broker",
+        "name": "north",
+        "broker": "push-access.sdp.101.com",
+        "port": "1780",
+        "clientid": "",
+        "autoConnect": true,
         "usetls": false,
         "protocolVersion": "4",
         "keepalive": "60",
@@ -1125,7 +1159,7 @@
         "type": "function",
         "z": "115f1d81a93b6fc4",
         "name": "",
-        "func": "\nlet topics = [\n    \"business/cmdgate/CMDGATE_FZ_PMZ_AC\",\n    \"business/cmdgate/CMDGATE_NDIOT\"\n    ];\n\n\nnode.send({\n        action: \"subscribe\",\n        topic: topics\n})    \n\n\n\n",
+        "func": "\nlet topics = [\n    \"business/cmdgate/CMDGATE_FZ_PMZ_AC\",\n    \"business/cmdgate/CMDGATE_FZ_YT_AC\",\n    \"business/cmdgate/CMDGATE_NDIOT\"\n    ];\n\n\nnode.send({\n        action: \"subscribe\",\n        topic: topics\n})    \n\n\n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1240,7 +1274,8 @@
         "z": "115f1d81a93b6fc4",
         "name": "接口处理输入",
         "links": [
-            "be8cd487c69c6c5a"
+            "be8cd487c69c6c5a",
+            "adeb7a4edd9ba86a"
         ],
         "x": 185,
         "y": 740,
@@ -1798,6 +1833,7 @@
         "name": "读写输出",
         "mode": "link",
         "links": [
+            "1cc085b57aa685b5",
             "eea822e040f44475"
         ],
         "x": 1415,
@@ -1833,6 +1869,7 @@
         "name": "读写输出",
         "mode": "link",
         "links": [
+            "1cc085b57aa685b5",
             "774d0cb8ef787fc2"
         ],
         "x": 1415,
@@ -2509,5 +2546,209 @@
         "x": 525,
         "y": 420,
         "wires": []
+    },
+    {
+        "id": "1023e03ef3a77189",
+        "type": "mqtt in",
+        "z": "8790bac5eca885ba",
+        "name": "订阅设备消息",
+        "topic": "0/0/dev/+/0/0/0/0",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "b5ef31a7a90ee4e8",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 490,
+        "y": 140,
+        "wires": [
+            [
+                "adeb7a4edd9ba86a",
+                "bab9ba5f6df4a14f"
+            ]
+        ]
+    },
+    {
+        "id": "1cc085b57aa685b5",
+        "type": "link in",
+        "z": "8790bac5eca885ba",
+        "name": "控制设备输入",
+        "links": [
+            "21290856fdc17bf5",
+            "aba9c53c961e20ad"
+        ],
+        "x": 235,
+        "y": 220,
+        "wires": [
+            [
+                "3134d006736621c4"
+            ]
+        ]
+    },
+    {
+        "id": "3134d006736621c4",
+        "type": "function",
+        "z": "8790bac5eca885ba",
+        "name": "主题",
+        "func": "msg.topic = \"0/0/0/0/dev/\" + msg.payload.hd.to.id + \"/0/0\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 220,
+        "wires": [
+            [
+                "6cb182dc40c0572c"
+            ]
+        ]
+    },
+    {
+        "id": "adeb7a4edd9ba86a",
+        "type": "link out",
+        "z": "8790bac5eca885ba",
+        "name": "北向输入",
+        "mode": "link",
+        "links": [
+            "bcb80ed091975c9a"
+        ],
+        "x": 735,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "6cb182dc40c0572c",
+        "type": "mqtt out",
+        "z": "8790bac5eca885ba",
+        "name": "控制设备发布",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b5ef31a7a90ee4e8",
+        "x": 500,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "bab9ba5f6df4a14f",
+        "type": "debug",
+        "z": "8790bac5eca885ba",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "85aa389fc8bf6d32",
+        "type": "inject",
+        "z": "8790bac5eca885ba",
+        "name": "reboot",
+        "props": [
+            {
+                "p": "payload.hd",
+                "v": "{\"stp\":0,\"entry\":{\"type\":\"svc\",\"id\":\"reboot\"}}",
+                "vt": "json"
+            },
+            {
+                "p": "payload.pld",
+                "v": "{\"id\":\"ESP8266x00c20638\"}",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 230,
+        "y": 460,
+        "wires": [
+            [
+                "a2d0e622513cb23a"
+            ]
+        ]
+    },
+    {
+        "id": "a5d0b173d185afed",
+        "type": "inject",
+        "z": "8790bac5eca885ba",
+        "name": "off",
+        "props": [
+            {
+                "p": "payload.pld.power",
+                "v": "off",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 210,
+        "y": 540,
+        "wires": [
+            [
+                "a2d0e622513cb23a"
+            ]
+        ]
+    },
+    {
+        "id": "a2d0e622513cb23a",
+        "type": "function",
+        "z": "8790bac5eca885ba",
+        "name": "ESP8266x00c20638",
+        "func": "msg.payload.hd = msg.payload.hd ||\n{\n    \"stp\": 0,\n    \"entry\": {\n        \"type\": \"svc\",\n        \"id\": \"set\"\n    },\n    \"to\": {\n        \"type\": \"dev\",\n        \"id\": \"ESP8266x00c20638\"\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 480,
+        "wires": [
+            [
+                "3134d006736621c4"
+            ]
+        ]
+    },
+    {
+        "id": "ce9a2df578966fd0",
+        "type": "inject",
+        "z": "8790bac5eca885ba",
+        "name": "on",
+        "props": [
+            {
+                "p": "payload.pld.power",
+                "v": "on",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 250,
+        "y": 600,
+        "wires": [
+            [
+                "a2d0e622513cb23a"
+            ]
+        ]
     }
 ]
