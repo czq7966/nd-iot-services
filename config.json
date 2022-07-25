@@ -54,7 +54,26 @@
                                 "product": {
                                     "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
                                 }                                
-                            }         
+                            },
+                            "shadows": {
+                                "dio_url": "https://iot-mqtt.beta.ndaeweb.com/dio",
+                                "mqtt": {
+                                    "south": {
+                                        "broker" : {
+                                            "url": "mqtt://push-access.sdp.101.com:1780",
+                                            "username": "south",
+                                            "password": ""
+                                        }                                        
+                                    },
+                                    "north": {
+                                        "broker" : {
+                                            "url": "mqtt://push-access.sdp.101.com:1780",
+                                            "username": "north",
+                                            "password": ""
+                                        }                                        
+                                    }                                          
+                                }
+                            }             
                         }
                 
                     },
@@ -142,7 +161,26 @@
                                 "product": {
                                     "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
                                 }                                
-                            }            
+                            },
+                            "shadows": {
+                                "dio_url": "https://iot-mqtt.beta.ndaeweb.com/dio",
+                                "mqtt": {
+                                    "south": {
+                                        "broker" : {
+                                            "url": "mqtt://push-access.sdp.101.com:1780",
+                                            "username": "south",
+                                            "password": ""
+                                        }                                        
+                                    },
+                                    "north": {
+                                        "broker" : {
+                                            "url": "mqtt://push-access.sdp.101.com:1780",
+                                            "username": "north",
+                                            "password": ""
+                                        }                                        
+                                    }                                          
+                                }
+                            }                
                         }
                 
                     },
@@ -214,7 +252,26 @@
                                 "product": {
                                     "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
                                 }                                
-                            }            
+                            },
+                            "shadows": {
+                                "dio_url": "https://iot-mqtt.beta.ndaeweb.com/dio",
+                                "mqtt": {
+                                    "south": {
+                                        "broker" : {
+                                            "url": "mqtt://push-access.sdp.101.com:1780",
+                                            "username": "south",
+                                            "password": ""
+                                        }                                        
+                                    },
+                                    "north": {
+                                        "broker" : {
+                                            "url": "mqtt://push-access.sdp.101.com:1780",
+                                            "username": "north",
+                                            "password": ""
+                                        }                                        
+                                    }                                          
+                                }
+                            }               
                         }
                 
                     },
@@ -316,7 +373,26 @@
                                         }
                                     }
                                 }
-                            }                                                                               
+                            },
+                            "shadows": {
+                                "dio_url": "https://iot-mqtt.beta.ndaeweb.com/dio",
+                                "mqtt": {
+                                    "south": {
+                                        "broker" : {
+                                            "url": "mqtt://push-access.sdp.101.com:1780",
+                                            "username": "south",
+                                            "password": ""
+                                        }                                        
+                                    },
+                                    "north": {
+                                        "broker" : {
+                                            "url": "mqtt://push-access.sdp.101.com:1780",
+                                            "username": "north",
+                                            "password": ""
+                                        }                                        
+                                    }                                          
+                                }
+                            }                                                                                   
                         }
                     }
                 },
@@ -395,7 +471,21 @@
                                             "dev_svc_penet": "penet",
                                             "dev_svc_handshake": "handshake"
                                         }
-                                    }
+                                    },
+                                    "south": {
+                                        "broker" : {
+                                            "url": "mqtt://push-access.sdp.101.com:1780",
+                                            "username": "south",
+                                            "password": ""
+                                        }                                        
+                                    },
+                                    "north": {
+                                        "broker" : {
+                                            "url": "mqtt://push-access.sdp.101.com:1780",
+                                            "username": "north",
+                                            "password": ""
+                                        }                                        
+                                    }                                    
                                 },
                                 "mongodb": {
                                     "develop": {
@@ -418,7 +508,26 @@
                                     "dataDir": "/data/zigbee2mqtt/data",
                                     "z2mDir_win": "E:/data/zigbee2mqtt",
                                     "dataDir_win": "E:/iotdata/zigbee2mqtt/data"
-                                }     
+                                },
+                                "shadows": {
+                                    "dio_url": "https://iot-mqtt.beta.ndaeweb.com/dio",
+                                    "mqtt": {
+                                        "south": {
+                                            "broker" : {
+                                                "url": "mqtt://push-access.sdp.101.com:1780",
+                                                "username": "south",
+                                                "password": ""
+                                            }                                        
+                                        },
+                                        "north": {
+                                            "broker" : {
+                                                "url": "mqtt://push-access.sdp.101.com:1780",
+                                                "username": "north",
+                                                "password": ""
+                                            }                                        
+                                        }                                          
+                                    }
+                                }    
                             }
                         }                        
                     }
@@ -577,7 +686,26 @@
                                 }
                             }
                         }
-                    } 
+                    },
+                    "shadows": {
+                        "dio_url": "https://iot-mqtt.beta.ndaeweb.com/dio",
+                        "mqtt": {
+                            "south": {
+                                "broker" : {
+                                    "url": "mqtt://push-access.sdp.101.com:1780",
+                                    "username": "south",
+                                    "password": ""
+                                }                                        
+                            },
+                            "north": {
+                                "broker" : {
+                                    "url": "mqtt://push-access.sdp.101.com:1780",
+                                    "username": "north",
+                                    "password": ""
+                                }                                        
+                            }                                          
+                        }
+                    }     
                 }                            
             },
             "common": {},
@@ -618,7 +746,26 @@
                         "product": {
                             "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
                         }                                
-                    } 
+                    },
+                    "shadows": {
+                        "dio_url": "https://iot-mqtt.beta.ndaeweb.com/dio",
+                        "mqtt": {
+                            "south": {
+                                "broker" : {
+                                    "url": "mqtt://push-access.sdp.101.com:1780",
+                                    "username": "south",
+                                    "password": ""
+                                }                                        
+                            },
+                            "north": {
+                                "broker" : {
+                                    "url": "mqtt://push-access.sdp.101.com:1780",
+                                    "username": "north",
+                                    "password": ""
+                                }                                        
+                            }                                          
+                        }
+                    }    
                 }                            
             },
             "common": {},

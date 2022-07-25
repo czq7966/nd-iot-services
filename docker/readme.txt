@@ -121,3 +121,4 @@ docker run -d -e IOT_CONFIG_FILE="/services/nd-iot-services/docker/config.json" 
 //ND租户
 docker run -it -p 80:8080  -e IOT_CODE_BRANCH=dev -e IOT_ENABLE_AUTO_UPDATE=1  -e IOT_ENABLE_NGINX=1  -e IOT_ENABLE_MQTT=1 -e IOT_ENABLE_DSP=1 -e IOT_ENABLE_EDG=1 -e IOT_APP_ID=ndiot -e IOT_DSP_ID=ndiot-dsp-xxx -e IOT_EDG_ID=ndiot-edg-xxx nd-iot-services-amd64:0.0.8
 
+
