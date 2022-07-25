@@ -3666,8 +3666,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 1090,
-        "y": 540,
+        "x": 1150,
+        "y": 500,
         "wires": []
     },
     {
@@ -3784,7 +3784,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 630,
+        "x": 770,
         "y": 440,
         "wires": [
             [
@@ -3825,8 +3825,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 820,
-        "y": 480,
+        "x": 840,
+        "y": 600,
         "wires": []
     },
     {
@@ -3843,17 +3843,25 @@
                 "vt": "str"
             },
             {
+                "t": "eq",
+                "v": "ndiot-edg-nd",
+                "vt": "str"
+            },
+            {
                 "t": "else"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 2,
+        "outputs": 3,
         "x": 530,
         "y": 340,
         "wires": [
             [
                 "01576f8d65769792"
+            ],
+            [
+                "5d46a3f21447466d"
             ],
             [
                 "805382e936c84350"
@@ -3890,10 +3898,29 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 320,
-        "y": 360,
+        "y": 340,
         "wires": [
             [
                 "4d63e449837668dc"
+            ]
+        ]
+    },
+    {
+        "id": "5d46a3f21447466d",
+        "type": "function",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "ndiot-edg-nd",
+        "func": "msg.collection = \"ndiot_devices\";\nmsg.operation = \"find\";\nmsg.payload = {\n    \"app_id\": \"ndiot\",\n    \"dom_id\": \"nd\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 340,
+        "wires": [
+            [
+                "b48d540577e24698"
             ]
         ]
     }
