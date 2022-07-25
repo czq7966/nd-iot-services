@@ -5135,7 +5135,8 @@
         "y": 360,
         "wires": [
             [
-                "e5bb14890b0c38d9"
+                "e5bb14890b0c38d9",
+                "9671afaef2c3b50f"
             ]
         ]
     },
@@ -5170,7 +5171,8 @@
         "y": 400,
         "wires": [
             [
-                "e5bb14890b0c38d9"
+                "e5bb14890b0c38d9",
+                "052c841bd51df816"
             ]
         ]
     },
@@ -5274,7 +5276,7 @@
         "type": "debug",
         "z": "e783d53461d94d52",
         "name": "北向输出",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -5472,7 +5474,8 @@
         "y": 440,
         "wires": [
             [
-                "e5bb14890b0c38d9"
+                "e5bb14890b0c38d9",
+                "e963a22a20634f94"
             ]
         ]
     },
@@ -5505,7 +5508,8 @@
         "y": 480,
         "wires": [
             [
-                "e5bb14890b0c38d9"
+                "e5bb14890b0c38d9",
+                "cdbf56d8282f0b45"
             ]
         ]
     },
@@ -5538,7 +5542,8 @@
         "y": 520,
         "wires": [
             [
-                "e5bb14890b0c38d9"
+                "e5bb14890b0c38d9",
+                "705afd9f36b17a61"
             ]
         ]
     },
@@ -5571,7 +5576,8 @@
         "y": 560,
         "wires": [
             [
-                "e5bb14890b0c38d9"
+                "e5bb14890b0c38d9",
+                "4b3311c4c77126cb"
             ]
         ]
     },
@@ -5619,6 +5625,108 @@
         ],
         "x": 995,
         "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "705afd9f36b17a61",
+        "type": "debug",
+        "z": "e783d53461d94d52",
+        "name": "插件输入",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "9671afaef2c3b50f",
+        "type": "debug",
+        "z": "e783d53461d94d52",
+        "name": "南向输入",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "052c841bd51df816",
+        "type": "debug",
+        "z": "e783d53461d94d52",
+        "name": "北向输入",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "e963a22a20634f94",
+        "type": "debug",
+        "z": "e783d53461d94d52",
+        "name": "配置输入",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "cdbf56d8282f0b45",
+        "type": "debug",
+        "z": "e783d53461d94d52",
+        "name": "通知输入",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "4b3311c4c77126cb",
+        "type": "debug",
+        "z": "e783d53461d94d52",
+        "name": "影子输入",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 320,
         "wires": []
     },
     {
@@ -6125,7 +6233,7 @@
         "type": "debug",
         "z": "0d352f1d7c785601",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -6141,7 +6249,7 @@
         "type": "debug",
         "z": "0d352f1d7c785601",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,

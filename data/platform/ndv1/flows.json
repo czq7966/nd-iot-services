@@ -88,7 +88,7 @@
         "broker": "push-access.sdp.101.com",
         "port": "1780",
         "clientid": "",
-        "autoConnect": true,
+        "autoConnect": false,
         "usetls": false,
         "protocolVersion": "4",
         "keepalive": "60",
@@ -283,7 +283,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据初始化",
-        "func": "let config = msg.payload;\n\nlet _ids = global.get(\"ids\");\n\nObject.keys(config).forEach(key => {\n    global.set(key, config[key])\n})\n\nlet data = global.get(\"data\");\nif (_ids) global.set(\"ids\", _ids);\nlet ids = global.get(\"ids\");\n\nlet app = data.app;\nlet plf = app.platform;\nplf.devices = plf.devices || {};\n\ndata.platform = plf\ndata.devices = plf.devices || {};\ndata.mqtt = plf.mqtt;\ndata.topics = plf.mqtt.topics;\ndata.mongodb = plf.mongodb;\ndata.ids = ids;\n\nreturn {payload: data};\n",
+        "func": "let config = msg.payload;\n\nlet _ids = global.get(\"ids\");\n\nObject.keys(config).forEach(key => {\n    global.set(key, config[key])\n})\n\nlet data = global.get(\"data\");\nif (_ids) global.set(\"ids\", _ids);\nlet ids = global.get(\"ids\");\n\nlet app = data.app;\nlet plf = app.platform;\nplf.devices = plf.devices || {};\n\ndata.platform = plf\ndata.devices = plf.devices || {};\ndata.mqtt = plf.mqtt;\ndata.topics = plf.mqtt.topics;\ndata.mongodb = plf.mongodb;\ndata.shadows = plf.shadows;\ndata.ids = ids;\n\nreturn {payload: data};\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2548,28 +2548,6 @@
         "wires": []
     },
     {
-        "id": "1023e03ef3a77189",
-        "type": "mqtt in",
-        "z": "8790bac5eca885ba",
-        "name": "订阅设备消息",
-        "topic": "0/0/dev/+/0/0/0/0",
-        "qos": "2",
-        "datatype": "json",
-        "broker": "b5ef31a7a90ee4e8",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 490,
-        "y": 140,
-        "wires": [
-            [
-                "adeb7a4edd9ba86a",
-                "bab9ba5f6df4a14f"
-            ]
-        ]
-    },
-    {
         "id": "1cc085b57aa685b5",
         "type": "link in",
         "z": "8790bac5eca885ba",
@@ -2578,8 +2556,8 @@
             "21290856fdc17bf5",
             "aba9c53c961e20ad"
         ],
-        "x": 235,
-        "y": 220,
+        "x": 325,
+        "y": 460,
         "wires": [
             [
                 "3134d006736621c4"
@@ -2597,8 +2575,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 350,
-        "y": 220,
+        "x": 440,
+        "y": 460,
         "wires": [
             [
                 "6cb182dc40c0572c"
@@ -2614,15 +2592,15 @@
         "links": [
             "bcb80ed091975c9a"
         ],
-        "x": 735,
-        "y": 140,
+        "x": 1015,
+        "y": 240,
         "wires": []
     },
     {
         "id": "6cb182dc40c0572c",
         "type": "mqtt out",
         "z": "8790bac5eca885ba",
-        "name": "控制设备发布",
+        "name": "北向输入发布",
         "topic": "",
         "qos": "",
         "retain": "",
@@ -2632,24 +2610,25 @@
         "correl": "",
         "expiry": "",
         "broker": "b5ef31a7a90ee4e8",
-        "x": 500,
-        "y": 220,
+        "x": 650,
+        "y": 460,
         "wires": []
     },
     {
         "id": "bab9ba5f6df4a14f",
         "type": "debug",
         "z": "8790bac5eca885ba",
-        "name": "",
+        "name": "北向输出",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 650,
-        "y": 80,
+        "x": 1020,
+        "y": 280,
         "wires": []
     },
     {
@@ -2674,8 +2653,8 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 230,
-        "y": 460,
+        "x": 410,
+        "y": 800,
         "wires": [
             [
                 "a2d0e622513cb23a"
@@ -2699,8 +2678,8 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 210,
-        "y": 540,
+        "x": 390,
+        "y": 880,
         "wires": [
             [
                 "a2d0e622513cb23a"
@@ -2718,8 +2697,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 680,
-        "y": 480,
+        "x": 860,
+        "y": 820,
         "wires": [
             [
                 "3134d006736621c4"
@@ -2743,11 +2722,129 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 250,
-        "y": 600,
+        "x": 430,
+        "y": 940,
         "wires": [
             [
                 "a2d0e622513cb23a"
+            ]
+        ]
+    },
+    {
+        "id": "a5fab40b8a440bb5",
+        "type": "mqtt in",
+        "z": "8790bac5eca885ba",
+        "name": "北向输出订阅",
+        "topic": "",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "b5ef31a7a90ee4e8",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 650,
+        "y": 240,
+        "wires": [
+            [
+                "821bd3a334fab03b"
+            ]
+        ]
+    },
+    {
+        "id": "dd907b890a084ac6",
+        "type": "function",
+        "z": "8790bac5eca885ba",
+        "name": "北向连接",
+        "func": "let data = global.get(\"data\")\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false\n}\nObject.assign(msg.broker, data.shadows.mqtt.north.broker);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 140,
+        "wires": [
+            [
+                "5dd7b802a624a206",
+                "d43f3585a9691357"
+            ]
+        ]
+    },
+    {
+        "id": "5dd7b802a624a206",
+        "type": "mqtt in",
+        "z": "8790bac5eca885ba",
+        "name": "北向连接",
+        "topic": "",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "b5ef31a7a90ee4e8",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 820,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d43f3585a9691357",
+        "type": "function",
+        "z": "8790bac5eca885ba",
+        "name": "北向输出订阅",
+        "func": "node.send({\n        action: \"subscribe\",\n        topic: \"+/+/dev/+/+/+/+/+\"\n})",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 240,
+        "wires": [
+            [
+                "a5fab40b8a440bb5"
+            ]
+        ]
+    },
+    {
+        "id": "f0c709d34e0511b9",
+        "type": "inject",
+        "z": "8790bac5eca885ba",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "x": 370,
+        "y": 140,
+        "wires": [
+            [
+                "dd907b890a084ac6"
+            ]
+        ]
+    },
+    {
+        "id": "821bd3a334fab03b",
+        "type": "function",
+        "z": "8790bac5eca885ba",
+        "name": "设备ID",
+        "func": "msg.id =  msg.topic.split(\"/\")[5]\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 240,
+        "wires": [
+            [
+                "bab9ba5f6df4a14f",
+                "adeb7a4edd9ba86a"
             ]
         ]
     }

@@ -53,7 +53,7 @@ let startNGINX = () => {
             if (code != 0)
                 console.error("nginx start error: %d", code);
             else 
-                console.info("nginx started");
+                console.info("nginx started(close event)");
         });
     }else {
         let cmd = "sudo /usr/local/nginx/sbin/nginx"; 
