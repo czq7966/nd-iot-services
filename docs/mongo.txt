@@ -18,3 +18,37 @@ mb.runSQLQuery(deviceStr)
         }
     });
 })
+
+
+
+
+==============================================================
+
+
+
+//Networking v3 离线检测
+
+let deviceStr = `SELECT * FROM ndiot_devices where "model" = 'FZYTACMIDEA'`
+let offTms = new Date().valueOf() - 1000 * 60 * 2 ;
+mb.runSQLQuery(deviceStr)
+.forEach(dev => {
+    let count = 0;    
+    let str = `select * from ndiot_shadows_20220726 where "from" = 'south' and "payload.hd.entry.id" = 'report' and "id" = '` + dev.id + "'";
+    let recs = mb.runSQLQuery(str)
+    .sort({_id:-1})
+    .limit(1)
+    .forEach( x => {
+        count++;
+        if (x.tms < offTms ) {
+            print(dev.name, "离线", x.tm)
+        } else {
+            // print("---------------------------: ", "在线", x.tm)
+            
+        }
+    });
+    
+    if (count == 0) {
+        print(dev.name, "掉线")
+    }
+    
+})

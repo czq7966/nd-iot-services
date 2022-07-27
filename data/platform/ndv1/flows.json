@@ -2615,23 +2615,6 @@
         "wires": []
     },
     {
-        "id": "bab9ba5f6df4a14f",
-        "type": "debug",
-        "z": "8790bac5eca885ba",
-        "name": "北向输出",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1020,
-        "y": 280,
-        "wires": []
-    },
-    {
         "id": "85aa389fc8bf6d32",
         "type": "inject",
         "z": "8790bac5eca885ba",
@@ -2843,7 +2826,6 @@
         "y": 240,
         "wires": [
             [
-                "bab9ba5f6df4a14f",
                 "adeb7a4edd9ba86a"
             ]
         ]
