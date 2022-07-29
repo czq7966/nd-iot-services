@@ -43,7 +43,7 @@ set IOT_APP_ID=ndiot&& set IOT_PLF_ID={HOSTNAME}&& set IOT_ENABLE_PLF_NDV1=1&& s
 set IOT_CONFIG_FILE=E:/data/nd-iot-edge-gateway/docker/config.json&& set IOT_CODE_BRANCH=dev&& set IOT_APP_ID=ndiot&& set IOT_ENABLE_MQTT=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& set IOT_ENABLE_PLF_NDV1=1&& set IOT_ENABLE_PLF_NDV2=1&& set IOT_ENABLE_PLF_BFY=1&& npm start
 
 //启动test租户
-set IOT_APP_ID=ndiot&& set IOT_DSP_ID={HOSTNAME}&& set IOT_EDG_ID={HOSTNAME}&& set IOT_ENABLE_MQTT=1&& set IOT_ENABLE_DSP=1&& set IOT_ENABLE_EDG=1&& npm start
+set IOT_APP_ID=ndiot&& set IOT_DSP_ID={HOSTNAME}&& set IOT_EDG_ID={HOSTNAME}&& set IOT_ENABLE_MQTT=1&& set IOT_ENABLE_DSP=0&& set IOT_ENABLE_EDG=1&& npm start
 
 
 

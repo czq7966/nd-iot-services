@@ -11,15 +11,7 @@
         "id": "e93bbc67912b9178",
         "type": "tab",
         "label": "订阅/发布2.0",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "115f1d81a93b6fc4",
-        "type": "tab",
-        "label": "平台-订阅/发布1.0",
-        "disabled": false,
+        "disabled": true,
         "info": "",
         "env": []
     },
@@ -27,7 +19,7 @@
         "id": "46a5ba0d798d87c3",
         "type": "tab",
         "label": "接口调用",
-        "disabled": false,
+        "disabled": true,
         "info": "",
         "env": []
     },
@@ -35,14 +27,22 @@
         "id": "f7e96a32e56d72eb",
         "type": "tab",
         "label": "接口处理",
-        "disabled": false,
+        "disabled": true,
         "info": "",
         "env": []
     },
     {
-        "id": "c71e6a6d8eb3613c",
+        "id": "115f1d81a93b6fc4",
         "type": "tab",
-        "label": "测试",
+        "label": "平台-订阅/发布1.0",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c2fb860326aa680d",
+        "type": "tab",
+        "label": "NDV1-影子",
         "disabled": false,
         "info": "",
         "env": []
@@ -56,13 +56,21 @@
         "env": []
     },
     {
+        "id": "fb2bc72821bd074d",
+        "type": "tab",
+        "label": "流程 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "4f298837cfcb1b75",
         "type": "mqtt-broker",
         "name": "push",
         "broker": "push-access.sdp.101.com",
-        "port": "11883",
+        "port": "1780",
         "clientid": "",
-        "autoConnect": false,
+        "autoConnect": true,
         "usetls": false,
         "protocolVersion": "4",
         "keepalive": "60",
@@ -621,7 +629,8 @@
         "links": [
             "b784350e948a9e8b",
             "667b436f43ebae3b",
-            "1e99de387ea3035c"
+            "1e99de387ea3035c",
+            "254789106af03955"
         ],
         "x": 975,
         "y": 620,
@@ -798,7 +807,8 @@
         "links": [
             "2ff5101df1ab6584",
             "b293cfb8b41ad91f",
-            "bcb80ed091975c9a"
+            "bcb80ed091975c9a",
+            "6a93f55caada7f66"
         ],
         "x": 965,
         "y": 140,
@@ -1003,7 +1013,9 @@
             "250ffb893d37d89a",
             "c7b7c2d7a905a76d",
             "e555fa7ff42ed40e",
-            "21290856fdc17bf5"
+            "21290856fdc17bf5",
+            "160d90b7c05bbe9c",
+            "bbbabbbac3b1536b"
         ],
         "x": 225,
         "y": 540,
@@ -1072,7 +1084,9 @@
         "name": "中转输入",
         "links": [
             "154e87ad105afaf5",
-            "aba9c53c961e20ad"
+            "aba9c53c961e20ad",
+            "66f2b4837b65c670",
+            "86248ce81c2f0ae7"
         ],
         "x": 235,
         "y": 860,
@@ -1131,6 +1145,592 @@
                 "0f989c13f4e0c1cb"
             ]
         ]
+    },
+    {
+        "id": "59181471dbc6175b",
+        "type": "link in",
+        "z": "46a5ba0d798d87c3",
+        "name": "请求",
+        "links": [
+            "1188b78d61e6e2a8"
+        ],
+        "x": 165,
+        "y": 200,
+        "wires": [
+            [
+                "a1d93e26f00d9928"
+            ]
+        ]
+    },
+    {
+        "id": "9b39f6a45516c881",
+        "type": "delay",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 540,
+        "y": 200,
+        "wires": [
+            [
+                "b5c10fec2a171dec"
+            ]
+        ]
+    },
+    {
+        "id": "b5c10fec2a171dec",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "登入请求",
+        "func": "let data = global.get(\"data\");\nlet ids = data.ids;\nreturn {\n    payload: {\n        hd: {\n            pref: {\n                app: ids.app,\n                dom: \"0\"\n            },\n            to: {\n                type: \"0\",\n                id: \"0\"\n            },\n            entry: {\n                type: \"svc\",\n                id: \"login\"\n            }\n        },\n        pld: {\n            id: data.ids.plf\n        }\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 200,
+        "wires": [
+            [
+                "daa6a0cef19c038d",
+                "fa0afe6023cff548",
+                "b45b2eba09115dae"
+            ]
+        ]
+    },
+    {
+        "id": "daa6a0cef19c038d",
+        "type": "trigger",
+        "z": "46a5ba0d798d87c3",
+        "name": "超时5秒",
+        "op1": "1",
+        "op2": "0",
+        "op1type": "str",
+        "op2type": "str",
+        "duration": "5",
+        "extend": true,
+        "overrideDelay": true,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 2,
+        "x": 540,
+        "y": 260,
+        "wires": [
+            [],
+            [
+                "9b39f6a45516c881"
+            ]
+        ]
+    },
+    {
+        "id": "a08e3843c15e944d",
+        "type": "change",
+        "z": "46a5ba0d798d87c3",
+        "name": "重置",
+        "rules": [
+            {
+                "t": "set",
+                "p": "reset",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 290,
+        "y": 260,
+        "wires": [
+            [
+                "daa6a0cef19c038d"
+            ]
+        ]
+    },
+    {
+        "id": "81d871be6af1b2a9",
+        "type": "link in",
+        "z": "46a5ba0d798d87c3",
+        "name": "重置登入请求",
+        "links": [
+            "87bda24bd97b90b7",
+            "7cc27320956b5354",
+            "e15f8affc75b6294"
+        ],
+        "x": 165,
+        "y": 260,
+        "wires": [
+            [
+                "a08e3843c15e944d"
+            ]
+        ]
+    },
+    {
+        "id": "1c8bebd4730ca10f",
+        "type": "comment",
+        "z": "46a5ba0d798d87c3",
+        "name": "登入",
+        "info": "",
+        "x": 170,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "fa0afe6023cff548",
+        "type": "debug",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "b45b2eba09115dae",
+        "type": "link out",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "774d0cb8ef787fc2"
+        ],
+        "x": 1005,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "6daf1af57e46df30",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "状态发布",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n        app: \"0\",\n        dom: \"0\"\n    },\n    from: {\n        type: \"plf\",\n        id: data.ids.plf\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.plf,\n    online: 1\n};\n\nreturn {\n    payload:{\n        hd: hd,\n        pld: pld\n    },\n    qos: 2,\n    retain: true\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 380,
+        "wires": [
+            [
+                "7dc6bf6f82555874",
+                "b45b2eba09115dae"
+            ]
+        ]
+    },
+    {
+        "id": "b784350e948a9e8b",
+        "type": "link in",
+        "z": "46a5ba0d798d87c3",
+        "name": "状态发布输入",
+        "links": [
+            "0ecafaa953e1df94",
+            "09cf3f2506fb6591",
+            "810c9c146d81321c",
+            "41780e48f27ccf1c"
+        ],
+        "x": 165,
+        "y": 380,
+        "wires": [
+            [
+                "6daf1af57e46df30"
+            ]
+        ]
+    },
+    {
+        "id": "7dc6bf6f82555874",
+        "type": "debug",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1010,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "a1d93e26f00d9928",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "未登入？",
+        "func": "let data = global.get(\"data\");\nif (!data.ids.app || !data.ids.dio) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 200,
+        "wires": [
+            [
+                "9b39f6a45516c881"
+            ]
+        ]
+    },
+    {
+        "id": "75f02d7892d5c309",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "状态上线ToDIO",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nif (data.ids.dio) {\n    let hd = {\n        pref: {\n            app: \"0\",\n            dom: \"0\"\n        },\n        to: {\n            type: \"0\",\n            id: \"0\"\n        },\n        entry: {\n            type: \"evt\",\n            id: \"status\"\n        },\n        stp: 1,\n        version: global.get(\"version\")\n    };\n    \n    let pld = {\n        id: data.ids.plf,\n        online: 1\n    };\n    \n    return {\n        payload:{\n            hd: hd,\n            pld: pld\n        }\n    };\n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 480,
+        "wires": [
+            [
+                "b45b2eba09115dae",
+                "7dc6bf6f82555874"
+            ]
+        ]
+    },
+    {
+        "id": "8a57ac32f524bf5e",
+        "type": "inject",
+        "z": "46a5ba0d798d87c3",
+        "name": "定时上报",
+        "props": [],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "60",
+        "topic": "",
+        "x": 510,
+        "y": 480,
+        "wires": [
+            [
+                "75f02d7892d5c309"
+            ]
+        ]
+    },
+    {
+        "id": "1e99de387ea3035c",
+        "type": "link in",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "links": [
+            "0ecafaa953e1df94"
+        ],
+        "x": 165,
+        "y": 720,
+        "wires": [
+            [
+                "9c88fd5568c36785"
+            ]
+        ]
+    },
+    {
+        "id": "9c88fd5568c36785",
+        "type": "http request",
+        "z": "46a5ba0d798d87c3",
+        "name": "http获取设备",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://iot-mqtt.beta.ndaeweb.com/dio/get_devices",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 410,
+        "y": 720,
+        "wires": [
+            [
+                "728f165358bdc6bc",
+                "35cf1e9005e8cb0a"
+            ]
+        ]
+    },
+    {
+        "id": "3b2f3e44ab9a8250",
+        "type": "inject",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 820,
+        "wires": [
+            [
+                "9c88fd5568c36785"
+            ]
+        ]
+    },
+    {
+        "id": "728f165358bdc6bc",
+        "type": "debug",
+        "z": "46a5ba0d798d87c3",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 570,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "35cf1e9005e8cb0a",
+        "type": "function",
+        "z": "46a5ba0d798d87c3",
+        "name": "设备补全",
+        "func": "let  common = global.get(\"common\");\nlet devs = msg.payload;\nif (devs) {\n    devs.forEach(dev => {\n        common.fixUpDev(dev);\n    })\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b293cfb8b41ad91f",
+        "type": "link in",
+        "z": "f7e96a32e56d72eb",
+        "name": "接口处理输入",
+        "links": [
+            "be8cd487c69c6c5a"
+        ],
+        "x": 135,
+        "y": 160,
+        "wires": [
+            [
+                "f3fbccc82b509675",
+                "6514803e7db80cac"
+            ]
+        ]
+    },
+    {
+        "id": "f3fbccc82b509675",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "数据服务响应",
+        "func": "let hd = msg.payload.hd;\nif (hd.stp == 1 && hd.entry.type == \"svc\" && hd.from.type == \"dio\" ) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 160,
+        "wires": [
+            [
+                "43bd55a5970c54c2"
+            ]
+        ]
+    },
+    {
+        "id": "43bd55a5970c54c2",
+        "type": "switch",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "property": "payload.hd.entry.id",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "login",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 520,
+        "y": 160,
+        "wires": [
+            [
+                "c3275c69d557b333"
+            ]
+        ]
+    },
+    {
+        "id": "c3275c69d557b333",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "登入响应处理",
+        "func": "let data = global.get(\"data\");\nlet pld = msg.payload.pld;\nif (pld.app_id && pld.dio_id && pld.plf_id) {\n    data.ids.app = pld.app_id;\n    data.ids.dio = pld.dio_id;\n    data.ids.plf = pld.plf_id;\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 120,
+        "wires": [
+            [
+                "7cc27320956b5354",
+                "3be6aa741efc38c0"
+            ]
+        ]
+    },
+    {
+        "id": "7cc27320956b5354",
+        "type": "link out",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "81d871be6af1b2a9"
+        ],
+        "x": 945,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "3be6aa741efc38c0",
+        "type": "link out",
+        "z": "f7e96a32e56d72eb",
+        "name": "重载配置",
+        "mode": "link",
+        "links": [
+            "b1a104c8f9b78d59"
+        ],
+        "x": 945,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "6514803e7db80cac",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "数据事件请求",
+        "func": "let hd = msg.payload.hd;\nif (hd.stp == 0 && hd.entry.type == \"evt\" && hd.from.type == \"dio\" ) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 220,
+        "wires": [
+            [
+                "4788e4fd31445485"
+            ]
+        ]
+    },
+    {
+        "id": "4788e4fd31445485",
+        "type": "switch",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "property": "payload.hd.entry.id",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "status",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 220,
+        "wires": [
+            [
+                "1ea18b95bf25cb02",
+                "294724a339ded15a"
+            ]
+        ]
+    },
+    {
+        "id": "1ea18b95bf25cb02",
+        "type": "function",
+        "z": "f7e96a32e56d72eb",
+        "name": "上线",
+        "func": "return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 220,
+        "wires": [
+            [
+                "41780e48f27ccf1c"
+            ]
+        ]
+    },
+    {
+        "id": "41780e48f27ccf1c",
+        "type": "link out",
+        "z": "f7e96a32e56d72eb",
+        "name": "状态发布",
+        "mode": "link",
+        "links": [
+            "b784350e948a9e8b"
+        ],
+        "x": 945,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "294724a339ded15a",
+        "type": "debug",
+        "z": "f7e96a32e56d72eb",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 260,
+        "wires": []
     },
     {
         "id": "b8e2664d60c6e048",
@@ -1225,7 +1825,7 @@
         "type": "debug",
         "z": "115f1d81a93b6fc4",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1257,7 +1857,7 @@
         "type": "debug",
         "z": "115f1d81a93b6fc4",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1897,7 +2497,7 @@
         "type": "debug",
         "z": "115f1d81a93b6fc4",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1909,105 +2509,77 @@
         "wires": []
     },
     {
-        "id": "59181471dbc6175b",
-        "type": "link in",
-        "z": "46a5ba0d798d87c3",
-        "name": "请求",
-        "links": [
-            "1188b78d61e6e2a8"
-        ],
-        "x": 165,
-        "y": 200,
-        "wires": [
-            [
-                "a1d93e26f00d9928"
-            ]
-        ]
-    },
-    {
-        "id": "9b39f6a45516c881",
-        "type": "delay",
-        "z": "46a5ba0d798d87c3",
+        "id": "11e901908c0ac31a",
+        "type": "inject",
+        "z": "115f1d81a93b6fc4",
         "name": "",
-        "pauseType": "delay",
-        "timeout": "2",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 540,
-        "y": 200,
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "2",
+        "topic": "",
+        "x": 150,
+        "y": 180,
         "wires": [
             [
-                "b5c10fec2a171dec"
+                "7b71eeb89ec8c9ae"
             ]
         ]
     },
     {
-        "id": "b5c10fec2a171dec",
+        "id": "a4cea620c7efecfe",
+        "type": "mqtt in",
+        "z": "c2fb860326aa680d",
+        "name": "平台订阅",
+        "topic": "",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "4f298837cfcb1b75",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 560,
+        "y": 200,
+        "wires": [
+            [
+                "e62502a3158097f0",
+                "d8c371b97195ef03"
+            ]
+        ]
+    },
+    {
+        "id": "02b53a8e8996c0c3",
         "type": "function",
-        "z": "46a5ba0d798d87c3",
-        "name": "登入请求",
-        "func": "let data = global.get(\"data\");\nlet ids = data.ids;\nreturn {\n    payload: {\n        hd: {\n            pref: {\n                app: ids.app,\n                dom: \"0\"\n            },\n            to: {\n                type: \"0\",\n                id: \"0\"\n            },\n            entry: {\n                type: \"svc\",\n                id: \"login\"\n            }\n        },\n        pld: {\n            id: data.ids.plf\n        }\n    }\n};",
+        "z": "c2fb860326aa680d",
+        "name": "订阅主题",
+        "func": "\nlet topics = [\n    \"business/cmdgate/CMDGATE_FZ_PMZ_AC\",\n    \"business/cmdgate/CMDGATE_FZ_YT_AC\",\n    \"business/cmdgate/CMDGATE_NDIOT\"\n    ];\n\n\nnode.send({\n        action: \"subscribe\",\n        topic: topics\n})    \n\n\n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 740,
+        "x": 400,
         "y": 200,
         "wires": [
             [
-                "daa6a0cef19c038d",
-                "fa0afe6023cff548",
-                "b45b2eba09115dae"
+                "a4cea620c7efecfe"
             ]
         ]
     },
     {
-        "id": "daa6a0cef19c038d",
-        "type": "trigger",
-        "z": "46a5ba0d798d87c3",
-        "name": "超时5秒",
-        "op1": "1",
-        "op2": "0",
-        "op1type": "str",
-        "op2type": "str",
-        "duration": "5",
-        "extend": true,
-        "overrideDelay": true,
-        "units": "s",
-        "reset": "",
-        "bytopic": "all",
-        "topic": "topic",
-        "outputs": 2,
-        "x": 540,
-        "y": 260,
-        "wires": [
-            [],
-            [
-                "9b39f6a45516c881"
-            ]
-        ]
-    },
-    {
-        "id": "a08e3843c15e944d",
+        "id": "2ae7dd5d849eaa3c",
         "type": "change",
-        "z": "46a5ba0d798d87c3",
-        "name": "重置",
+        "z": "c2fb860326aa680d",
+        "name": "ndv1设备数据",
         "rules": [
             {
                 "t": "set",
-                "p": "reset",
-                "pt": "msg",
-                "to": "true",
-                "tot": "bool"
+                "p": "devices",
+                "pt": "flow",
+                "to": "{\"CMDGATE_CL_VRTYG\":{\"name\":\"长乐VR体验馆\",\"devices\":{\"ESP8266_9926564\":{\"name\":\"二楼1成果区宣传大屏前空调\"},\"ESP8266_9928598\":{\"name\":\"二楼2成果区体验中心入口空调\"},\"ESP8266_9933676\":{\"name\":\"二楼3成果区富士康大屏处空调\"},\"ESP8266_488969\":{\"name\":\"二楼5成果区版图区域内侧空调\"},\"ESP8266_9931870\":{\"name\":\"二楼6成果区版图区域外侧空调\"},\"ESP8266_9956709\":{\"name\":\"二楼7成果区小镇沙盘前空调\"},\"ESP8266_430864\":{\"name\":\"二楼8成果区红色教育一体机旁空调\"},\"ESP8266_486720\":{\"name\":\"二楼9恐龙休息区沙发区上方空调\"},\"ESP8266_469370\":{\"name\":\"二楼10恐龙休息区恐龙区入口上方空调\"},\"ESP8266_9922593\":{\"name\":\"二楼11恐龙休息区恐龙大屏上方空调\"},\"ESP8266_491535\":{\"name\":\"二楼12恐龙休息区长桌上方空调\"},\"ESP8266_9945247\":{\"name\":\"二楼16沉浸教室地理沙盘上方空调\"},\"ESP8266_450977\":{\"name\":\"二楼17沉浸教室3D扫描上方空调\"},\"ESP8266_9954003\":{\"name\":\"二楼18沉浸教室曲面屏上方空调\"},\"ESP8266_448616\":{\"name\":\"二楼19沉浸教室座位区上方空调\"},\"ESP8266_431099\":{\"name\":\"二楼22应用区新品体验展位上方空调\"},\"ESP8266_9930630\":{\"name\":\"二楼23应用区急速风暴展位上方空调\"},\"ESP8266_502328\":{\"name\":\"二楼24应用区世宇展位上方空调\"},\"ESP8266_525449\":{\"name\":\"二楼25应用区ColdingGalaxy展位上方空调\"},\"ESP8266_9928778\":{\"name\":\"二楼26应用区虎豹骑展位上方空调\"},\"ESP8266_9930144\":{\"name\":\"二楼27应用区VR消防展位上方空调\"},\"ESP8266_523355\":{\"name\":\"二楼28应用区虚拟实验室前空调\"},\"ESP8266_524983\":{\"name\":\"二楼29应用区央馆虚拟实验展位上方空调\"},\"ESP8266_10004904\":{\"name\":\"二楼30全息舞台舞台上方空调-1\"},\"ESP8266_9921707\":{\"name\":\"二楼31全息舞台舞台上方空调-2\"},\"ESP8266_433213\":{\"name\":\"二楼32乐空间四格空间1空调\"},\"ESP8266_9920978\":{\"name\":\"二楼33乐空间入口空调\"},\"ESP8266_464648\":{\"name\":\"二楼34乐空间六轴赛车上方空调\"},\"ESP8266_9924660\":{\"name\":\"二楼35乐空间四轴赛车上方空调\"},\"ESP8266_9957889\":{\"name\":\"二楼36乐空间Switch游戏上方空调\"},\"ESP8266_9930089\":{\"name\":\"二楼37乐空间VR自行车上方空调\"},\"ESP8266_448481\":{\"name\":\"二楼38乐空间四格空间4空调\"},\"ESP8266_427331\":{\"name\":\"二楼39乐空间四格空间2&3空调\"},\"ESP8266_9934513\":{\"name\":\"二楼40乐空间仓库空调\"},\"ESP8266_9925594\":{\"name\":\"二楼41乐空间滑雪机上方空调\"},\"ESP8266_9926755\":{\"name\":\"二楼4通道、卫生间区域卫生间一外空调\"},\"ESP8266_9938106\":{\"name\":\"二楼13通道、卫生间区域卫生间二外空调\"},\"ESP8266_9932037\":{\"name\":\"二楼14通道、卫生间区域电梯厅外空调\"},\"ESP8266_465345\":{\"name\":\"二楼15通道、卫生间区域电梯厅内空调\"},\"ESP8266_10009326\":{\"name\":\"二楼20通道、卫生间区域卫生间三外新风机\"},\"ESP8266_9926288\":{\"name\":\"二楼21通道、卫生间区域卫生间三外空调\"},\"ESP8266_9937795\":{\"name\":\"三楼1直播摄影棚摄影棚后方空调1\"},\"ESP8266_10006724\":{\"name\":\"三楼2直播摄影棚摄影棚区域办公室空调1\"},\"ESP8266_442480\":{\"name\":\"三楼3直播摄影棚摄影棚后方空调2\"},\"ESP8266_519369\":{\"name\":\"三楼4直播摄影棚摄影棚区域办公室空调2\"},\"ESP8266_448586\":{\"name\":\"三楼5直播摄影棚摄影棚区域会议室空调\"},\"ESP8266_9930798\":{\"name\":\"三楼6直播摄影棚摄影棚前方空调1\"},\"ESP8266_521738\":{\"name\":\"三楼7直播摄影棚摄影棚前方空调2\"},\"ESP8266_432044\":{\"name\":\"三楼8VR办公区VR办公室新风\"},\"ESP8266_526058\":{\"name\":\"三楼9VR办公区VR办公室空调1\"},\"ESP8266_9926764\":{\"name\":\"三楼10VR办公区VR办公室空调2\"},\"ESP8266_427863\":{\"name\":\"三楼11党建办公区党建办公室空调1\"},\"ESP8266_9926765\":{\"name\":\"三楼12党建办公区党建办公室空调2\"},\"ESP8266_9958380\":{\"name\":\"三楼13党建办公区党建办公室空调3\"},\"ESP8266_474651\":{\"name\":\"三楼14党建办公区党建办公室空调4\"},\"ESP8266_432426\":{\"name\":\"三楼15通道区域电梯间空调\"},\"ESP8266_447884\":{\"name\":\"三楼16通道区域通道空调1\"},\"ESP8266_522277\":{\"name\":\"三楼17通道区域通道空调2\"},\"ESP8266_525584\":{\"name\":\"三楼18通道区域通道空调3\"},\"ESP8266_10029119\":{\"name\":\"三楼19通道区域通道区域新风\"},\"ESP8266_9944959\":{\"name\":\"三楼20党员活动室活动室空调1\"},\"ESP8266_10047940\":{\"name\":\"三楼21党员活动室活动室空调2\"},\"ESP8266_9927599\":{\"name\":\"三楼22党员活动室活动室空调3\"},\"ESP8266_440864\":{\"name\":\"三楼23党员活动室活动室空调4\"},\"ESP8266_9920788\":{\"name\":\"三楼24党员活动室活动室展区空调1\"},\"ESP8266_500512\":{\"name\":\"三楼25党员活动室活动室展区空调2\"},\"ESP8266_9934592\":{\"name\":\"三楼26党员活动室活动室展区空调3\"},\"ESP8266_469696\":{\"name\":\"三楼27党建会议室前方空调1\"},\"ESP8266_9926218\":{\"name\":\"三楼28党建会议室前方空调2\"},\"ESP8266_9955466\":{\"name\":\"三楼29党建会议室前方空调3\"},\"ESP8266_448179\":{\"name\":\"三楼30党建会议室前方空调4\"},\"ESP8266_9932108\":{\"name\":\"三楼31党建会议室前方空调5\"},\"ESP8266_10027740\":{\"name\":\"三楼32党建会议室前方空调6\"},\"ESP8266_9928853\":{\"name\":\"三楼33党建会议室前方空调7\"},\"ESP8266_433112\":{\"name\":\"三楼34党建会议室前方空调8\"},\"ESP8266_9932430\":{\"name\":\"三楼35党建会议室新风\"},\"ESP8266_9925572\":{\"name\":\"\"},\"ESP8266_10005258\":{\"name\":\"\"},\"ESP8266_524478\":{\"name\":\"\"},\"ESP8266_9959024\":{\"name\":\"\"},\"ESP8266_9924667\":{\"name\":\"\"},\"ESP8266_9931370\":{\"name\":\"\"},\"ESP8266_9923383\":{\"name\":\"\"},\"ESP8266_10006696\":{\"name\":\"\"},\"ESP8266_9944985\":{\"name\":\"\"},\"ESP8266_9941341\":{\"name\":\"\"},\"ESP8266_9936075\":{\"name\":\"\"},\"ESP8266_449971\":{\"name\":\"\"},\"ESP8266_9935390\":{\"name\":\"\"},\"ESP8266_10007032\":{\"name\":\"\"},\"ESP8266x00c1747a\":{\"name\":\"二楼窗帘、雨棚433发射器\"},\"ESP8266x00c1cb4e\":{\"name\":\"二楼雨棚433发射器\"},\"ESP8266x00c1cb4e_1\":{\"name\":\"二楼1号雨棚\"},\"ESP8266x00c1cb4e_2\":{\"name\":\"二楼2号雨棚\"},\"ESP8266x00491fd5\":{\"name\":\"福州东门开发板\"}}},\"CMDGATE_CL_VR_F1\":{\"name\":\"长乐VR体验馆党建1楼\",\"devices\":{\"ESP8266x0006d778\":{\"name\":\"党建1楼样板\"},\"ESP8266x002b1a04\":{\"name\":\"党建1楼1\"},\"ESP8266x002c258c\":{\"name\":\"党建1楼2\"},\"ESP8266x002b0e27\":{\"name\":\"党建1楼3\"},\"ESP8266x00c77d13\":{\"name\":\"党建1楼4\"},\"ESP8266x00c7b907\":{\"name\":\"党建1楼5\"},\"ESP8266x002b7188\":{\"name\":\"党建1楼6\"},\"ESP8266x002c2fe7\":{\"name\":\"党建1楼7\"},\"ESP8266x002c6f23\":{\"name\":\"党建1楼8\"},\"ESP8266x00c7a9c6\":{\"name\":\"党建1楼9\"},\"ESP8266x002c162d\":{\"name\":\"党建1楼10\"},\"ESP8266x00c786a4\":{\"name\":\"党建1楼11\"},\"ESP8266x00c69d8f\":{\"name\":\"党建1楼12\"},\"ESP8266x00c71f60\":{\"name\":\"党建1楼13\"},\"ESP8266x002c2464\":{\"name\":\"党建1楼14\"},\"ESP8266x002c8923\":{\"name\":\"党建1楼15\"},\"ESP8266x00c79674\":{\"name\":\"党建1楼16\"},\"ESP8266x00c6e64a\":{\"name\":\"党建1楼17\"},\"ESP8266x00c78231\":{\"name\":\"党建1楼18\"},\"ESP8266x00c771dd\":{\"name\":\"党建1楼19\"},\"ESP8266x002bdc04\":{\"name\":\"党建1楼20\"},\"ESP8266x00c5a9e6\":{\"name\":\"党建1楼21\"},\"ESP8266x00c5a343\":{\"name\":\"党建1楼22\"},\"ESP8266x002badef\":{\"name\":\"党建1楼23\"},\"ESP8266x002c1edd\":{\"name\":\"党建1楼24\"},\"ESP8266x00c72f12\":{\"name\":\"党建1楼25\"},\"ESP8266x00c6495d\":{\"name\":\"党建1楼26\"},\"ESP8266x002b0948\":{\"name\":\"党建1楼27\"},\"ESP8266x002c2813\":{\"name\":\"党建1楼28\"},\"ESP8266x002cac4e\":{\"name\":\"党建1楼29\"},\"ESP8266x00c77946\":{\"name\":\"党建1楼30\"},\"ESP8266x00c764c8\":{\"name\":\"党建1楼31\"},\"ESP8266x00c72e9b\":{\"name\":\"党建1楼32\"},\"ESP8266x002c25b3\":{\"name\":\"党建1楼33\"},\"ESP8266x002c7ff3\":{\"name\":\"党建1楼34\"},\"ESP8266x002c7cea\":{\"name\":\"党建1楼35\"},\"ESP8266x00c78eb5\":{\"name\":\"党建1楼36\"},\"ESP8266x00c5cced\":{\"name\":\"党建1楼37\"},\"ESP8266x00c66b43\":{\"name\":\"党建1楼38\"},\"ESP8266x002c959f\":{\"name\":\"党建1楼39\"},\"ESP8266x002b0bcc\":{\"name\":\"党建1楼40\"},\"ESP8266x002c9ece\":{\"name\":\"党建1楼41\"},\"ESP8266x002b33bb\":{\"name\":\"党建1楼42\"},\"ESP8266x002ca32b\":{\"name\":\"党建1楼43\"},\"ESP8266x00c74957\":{\"name\":\"党建1楼44\"},\"ESP8266x002c9141\":{\"name\":\"党建1楼45\"},\"ESP8266x002ba534\":{\"name\":\"党建1楼46\"},\"ESP8266x00c5a8b4\":{\"name\":\"党建1楼47\"},\"ESP8266x00c691b6\":{\"name\":\"党建1楼48\"},\"ESP8266x002c2c21\":{\"name\":\"党建1楼49\"},\"ESP8266x002b28e4\":{\"name\":\"党建1楼50\"},\"ESP8266x00c77c37\":{\"name\":\"党建1楼51\"},\"ESP8266x00c68f51\":{\"name\":\"党建1楼52\"},\"ESP8266x00c73120\":{\"name\":\"党建1楼53\"},\"ESP8266x002b1076\":{\"name\":\"党建1楼54\"},\"ESP8266x00c72fee\":{\"name\":\"党建1楼55\"},\"ESP8266x00c78ee8\":{\"name\":\"党建1楼56\"},\"ESP8266x002c921c\":{\"name\":\"党建1楼57\"},\"ESP8266x002b659e\":{\"name\":\"党建1楼58\"},\"ESP8266x002c9b1f\":{\"name\":\"党建1楼59\"},\"ESP8266x00c7793e\":{\"name\":\"党建1楼60\"},\"ESP8266x00c1a13c\":{\"name\":\"党建1楼水机\"}}},\"CMDGATE_CL_VR_F2\":{\"name\":\"长乐VR体验馆2楼\",\"devices\":{\"0xa4c1381c5bd15c52\":{\"name\":\"恐龙区男卫生间三路开关\"},\"0xa4c138d2c1bdc074\":{\"name\":\"恐龙区女卫生间三路开关\"},\"0x00158d0003539f17\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"}}},\"CMDGATE_CL_JZX01\":{\"name\":\"长乐1号集装箱\",\"devices\":{\"c8f742e36fd2\":{\"name\":\"1号空调\"},\"24dfa7056ca9\":{\"name\":\"2号空调\"},\"ESP8266_5628343\":{\"name\":\"窗帘控制芯片\"},\"CL_JZX01_curtain_01\":{\"name\":\"1号窗帘\"},\"CL_JZX01_curtain_02\":{\"name\":\"2号窗帘\"},\"CL_JZX01_curtain_03\":{\"name\":\"3号窗帘\"},\"CL_JZX01_curtain_04\":{\"name\":\"4号窗帘\"},\"CL_JZX01_curtain_05\":{\"name\":\"5号窗帘\"},\"CL_JZX01_curtain_06\":{\"name\":\"6号窗帘\"}}},\"CMDGATE_CL_JZX02\":{\"name\":\"长乐2号集装箱\",\"devices\":{}},\"CMDGATE_CL_QYA53\":{\"name\":\"长乐企业号A5-3\",\"devices\":{\"CL_QYA53_curtain_01\":{\"name\":\"1号窗帘\"},\"CL_QYA53_curtain_02\":{\"name\":\"2号窗帘\"}}},\"CMDGATE_CL_DJHYS\":{\"name\":\"长乐DJ会议室\",\"devices\":{\"CL_DJHYS_curtain_01\":{\"name\":\"1号窗帘\"},\"CL_DJHYS_curtain_02\":{\"name\":\"2号窗帘\"},\"CL_DJHYS_curtain_03\":{\"name\":\"3号窗帘\"},\"CL_DJHYS_curtain_04\":{\"name\":\"4号窗帘\"},\"CL_DJHYS_curtain_05\":{\"name\":\"5号窗帘\"},\"CL_DJHYS_curtain_06\":{\"name\":\"6号窗帘\"},\"CL_DJHYS_curtain_07\":{\"name\":\"7号窗帘\"},\"CL_DJHYS_curtain_08\":{\"name\":\"8号窗帘\"},\"CL_DJHYS_curtain_09\":{\"name\":\"9号窗帘\"},\"CL_DJHYS_curtain_10\":{\"name\":\"10号窗帘\"},\"CL_DJHYS_curtain_11\":{\"name\":\"11号窗帘\"},\"CL_DJHYS_curtain_12\":{\"name\":\"12号窗帘\"},\"CL_DJHYS_curtain_13\":{\"name\":\"13号窗帘\"},\"CL_DJHYS_curtain_14\":{\"name\":\"14号窗帘\"},\"CL_DJHYS_curtain_15\":{\"name\":\"15号窗帘\"},\"CL_DJHYS_curtain_16\":{\"name\":\"16号窗帘\"},\"CL_DJHYS_curtain_17\":{\"name\":\"17号窗帘\"},\"CL_DJHYS_curtain_18\":{\"name\":\"18号窗帘\"},\"CL_DJHYS_curtain_19\":{\"name\":\"19号窗帘\"},\"CL_DJHYS_curtain_20\":{\"name\":\"20号窗帘\"},\"ESP8266x005dc688\":{\"name\":\"福州开发空调板\"},\"ESP8266x005dc677\":{\"name\":\"（后）走道区5号空调\",\"sensors\":{\"0x00158d000704fdaa\":\"\",\"0x00158d0007064a65\":\"\"}},\"ESP8266x00c1dffd\":{\"name\":\"健身区->靠走道空调\"},\"ESP8266x00c1c16d\":{\"name\":\"c1c16d\"},\"ESP8266x00c1cb9a\":{\"name\":\"会议区->靠模型区2入口2号空调\"},\"ESP8266x00c223c1\":{\"name\":\"c223c1\"},\"ESP8266x00c1a011\":{\"name\":\"c1a011\"},\"ESP8266x00c1d2ab\":{\"name\":\"c1d2ab\"},\"ESP8266x00c203ef\":{\"name\":\"c203ef\"},\"ESP8266x00c176cb\":{\"name\":\"模型式1-靠墙空调\"},\"ESP8266x00c17bd3\":{\"name\":\"会议区->会议桌左上方空调\"},\"ESP8266x00c1a2ab\":{\"name\":\"读书区->靠窗空调\"},\"ESP8266x00c23f17\":{\"name\":\"卫生间门口->柱子右前方靠走廊空调\"},\"ESP8266x00c1e174\":{\"name\":\"会议区->靠模型区2入口1号空调\"},\"ESP8266x00c1d5ac\":{\"name\":\"模型式1-中间空调\"},\"ESP8266x00c22c11\":{\"name\":\"c22c11\"},\"ESP8266x00c1bf04\":{\"name\":\"c1bf04\"},\"ESP8266x00c14ddc\":{\"name\":\"模型式2-靠墙空调\"},\"ESP8266x00c1e7f4\":{\"name\":\"c1e7f4\"},\"ESP8266x00c1c9df\":{\"name\":\"c1c9df\"},\"ESP8266x00c20a26\":{\"name\":\"（前）走道区3号空调\"},\"ESP8266x00c21296\":{\"name\":\"会议区->靠前走廊空调\"},\"ESP8266x00c17f7c\":{\"name\":\"c17f7c\"},\"ESP8266x00c1a719\":{\"name\":\"卫生间门口->柱子右后方靠墙空调\"},\"ESP8266x00c1a9b2\":{\"name\":\"模型式2->中间空调\"},\"ESP8266x00c1c69d\":{\"name\":\"c1c69d\"},\"ESP8266x00c17d51\":{\"name\":\"卫生间门口->柱子左边靠读书区空调\"},\"ESP8266x00c20ca1\":{\"name\":\"c20ca1\"},\"ESP8266x00c19fe5\":{\"name\":\"会议区->前大屏左上方空调\"},\"ESP8266x00c204a1\":{\"name\":\"卫生间门口->靠走廊柱子后方空调\"},\"ESP8266x00c1cc0a\":{\"name\":\"c1cc0a\"},\"ESP8266x00c1997e\":{\"name\":\"会议区->前大屏右上方空调\"},\"ESP8266x00c1aa1c\":{\"name\":\"（后）走道区4号空调\"},\"ESP8266x00c235cb\":{\"name\":\"c235cb\"},\"ESP8266x00c1c1ec\":{\"name\":\"c1c1ec\"},\"ESP8266x00c1cfb3\":{\"name\":\"c1cfb3\"},\"ESP8266x00c1cda4\":{\"name\":\"c1cda4\"},\"ESP8266x00c19a65\":{\"name\":\"弹丸区->靠走道空调\"},\"ESP8266x00c18442\":{\"name\":\"（前）走道区1号空调\"},\"ESP8266x00c17dd8\":{\"name\":\"c17dd8\"},\"ESP8266x00c162fa\":{\"name\":\"c162fa\"},\"ESP8266x00c1c5f9\":{\"name\":\"（前）走道区2号空调\"},\"ESP8266x00c23379\":{\"name\":\"c23379\"},\"ESP8266x00c1b48c\":{\"name\":\"c1b48c\"},\"0x00158d000353a076\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"},\"0x00158d000353a073\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"},\"0x00158d000353c52b\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"},\"0x00158d00039bf5bc\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"},\"0x00158d0003539a3c\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"},\"0x00158d000704fdaa\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d0007064a65\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d000705e971\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d0007071712\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d000706883e\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d000705007b\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d0007071af4\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d0007089665\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d0007071747\":{\"name\":\"绿米温湿度计-无屏\"},\"0x00158d000588d40a\":{\"name\":\"绿米温湿度计-无屏\"},\"0x54ef441000090760\":{\"name\":\"绿米温湿度计-有屏\"},\"0x54ef4410000902f2\":{\"name\":\"绿米温湿度计-有屏\"},\"0x54ef44100001b16c\":{\"name\":\"绿米温湿度计-有屏\"},\"0x54ef44100009011c\":{\"name\":\"绿米温湿度计-有屏\"},\"0x54ef44100009063c\":{\"name\":\"绿米温湿度计-有屏\"},\"0x54ef441000090215\":{\"name\":\"绿米温湿度计-有屏\"},\"0x60a423fffe3470e5\":{\"name\":\"鸿雁温湿度计-无屏\"},\"0x60a423fffe348618\":{\"name\":\"鸿雁温湿度计-无屏\"},\"0x60a423fffe2a2eb6\":{\"name\":\"鸿雁温湿度计-无屏\"},\"0x60a423fffe347315\":{\"name\":\"鸿雁温湿度计-无屏\"},\"ESP8266x00c20678\":{\"name\":\"乐高区射灯开关\"}}},\"CMDGATE_CL_DJHYS_CBUS\":{\"name\":\"长乐DJ会议室CBUS\",\"devices\":{\"CL_DJHYS_lighting_0\":{\"name\":\"0组灯光\"},\"CL_DJHYS_lighting_1\":{\"name\":\"1组灯光\"},\"CL_DJHYS_lighting_2\":{\"name\":\"2组灯光\"},\"CL_DJHYS_lighting_3\":{\"name\":\"3组灯光\"},\"CL_DJHYS_door_4\":{\"name\":\"4组门开关\"},\"CL_DJHYS_door_5\":{\"name\":\"5组门开关\"},\"CL_DJHYS_lighting_6\":{\"name\":\"6组灯光\"},\"CL_DJHYS_lighting_7\":{\"name\":\"7组灯光\"},\"CL_DJHYS_lighting_8\":{\"name\":\"8组灯光\"},\"CL_DJHYS_lighting_9\":{\"name\":\"9组灯光\"},\"CL_DJHYS_lighting_10\":{\"name\":\"10组灯光\"},\"CL_DJHYS_lighting_11\":{\"name\":\"11组灯光\"},\"CL_DJHYS_door_12\":{\"name\":\"12组门开关\"},\"CL_DJHYS_door_13\":{\"name\":\"13组门开关\"},\"CL_DJHYS_lighting_14\":{\"name\":\"14组灯光\"},\"CL_DJHYS_lighting_15\":{\"name\":\"15组灯光\"},\"CL_DJHYS_lighting_16\":{\"name\":\"16组灯光\"},\"CL_DJHYS_lighting_17\":{\"name\":\"17组灯光\"},\"CL_DJHYS_lighting_18\":{\"name\":\"18组灯光\"},\"CL_DJHYS_lighting_19\":{\"name\":\"19组灯光\"},\"CL_DJHYS_lighting_20\":{\"name\":\"20组灯光\"},\"CL_DJHYS_lighting_21\":{\"name\":\"21组灯光\"},\"CL_DJHYS_lighting_22\":{\"name\":\"22组灯光\"},\"CL_DJHYS_lighting_23\":{\"name\":\"23组灯光\"},\"CL_DJHYS_lighting_24\":{\"name\":\"24组灯光\"},\"CL_DJHYS_lighting_25\":{\"name\":\"25组灯光\"},\"CL_DJHYS_lighting_26\":{\"name\":\"26组灯光\"},\"CL_DJHYS_lighting_27\":{\"name\":\"27组灯光\"},\"CL_DJHYS_lighting_28\":{\"name\":\"28组灯光\"},\"CL_DJHYS_lighting_29\":{\"name\":\"29组灯光\"},\"CL_DJHYS_lighting_30\":{\"name\":\"30组灯光\"},\"CL_DJHYS_lighting_31\":{\"name\":\"31组灯光\"},\"CL_DJHYS_lighting_32\":{\"name\":\"32组灯光\"},\"CL_DJHYS_lighting_33\":{\"name\":\"33组灯光\"},\"CL_DJHYS_lighting_34\":{\"name\":\"34组灯光\"},\"CL_DJHYS_lighting_35\":{\"name\":\"35组灯光\"},\"CL_DJHYS_lighting_36\":{\"name\":\"36组灯光\"},\"CL_DJHYS_lighting_37\":{\"name\":\"37组灯光\"},\"CL_DJHYS_lighting_38\":{\"name\":\"38组灯光\"},\"CL_DJHYS_lighting_39\":{\"name\":\"39组灯光\"},\"CL_DJHYS_lighting_40\":{\"name\":\"40组灯光\"}}},\"CMDGATE_CL_DJHYS_CT_485\":{\"name\":\"长乐DJ会议室485窗帘\",\"devices\":{}},\"CMDGATE_CL_CXY\":{\"name\":\"长乐禅修院\",\"devices\":{\"ESP8266x00dce3ae\":{\"name\":\"音箱\"}}},\"CMDGATE_CL_FRA303\":{\"name\":\"福软教室A303\",\"devices\":{\"CL_FRA303_curtain_01\":{\"name\":\"幕布\"},\"CL_FRA303_curtain_02\":{\"name\":\"备用\"}}},\"CMDGATE_CL_FRA305\":{\"name\":\"福软教室A305\",\"devices\":{\"CL_FRA305_curtain_01\":{\"name\":\"幕布\"},\"CL_FRA305_curtain_02\":{\"name\":\"备用\"}}},\"CMDGATE_CL_FRA306\":{\"name\":\"福软教室A306\",\"devices\":{\"CL_FRA306_curtain_01\":{\"name\":\"幕布\"},\"CL_FRA306_curtain_02\":{\"name\":\"备用\"}}},\"CMDGATE_CL_FRD302\":{\"name\":\"福软教室D302\",\"devices\":{\"CL_FRD302_curtain_01\":{\"name\":\"幕布\"},\"CL_FRD302_curtain_02\":{\"name\":\"备用\"}}},\"CMDGATE_CL_FRF308\":{\"name\":\"福软教室F308\",\"devices\":{\"CL_FRF308_curtain_01\":{\"name\":\"幕布\"},\"CL_FRF308_curtain_02\":{\"name\":\"备用\"}}},\"CMDGATE_CL_FRF319\":{\"name\":\"福软教室F319\",\"devices\":{\"CL_FRF319_curtain_01\":{\"name\":\"幕布\"},\"CL_FRF319_curtain_02\":{\"name\":\"备用\"}}},\"CMDGATE_CL_XZ_MSG\":{\"name\":\"长乐小镇美术馆\",\"devices\":{\"ESP8266x00c1cd77\":{\"name\":\"空调风机-485控制模块\"},\"ESP8266x00c1cd77_1\":{\"name\":\"空调风机1\"},\"ESP8266x00c1cd77_2\":{\"name\":\"空调风机2\"},\"ESP8266x00c1cd77_3\":{\"name\":\"空调风机3\"},\"ESP8266x00c1cd77_4\":{\"name\":\"空调风机4\"}}},\"CMDGATE_FZ_DEV\":{\"name\":\"福州亚太二楼开发(有433射频)\",\"devices\":{\"DJ-YT-500-01\":{\"name\":\"1号舵机\"},\"ESP32x6abf713c\":{\"name\":\"esp32开发板\"},\"ESP32x6dabf498\":{\"name\":\"esp32开发板\"},\"ESP8266x005dc775\":{\"name\":\"党建1楼开发板\"},\"ESP8266x0006d432\":{\"name\":\"党建1楼开发板带强电\"},\"android_924ed49\":{\"name\":\"采码android机1\"},\"0xa4c13860713c6457\":{\"name\":\"Z3开关HONYAR一路开关\"},\"0x00158d000353c53f\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"},\"0x00158d00039be5c1\":{\"name\":\"Z3插座-Xiaomi-ZNCZ02LM\"},\"ESP8266_1839985816\":{\"name\":\"ESP32测试板\"},\"ESP8266x0006dbe5\":{\"name\":\"CC2652透传网关\"}}},\"CMDGATE_FZ_PMZ_AC\":{\"name\":\"福州飘渺庄空调\",\"devices\":{\"ESP8266x005dcac5\":{\"name\":\"未启用\"},\"ESP8266x0006d906\":{\"name\":\"未启用\"},\"ESP8266x00c20fff\":{\"name\":\"飘渺庄空调1-PM3-F10\"},\"ESP8266x00d03f88\":{\"name\":\"飘渺庄空调2-PM3-F11\"},\"ESP8266x00c1a22a\":{\"name\":\"飘渺庄空调3-PM2-F07\"},\"ESP8266x00c1cae3\":{\"name\":\"飘渺庄空调4-PM2-F25\"},\"ESP8266x00c19982\":{\"name\":\"飘渺庄空调5-PM2-F24\"},\"ESP8266x00c1cbb8\":{\"name\":\"飘渺庄空调6-PM2-F19\"},\"ESP8266x00c1cca9\":{\"name\":\"飘渺庄空调7-PM2-F18\"},\"ESP8266x00c22d93\":{\"name\":\"飘渺庄空调8-PM2-F20\"},\"ESP8266x00c1d2ba\":{\"name\":\"飘渺庄空调9-PM2-F13\"},\"ESP8266x003dc0f3\":{\"name\":\"飘渺庄空调10-PM2-F21\"},\"ESP8266x00c1d3fd\":{\"name\":\"飘渺庄空调11-PM2-F15\"},\"ESP8266x00c1ceca\":{\"name\":\"飘渺庄空调12-PM2-F22\"},\"ESP8266x00c20ed6\":{\"name\":\"飘渺庄空调13-PM2-F23\"},\"ESP8266x003db3c4\":{\"name\":\"飘渺庄空调14-PM2-F16\"},\"ESP8266x00c1ddd1\":{\"name\":\"飘渺庄空调15-PM3-F20\"},\"ESP8266x00c1bad8\":{\"name\":\"飘渺庄空调16-PM2-F14\"},\"ESP8266x003dc6b4\":{\"name\":\"飘渺庄空调17-PM2-F12\"},\"ESP8266x00c1a8c2\":{\"name\":\"飘渺庄空调18-PM2-F10\"},\"ESP8266x00c1768e\":{\"name\":\"飘渺庄空调19-PM2-F11\"},\"ESP8266x00c1c883\":{\"name\":\"飘渺庄空调20-PM2-F06\"},\"ESP8266x00c1a908\":{\"name\":\"飘渺庄空调21-PM2-F05\"},\"ESP8266x00c1d2ac\":{\"name\":\"飘渺庄空调22-PM2-F04\"},\"ESP8266x00d09c3a\":{\"name\":\"飘渺庄空调23-PM2-F08\"},\"ESP8266x00c184de\":{\"name\":\"飘渺庄空调24-\"},\"ESP8266x00c1e1af\":{\"name\":\"飘渺庄空调25-PM2-F09\"},\"ESP8266x003d92de\":{\"name\":\"飘渺庄空调26-PM2-F01\"},\"ESP8266x00c1ad5e\":{\"name\":\"飘渺庄空调27-PM2-F02\"},\"ESP8266x00c2036c\":{\"name\":\"飘渺庄空调28-PM2-F17\"},\"ESP8266x00c172c3\":{\"name\":\"飘渺庄空调29-PM3-电梯口\"},\"ESP8266x00c1d473\":{\"name\":\"飘渺庄空调30-PM3-F25\"},\"ESP8266x00c1d309\":{\"name\":\"飘渺庄空调31-PM3-F12\"},\"ESP8266x00c172d3\":{\"name\":\"飘渺庄空调32-PM3-F13\"},\"ESP8266x00c1d4dc\":{\"name\":\"飘渺庄空调33-PM3-F19\"},\"ESP8266x00c153db\":{\"name\":\"飘渺庄空调34-PM3-F14\"},\"ESP8266x00c20c2c\":{\"name\":\"飘渺庄空调35-PM3-F18\"},\"ESP8266x00c1a6be\":{\"name\":\"飘渺庄空调36-PM3-F17\"},\"ESP8266x00c1e517\":{\"name\":\"飘渺庄空调37-PM2-F03\"},\"ESP8266x00c15426\":{\"name\":\"飘渺庄空调38-PM3-F16\"},\"ESP8266x00c22bf6\":{\"name\":\"东门空调39\"},\"ESP8266x00c20638\":{\"name\":\"东门空调40\"}}},\"CMDGATE_FZ_YT_AC\":{\"name\":\"福州亚太空调\",\"devices\":{\"ESP8266x002c2739\":{\"name\":\"5楼测试样板\"}}},\"CMDGATE_FZ_DM_AC\":{\"name\":\"福州东门空调\",\"devices\":{}},\"CMDGATE_FZ_YT2DGN\":{\"name\":\"福州亚太二楼多功能会议室\",\"devices\":{\"FZ_YT2DGN_curtain_01\":{\"name\":\"幕布\"}}},\"CMDGATE_XA_KFDX01\":{\"name\":\"西安开放大学\",\"devices\":{\"780f7732d5f6\":{\"name\":\"1号空调\"},\"XA_KFDX01_curtain_01\":{\"name\":\"1号窗帘\"},\"XA_KFDX01_curtain_02\":{\"name\":\"2号窗帘\"},\"XA_KFDX01_curtain_03\":{\"name\":\"3号窗帘\"}}},\"CMDGATE_XA_KFDX03\":{\"name\":\"西安开放大学智慧教室303\",\"devices\":{\"XA_KFDX03_air_01\":{\"name\":\"1号空调\"}}},\"CMDGATE_XA_KFDX08\":{\"name\":\"西安开放大学智慧教室302\",\"devices\":{\"XA_KFDX08_air_01\":{\"name\":\"1号空调\"}}},\"CMDGATE_ZFZ01\":{\"name\":\"中非展01\",\"devices\":{\"tasmota_982A80\":{\"name\":\"1号风扇\"},\"tasmota_9AA972\":{\"name\":\"2号风扇\"},\"ZFZ01_curtain_01\":{\"name\":\"1号窗帘\"},\"ZFZ01_curtain_02\":{\"name\":\"2号窗帘\"}}}}",
+                "tot": "json"
             }
         ],
         "action": "",
@@ -2015,46 +2587,365 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 290,
-        "y": 260,
+        "x": 380,
+        "y": 120,
         "wires": [
             [
-                "daa6a0cef19c038d"
+                "df25086cd08c3bf2"
             ]
         ]
     },
     {
-        "id": "81d871be6af1b2a9",
-        "type": "link in",
-        "z": "46a5ba0d798d87c3",
-        "name": "重置登入请求",
-        "links": [
-            "87bda24bd97b90b7",
-            "7cc27320956b5354",
-            "e15f8affc75b6294"
-        ],
-        "x": 165,
-        "y": 260,
+        "id": "df25086cd08c3bf2",
+        "type": "function",
+        "z": "c2fb860326aa680d",
+        "name": "数据补全",
+        "func": "let devices = flow.get(\"devices\") ;\n\nlet setDevice = (did, device, gateway) => {\n    if (devices[did] && devices[did].gid) {\n        node.error(\"设备编号重复：\" + did);\n        node.warn(devices[did]);\n        node.warn(gateway);\n        return;\n    }\n    device.did = did;\n    device.gid = gateway ? gateway.did : null\n    device.gateway = gateway;\n    devices[did] = device;\n\n    let subdevs = device.devices;\n    if (subdevs) {\n        let subkeys = Object.keys(subdevs);\n        subkeys.forEach(subkey => {\n            let subdev = subdevs[subkey];\n            setDevice(subkey, subdev, device);            \n        });        \n\n    }\n}\n\n\n\n    let keys = Object.keys(devices);\n    keys.forEach(key => {\n        let device = devices[key];\n        setDevice(key, device)\n        \n    });\n\nmsg.payload = devices;\n\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 120,
         "wires": [
             [
-                "a08e3843c15e944d"
+                "939c567dce3d5031",
+                "02b53a8e8996c0c3"
             ]
         ]
     },
     {
-        "id": "1c8bebd4730ca10f",
-        "type": "comment",
-        "z": "46a5ba0d798d87c3",
-        "name": "登入",
-        "info": "",
-        "x": 170,
-        "y": 100,
+        "id": "939c567dce3d5031",
+        "type": "debug",
+        "z": "c2fb860326aa680d",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 120,
         "wires": []
     },
     {
-        "id": "fa0afe6023cff548",
+        "id": "e62502a3158097f0",
         "type": "debug",
-        "z": "46a5ba0d798d87c3",
+        "z": "c2fb860326aa680d",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "d4ddc4d928a69f8c",
+        "type": "link in",
+        "z": "c2fb860326aa680d",
+        "name": "接口处理输入",
+        "links": [
+            "adeb7a4edd9ba86a"
+        ],
+        "x": 185,
+        "y": 720,
+        "wires": [
+            [
+                "958d6d3308232ac2"
+            ]
+        ]
+    },
+    {
+        "id": "958d6d3308232ac2",
+        "type": "function",
+        "z": "c2fb860326aa680d",
+        "name": "设备事件请求",
+        "func": "let hd = msg.payload.hd;\nif (hd.stp == 0 && hd.entry.type == \"evt\" && hd.from.type == \"dev\" ||\n    hd.stp == 1 && hd.entry.id == \"get\" && hd.from.type == \"dev\"\n) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 720,
+        "wires": [
+            [
+                "83eb3e50b49d8fdb"
+            ]
+        ]
+    },
+    {
+        "id": "83eb3e50b49d8fdb",
+        "type": "switch",
+        "z": "c2fb860326aa680d",
+        "name": "",
+        "property": "payload.hd.entry.id",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "report",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "get",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 560,
+        "y": 720,
+        "wires": [
+            [
+                "39eeacfc75abea8b",
+                "839dcac2f8b79ba1"
+            ],
+            [
+                "839dcac2f8b79ba1",
+                "39eeacfc75abea8b"
+            ]
+        ]
+    },
+    {
+        "id": "39eeacfc75abea8b",
+        "type": "function",
+        "z": "c2fb860326aa680d",
+        "name": "上报事件处理",
+        "func": "let fdevices = flow.get(\"devices\");\n\n\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet did = hd.from.id;\n\nlet fdev = fdevices[did];\n\n\nlet gid = fdev && fdev.gid ? fdev.gid : \"CMDGATE_NDIOT\";\nlet cmd = 3;\n\n\n\nlet _hd = {\n    did: did,\n    gid: gid,\n    cmd: cmd,\n    stp: 1\n};\n\n\nreturn {\n    payload: {\n        hd: _hd,\n        pld: pld\n    }\n}\n    \n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 720,
+        "wires": [
+            [
+                "6d9b2c18ec698afd"
+            ]
+        ]
+    },
+    {
+        "id": "839dcac2f8b79ba1",
+        "type": "debug",
+        "z": "c2fb860326aa680d",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "be89fe2a9177fdce",
+        "type": "mqtt out",
+        "z": "c2fb860326aa680d",
+        "name": "平台/终端发布",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "4f298837cfcb1b75",
+        "x": 560,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "9ae01921f1d04059",
+        "type": "link in",
+        "z": "c2fb860326aa680d",
+        "name": "平台发布输入",
+        "links": [
+            "6d9b2c18ec698afd"
+        ],
+        "x": 165,
+        "y": 360,
+        "wires": [
+            [
+                "dfa17694354b9820"
+            ]
+        ]
+    },
+    {
+        "id": "dfa17694354b9820",
+        "type": "function",
+        "z": "c2fb860326aa680d",
+        "name": "平台上行主题",
+        "func": "if (!msg.topic)\n    msg.topic = \"business/svcgate/\" + msg.payload.hd.gid;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 360,
+        "wires": [
+            [
+                "be89fe2a9177fdce",
+                "e9c3460342322e79"
+            ]
+        ]
+    },
+    {
+        "id": "6d9b2c18ec698afd",
+        "type": "link out",
+        "z": "c2fb860326aa680d",
+        "name": "平台发布输出",
+        "mode": "link",
+        "links": [
+            "9ae01921f1d04059"
+        ],
+        "x": 955,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "e9c3460342322e79",
+        "type": "debug",
+        "z": "c2fb860326aa680d",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "d8c371b97195ef03",
+        "type": "link out",
+        "z": "c2fb860326aa680d",
+        "name": "平台请求输出",
+        "mode": "link",
+        "links": [
+            "774fa947dc60b529"
+        ],
+        "x": 1025,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "eff06f6c9328d832",
+        "type": "function",
+        "z": "c2fb860326aa680d",
+        "d": true,
+        "name": "读写?",
+        "func": "let fdevices = flow.get(\"devices\");\nlet gdevices = global.get(\"data\").devices;\n\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet did = hd.did;\n\nlet fdev = fdevices[did];\nlet gdev = gdevices[did];\n\nmsg.device = gdev;\n\nif (hd.stp == 2 || \n    !hd.stp && (!pld || Object.keys(pld).length == 0) ||\n    gdev && gdev.type === \"CT\" && pld.open == -1\n    ) {\n    return [msg, null]\n} else {\n    \n    if (gdev && gdev.type === \"CT\" && (pld.open || pld.open === 0))\n        pld.pos = pld.open\n    \n    return [null, msg]\n}\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 940,
+        "wires": [
+            [
+                "b0d2441490f9b206"
+            ],
+            [
+                "1d9f6f999564fc1d",
+                "08adf599d6a749a2"
+            ]
+        ]
+    },
+    {
+        "id": "774fa947dc60b529",
+        "type": "link in",
+        "z": "c2fb860326aa680d",
+        "name": "平台请求输入",
+        "links": [
+            "d8c371b97195ef03",
+            "3fe371e58c48bbba"
+        ],
+        "x": 185,
+        "y": 940,
+        "wires": [
+            [
+                "85105ede26c59bd3"
+            ]
+        ]
+    },
+    {
+        "id": "b0d2441490f9b206",
+        "type": "function",
+        "z": "c2fb860326aa680d",
+        "name": "查询终端",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet devices = data.devices;\nlet ids = data.ids;\nlet devId = msg.payload.hd.did;\nlet dev = devices[devId]\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: dev ? dev.dom_id : \"\"\n    },\n    from: {\n        type: \"plf\",\n        id: ids.plf\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"get\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet pld = { id : devId };\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 900,
+        "wires": [
+            [
+                "c0747c850c8b2cc2",
+                "ab1ef9fb825cf331"
+            ]
+        ]
+    },
+    {
+        "id": "1d9f6f999564fc1d",
+        "type": "function",
+        "z": "c2fb860326aa680d",
+        "name": "设置终端",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet devices = data.devices;\nlet ids = data.ids;\nlet devId = msg.payload.hd.did;\nlet dev = devices[devId]\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: dev ? dev.dom_id : \"\"\n    },\n    from: {\n        type: \"plf\",\n        id: ids.plf\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"set\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet pld = { id : devId };\npld = Object.assign(pld, msg.payload.pld);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 960,
+        "wires": [
+            [
+                "ab1ef9fb825cf331",
+                "214659880a400c16"
+            ]
+        ]
+    },
+    {
+        "id": "b40ff2431aa5753a",
+        "type": "link out",
+        "z": "c2fb860326aa680d",
+        "name": "读写输出",
+        "mode": "link",
+        "links": [
+            "eea822e040f44475"
+        ],
+        "x": 965,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "c0747c850c8b2cc2",
+        "type": "debug",
+        "z": "c2fb860326aa680d",
         "name": "",
         "active": false,
         "tosidebar": true,
@@ -2064,65 +2955,13 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 890,
-        "y": 160,
+        "y": 860,
         "wires": []
     },
     {
-        "id": "b45b2eba09115dae",
-        "type": "link out",
-        "z": "46a5ba0d798d87c3",
-        "name": "",
-        "mode": "link",
-        "links": [
-            "774d0cb8ef787fc2"
-        ],
-        "x": 1005,
-        "y": 280,
-        "wires": []
-    },
-    {
-        "id": "6daf1af57e46df30",
-        "type": "function",
-        "z": "46a5ba0d798d87c3",
-        "name": "状态发布",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n        app: \"0\",\n        dom: \"0\"\n    },\n    from: {\n        type: \"plf\",\n        id: data.ids.plf\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.plf,\n    online: 1\n};\n\nreturn {\n    payload:{\n        hd: hd,\n        pld: pld\n    },\n    qos: 2,\n    retain: true\n};",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 740,
-        "y": 380,
-        "wires": [
-            [
-                "7dc6bf6f82555874",
-                "b45b2eba09115dae"
-            ]
-        ]
-    },
-    {
-        "id": "b784350e948a9e8b",
-        "type": "link in",
-        "z": "46a5ba0d798d87c3",
-        "name": "状态发布输入",
-        "links": [
-            "0ecafaa953e1df94",
-            "09cf3f2506fb6591",
-            "810c9c146d81321c",
-            "41780e48f27ccf1c"
-        ],
-        "x": 165,
-        "y": 380,
-        "wires": [
-            [
-                "6daf1af57e46df30"
-            ]
-        ]
-    },
-    {
-        "id": "7dc6bf6f82555874",
+        "id": "08adf599d6a749a2",
         "type": "debug",
-        "z": "46a5ba0d798d87c3",
+        "z": "c2fb860326aa680d",
         "name": "",
         "active": false,
         "tosidebar": true,
@@ -2131,357 +2970,49 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1010,
-        "y": 420,
+        "x": 470,
+        "y": 1040,
         "wires": []
     },
     {
-        "id": "a1d93e26f00d9928",
+        "id": "ab1ef9fb825cf331",
         "type": "function",
-        "z": "46a5ba0d798d87c3",
-        "name": "未登入？",
-        "func": "let data = global.get(\"data\");\nif (!data.ids.app || !data.ids.dio) {\n    return msg;\n}",
-        "outputs": 1,
+        "z": "c2fb860326aa680d",
+        "name": "中转？",
+        "func": "let hd = msg.payload.hd;\nif (hd.pref.dom)\n    return [msg, null];\nelse\n    return [null, msg];",
+        "outputs": 2,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
-        "y": 200,
+        "x": 830,
+        "y": 920,
         "wires": [
             [
-                "9b39f6a45516c881"
+                "7b2b075120b2194c"
+            ],
+            [
+                "b40ff2431aa5753a"
             ]
         ]
     },
     {
-        "id": "75f02d7892d5c309",
-        "type": "function",
-        "z": "46a5ba0d798d87c3",
-        "name": "状态上线ToDIO",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nif (data.ids.dio) {\n    let hd = {\n        pref: {\n            app: \"0\",\n            dom: \"0\"\n        },\n        to: {\n            type: \"0\",\n            id: \"0\"\n        },\n        entry: {\n            type: \"evt\",\n            id: \"status\"\n        },\n        stp: 1,\n        version: global.get(\"version\")\n    };\n    \n    let pld = {\n        id: data.ids.plf,\n        online: 1\n    };\n    \n    return {\n        payload:{\n            hd: hd,\n            pld: pld\n        }\n    };\n}\n\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 740,
-        "y": 480,
-        "wires": [
-            [
-                "b45b2eba09115dae",
-                "7dc6bf6f82555874"
-            ]
-        ]
-    },
-    {
-        "id": "8a57ac32f524bf5e",
-        "type": "inject",
-        "z": "46a5ba0d798d87c3",
-        "name": "定时上报",
-        "props": [],
-        "repeat": "60",
-        "crontab": "",
-        "once": true,
-        "onceDelay": "60",
-        "topic": "",
-        "x": 510,
-        "y": 480,
-        "wires": [
-            [
-                "75f02d7892d5c309"
-            ]
-        ]
-    },
-    {
-        "id": "1e99de387ea3035c",
-        "type": "link in",
-        "z": "46a5ba0d798d87c3",
-        "name": "",
+        "id": "7b2b075120b2194c",
+        "type": "link out",
+        "z": "c2fb860326aa680d",
+        "name": "读写输出",
+        "mode": "link",
         "links": [
-            "0ecafaa953e1df94"
+            "774d0cb8ef787fc2"
         ],
-        "x": 165,
-        "y": 720,
-        "wires": [
-            [
-                "9c88fd5568c36785"
-            ]
-        ]
+        "x": 965,
+        "y": 900,
+        "wires": []
     },
     {
-        "id": "9c88fd5568c36785",
-        "type": "http request",
-        "z": "46a5ba0d798d87c3",
-        "name": "http获取设备",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "https://iot-mqtt.beta.ndaeweb.com/dio/get_devices",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "senderr": false,
-        "x": 410,
-        "y": 720,
-        "wires": [
-            [
-                "728f165358bdc6bc",
-                "35cf1e9005e8cb0a"
-            ]
-        ]
-    },
-    {
-        "id": "3b2f3e44ab9a8250",
-        "type": "inject",
-        "z": "46a5ba0d798d87c3",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 150,
-        "y": 820,
-        "wires": [
-            [
-                "9c88fd5568c36785"
-            ]
-        ]
-    },
-    {
-        "id": "728f165358bdc6bc",
+        "id": "214659880a400c16",
         "type": "debug",
-        "z": "46a5ba0d798d87c3",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 570,
-        "y": 840,
-        "wires": []
-    },
-    {
-        "id": "35cf1e9005e8cb0a",
-        "type": "function",
-        "z": "46a5ba0d798d87c3",
-        "name": "设备补全",
-        "func": "let  common = global.get(\"common\");\nlet devs = msg.payload;\nif (devs) {\n    devs.forEach(dev => {\n        common.fixUpDev(dev);\n    })\n}",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 640,
-        "y": 720,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "b293cfb8b41ad91f",
-        "type": "link in",
-        "z": "f7e96a32e56d72eb",
-        "name": "接口处理输入",
-        "links": [
-            "be8cd487c69c6c5a"
-        ],
-        "x": 135,
-        "y": 160,
-        "wires": [
-            [
-                "f3fbccc82b509675",
-                "6514803e7db80cac"
-            ]
-        ]
-    },
-    {
-        "id": "f3fbccc82b509675",
-        "type": "function",
-        "z": "f7e96a32e56d72eb",
-        "name": "数据服务响应",
-        "func": "let hd = msg.payload.hd;\nif (hd.stp == 1 && hd.entry.type == \"svc\" && hd.from.type == \"dio\" ) {\n    return msg;\n}",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 310,
-        "y": 160,
-        "wires": [
-            [
-                "43bd55a5970c54c2"
-            ]
-        ]
-    },
-    {
-        "id": "43bd55a5970c54c2",
-        "type": "switch",
-        "z": "f7e96a32e56d72eb",
-        "name": "",
-        "property": "payload.hd.entry.id",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "login",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 520,
-        "y": 160,
-        "wires": [
-            [
-                "c3275c69d557b333"
-            ]
-        ]
-    },
-    {
-        "id": "c3275c69d557b333",
-        "type": "function",
-        "z": "f7e96a32e56d72eb",
-        "name": "登入响应处理",
-        "func": "let data = global.get(\"data\");\nlet pld = msg.payload.pld;\nif (pld.app_id && pld.dio_id && pld.plf_id) {\n    data.ids.app = pld.app_id;\n    data.ids.dio = pld.dio_id;\n    data.ids.plf = pld.plf_id;\n    return msg;\n}",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 750,
-        "y": 120,
-        "wires": [
-            [
-                "7cc27320956b5354",
-                "3be6aa741efc38c0"
-            ]
-        ]
-    },
-    {
-        "id": "7cc27320956b5354",
-        "type": "link out",
-        "z": "f7e96a32e56d72eb",
-        "name": "",
-        "mode": "link",
-        "links": [
-            "81d871be6af1b2a9"
-        ],
-        "x": 945,
-        "y": 80,
-        "wires": []
-    },
-    {
-        "id": "3be6aa741efc38c0",
-        "type": "link out",
-        "z": "f7e96a32e56d72eb",
-        "name": "重载配置",
-        "mode": "link",
-        "links": [
-            "b1a104c8f9b78d59"
-        ],
-        "x": 945,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "6514803e7db80cac",
-        "type": "function",
-        "z": "f7e96a32e56d72eb",
-        "name": "数据事件请求",
-        "func": "let hd = msg.payload.hd;\nif (hd.stp == 0 && hd.entry.type == \"evt\" && hd.from.type == \"dio\" ) {\n    return msg;\n}",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 320,
-        "y": 220,
-        "wires": [
-            [
-                "4788e4fd31445485"
-            ]
-        ]
-    },
-    {
-        "id": "4788e4fd31445485",
-        "type": "switch",
-        "z": "f7e96a32e56d72eb",
-        "name": "",
-        "property": "payload.hd.entry.id",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "status",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 510,
-        "y": 220,
-        "wires": [
-            [
-                "1ea18b95bf25cb02",
-                "294724a339ded15a"
-            ]
-        ]
-    },
-    {
-        "id": "1ea18b95bf25cb02",
-        "type": "function",
-        "z": "f7e96a32e56d72eb",
-        "name": "上线",
-        "func": "return msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 710,
-        "y": 220,
-        "wires": [
-            [
-                "41780e48f27ccf1c"
-            ]
-        ]
-    },
-    {
-        "id": "41780e48f27ccf1c",
-        "type": "link out",
-        "z": "f7e96a32e56d72eb",
-        "name": "状态发布",
-        "mode": "link",
-        "links": [
-            "b784350e948a9e8b"
-        ],
-        "x": 945,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "294724a339ded15a",
-        "type": "debug",
-        "z": "f7e96a32e56d72eb",
+        "z": "c2fb860326aa680d",
         "name": "",
         "active": false,
         "tosidebar": true,
@@ -2491,61 +3022,401 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 730,
-        "y": 260,
+        "y": 1000,
         "wires": []
     },
     {
-        "id": "6eac091ff56c9201",
-        "type": "inject",
-        "z": "c71e6a6d8eb3613c",
-        "name": "",
-        "props": [
+        "id": "85105ede26c59bd3",
+        "type": "switch",
+        "z": "c2fb860326aa680d",
+        "name": "过滤DJ窗帘",
+        "property": "payload.hd.did",
+        "propertyType": "msg",
+        "rules": [
             {
-                "p": "payload.hd.did",
-                "v": "ESP8266x00c1cd77",
+                "t": "eq",
+                "v": "ESP8266x00c0440d",
                 "vt": "str"
             },
             {
-                "p": "payload.hd.cmd",
-                "v": "4",
-                "vt": "num"
+                "t": "eq",
+                "v": "ESP8266x00c08602",
+                "vt": "str"
             },
             {
-                "p": "payload.hd.stp",
-                "v": "0",
-                "vt": "num"
+                "t": "eq",
+                "v": "ESP8266x00c049d2",
+                "vt": "str"
             },
             {
-                "p": "payload.pld.pos",
-                "v": "50",
-                "vt": "num"
+                "t": "else"
             }
         ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 330,
-        "y": 420,
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 250,
+        "y": 860,
         "wires": [
+            [],
+            [],
+            [],
             [
-                "3fe371e58c48bbba"
+                "eff06f6c9328d832",
+                "9523fed89eb44f73"
             ]
         ]
     },
     {
-        "id": "3fe371e58c48bbba",
-        "type": "link out",
-        "z": "c71e6a6d8eb3613c",
+        "id": "60c2f1af7ed5d18b",
+        "type": "switch",
+        "z": "c2fb860326aa680d",
         "name": "",
+        "property": "device.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "CO",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "CO_PL",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "CO_SW",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "AC",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "CT",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 6,
+        "x": 470,
+        "y": 1360,
+        "wires": [
+            [
+                "e8141271f359f47c"
+            ],
+            [
+                "6176d0cf2f2560a8"
+            ],
+            [
+                "6176d0cf2f2560a8"
+            ],
+            [
+                "6ea4190a49154479"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "e8141271f359f47c",
+        "type": "function",
+        "z": "c2fb860326aa680d",
+        "name": "协调器_协议转换",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet dev = msg.device\n\nif (msg.payload.hd.iotype != \"set\") \n    return;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: dev ? dev.dom_id : \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: dev.id,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        func: \"permit_join\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet value = msg.payload.pld.state == \"on\" ? true : false;\n\nlet pld = {\"value\": value, \"time\": 254}\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 1300,
+        "wires": [
+            [
+                "0e365cbdbf339bee"
+            ]
+        ]
+    },
+    {
+        "id": "6176d0cf2f2560a8",
+        "type": "function",
+        "z": "c2fb860326aa680d",
+        "name": "子设备_协议转换",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet dev = msg.device\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: dev.id\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        func: msg.payload.hd.iotype\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet pld = {}\npld = Object.assign(pld, msg.payload.pld);\nif (Object.keys(pld).length == 0) {\n    pld = {\n        state : \"\"\n    }\n}\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 1340,
+        "wires": [
+            [
+                "0e365cbdbf339bee",
+                "2769795ed5baddfd"
+            ]
+        ]
+    },
+    {
+        "id": "6ea4190a49154479",
+        "type": "function",
+        "z": "c2fb860326aa680d",
+        "name": "空调_协议转换",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet dev = msg.device\n\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: dev ? dev.dom_id : \"\"\n    },\n    from: {\n        type: \"plf\",\n        id: ids.plf\n    },\n    to: {\n        type: \"dev\",\n        id: dev.id,\n    },\n    entry: {\n        type: \"svc\",\n        id: msg.payload.hd.iotype\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet pld = { id : dev.id };\npld = Object.assign(pld, msg.payload.pld);\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};\n\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1000,
+        "y": 1380,
+        "wires": [
+            [
+                "0e365cbdbf339bee",
+                "e349aa8bd6d6b88d"
+            ]
+        ]
+    },
+    {
+        "id": "9523fed89eb44f73",
+        "type": "function",
+        "z": "c2fb860326aa680d",
+        "name": "读写?",
+        "func": "let data = flow.get(\"data\");\nlet devices = data.devices;\n\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nlet did = hd.did;\n\n\nmsg.device = devices[did];\n\nif (hd.stp == 2 || \n    !hd.stp && (!pld || Object.keys(pld).length == 0)\n    ) {\n        \n    hd.iotype = \"get\"\n} else {\n    \n\n    hd.iotype = \"set\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 1360,
+        "wires": [
+            [
+                "60c2f1af7ed5d18b",
+                "134aa0e14395cc4b"
+            ]
+        ]
+    },
+    {
+        "id": "59804eadef4af3f9",
+        "type": "link out",
+        "z": "c2fb860326aa680d",
+        "name": "读写输出",
         "mode": "link",
         "links": [
-            "62258abdab11f52c"
+            "1cc085b57aa685b5",
+            "eea822e040f44475"
         ],
-        "x": 525,
-        "y": 420,
+        "x": 1415,
+        "y": 1360,
         "wires": []
+    },
+    {
+        "id": "0e365cbdbf339bee",
+        "type": "function",
+        "z": "c2fb860326aa680d",
+        "name": "中转？",
+        "func": "let hd = msg.payload.hd;\nif (hd.pref.dom)\n    return [msg, null];\nelse\n    return [null, msg];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1280,
+        "y": 1340,
+        "wires": [
+            [
+                "0f2f17fda01e8686"
+            ],
+            [
+                "59804eadef4af3f9"
+            ]
+        ]
+    },
+    {
+        "id": "0f2f17fda01e8686",
+        "type": "link out",
+        "z": "c2fb860326aa680d",
+        "name": "读写输出",
+        "mode": "link",
+        "links": [
+            "1cc085b57aa685b5",
+            "774d0cb8ef787fc2"
+        ],
+        "x": 1415,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "2769795ed5baddfd",
+        "type": "debug",
+        "z": "c2fb860326aa680d",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1210,
+        "y": 1420,
+        "wires": []
+    },
+    {
+        "id": "e349aa8bd6d6b88d",
+        "type": "debug",
+        "z": "c2fb860326aa680d",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1210,
+        "y": 1460,
+        "wires": []
+    },
+    {
+        "id": "fa02dc1c25c58e80",
+        "type": "inject",
+        "z": "c2fb860326aa680d",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "2",
+        "topic": "",
+        "x": 150,
+        "y": 120,
+        "wires": [
+            [
+                "2ae7dd5d849eaa3c"
+            ]
+        ]
+    },
+    {
+        "id": "134aa0e14395cc4b",
+        "type": "debug",
+        "z": "c2fb860326aa680d",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "device",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "63fc9bf9908f0714",
+        "type": "inject",
+        "z": "c2fb860326aa680d",
+        "name": "shadows_get_devices",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "x": 180,
+        "y": 40,
+        "wires": [
+            [
+                "83351bd88334e91c"
+            ]
+        ]
+    },
+    {
+        "id": "709519b75275d375",
+        "type": "http request",
+        "z": "c2fb860326aa680d",
+        "name": "shadows_get_devices",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "query",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 600,
+        "y": 40,
+        "wires": [
+            [
+                "8cbb90ac0c1f7b5b"
+            ]
+        ]
+    },
+    {
+        "id": "8cbb90ac0c1f7b5b",
+        "type": "json",
+        "z": "c2fb860326aa680d",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 790,
+        "y": 40,
+        "wires": [
+            [
+                "4b11bf8de98bd214"
+            ]
+        ]
+    },
+    {
+        "id": "83351bd88334e91c",
+        "type": "function",
+        "z": "c2fb860326aa680d",
+        "name": "获取设备",
+        "func": "let data = global.get(\"data\");\nlet url = data.shadows.dio_url;\n\n\nmsg = {}\nmsg.url = url + \"/shadows_get_devices\";\nmsg.payload = msg.payload || {}\nmsg.payload.edg_id = \"ndiot-edg-bfy\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 40,
+        "wires": [
+            [
+                "709519b75275d375"
+            ]
+        ]
+    },
+    {
+        "id": "4b11bf8de98bd214",
+        "type": "function",
+        "z": "c2fb860326aa680d",
+        "name": "设备数据",
+        "func": "let data = {}\nlet devices = {};\ndata.devices = devices;\nflow.set(\"data\", data);\n\nlet devs = msg.payload;\ndevs.forEach(dev => {\n    devices[dev.id] = dev\n})\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 40,
+        "wires": [
+            [
+                "2ae7dd5d849eaa3c"
+            ]
+        ]
     },
     {
         "id": "1cc085b57aa685b5",
@@ -2554,7 +3425,9 @@
         "name": "控制设备输入",
         "links": [
             "21290856fdc17bf5",
-            "aba9c53c961e20ad"
+            "aba9c53c961e20ad",
+            "86248ce81c2f0ae7",
+            "bbbabbbac3b1536b"
         ],
         "x": 325,
         "y": 460,
@@ -2590,7 +3463,8 @@
         "name": "北向输入",
         "mode": "link",
         "links": [
-            "bcb80ed091975c9a"
+            "bcb80ed091975c9a",
+            "6a93f55caada7f66"
         ],
         "x": 1015,
         "y": 240,

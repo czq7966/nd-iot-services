@@ -11,15 +11,7 @@
         "id": "e93bbc67912b9178",
         "type": "tab",
         "label": "订阅/发布",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "63bcc9db2b38df75",
-        "type": "tab",
-        "label": "接口调用",
-        "disabled": false,
+        "disabled": true,
         "info": "",
         "env": []
     },
@@ -27,6 +19,14 @@
         "id": "f7e96a32e56d72eb",
         "type": "tab",
         "label": "接口处理",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "63bcc9db2b38df75",
+        "type": "tab",
+        "label": "接口调用",
         "disabled": false,
         "info": "",
         "env": []
@@ -1473,856 +1473,6 @@
         ]
     },
     {
-        "id": "3117ede74b04d9c4",
-        "type": "comment",
-        "z": "63bcc9db2b38df75",
-        "name": "MG数据查询",
-        "info": "",
-        "x": 150,
-        "y": 80,
-        "wires": []
-    },
-    {
-        "id": "95f8abc4558b9fe4",
-        "type": "link in",
-        "z": "63bcc9db2b38df75",
-        "name": "获取配置数据",
-        "links": [
-            "fcb9bbaa875f8ea9"
-        ],
-        "x": 105,
-        "y": 180,
-        "wires": [
-            [
-                "148e5a4f336db704"
-            ]
-        ]
-    },
-    {
-        "id": "148e5a4f336db704",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "获取配置数据",
-        "func": "let _msg = {};\n_msg.collection = \"ndiot_config\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"dataio.global.data.app.id\": env.get(\"IOT_APP_ID\")\n}\n\n_msg._topic = msg._topic || \"find_ndiot_config\";\n_msg._payload = msg.payload;\nreturn _msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 180,
-        "wires": [
-            [
-                "1d7c8bf676bfd405"
-            ]
-        ]
-    },
-    {
-        "id": "1d7c8bf676bfd405",
-        "type": "link out",
-        "z": "63bcc9db2b38df75",
-        "name": "",
-        "mode": "link",
-        "links": [
-            "9bfc8855190691e9"
-        ],
-        "x": 555,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "6f39e4ac99d30a07",
-        "type": "switch",
-        "z": "63bcc9db2b38df75",
-        "name": "MG数据返回",
-        "property": "_topic",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "find_ndiot_config",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "find_ndiot_z2m_datafile",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "find_ndiot_domains",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "find_ndiot_dispatchers",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "find_ndiot_edges",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "find_ndiot_devices",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "find_ndiot_platforms",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "custom_find",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 8,
-        "x": 270,
-        "y": 600,
-        "wires": [
-            [
-                "361c77e72a85832a"
-            ],
-            [
-                "8f366ee3986be4d3"
-            ],
-            [
-                "5e9291d2b6187ea4"
-            ],
-            [
-                "627468f7c11147be"
-            ],
-            [
-                "c609d682d722b625"
-            ],
-            [
-                "96a28f5c17c0712b"
-            ],
-            [
-                "b136be555d0b9756"
-            ],
-            [
-                "605abd3b667aff19"
-            ]
-        ]
-    },
-    {
-        "id": "cfdf93b3e832d7d7",
-        "type": "link in",
-        "z": "63bcc9db2b38df75",
-        "name": "",
-        "links": [
-            "272546c8bfd46694"
-        ],
-        "x": 105,
-        "y": 600,
-        "wires": [
-            [
-                "6f39e4ac99d30a07"
-            ]
-        ]
-    },
-    {
-        "id": "b22fe37d91a17773",
-        "type": "debug",
-        "z": "63bcc9db2b38df75",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 850,
-        "y": 800,
-        "wires": []
-    },
-    {
-        "id": "13a9b4457054c058",
-        "type": "link out",
-        "z": "63bcc9db2b38df75",
-        "name": "配置数据输出",
-        "mode": "link",
-        "links": [
-            "b1a104c8f9b78d59"
-        ],
-        "x": 665,
-        "y": 560,
-        "wires": []
-    },
-    {
-        "id": "361c77e72a85832a",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "配置数据返回",
-        "func": "if (msg.payload && msg.payload[0]) {\n    return {\n        payload: msg.payload[0]\n    };\n}",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 500,
-        "y": 560,
-        "wires": [
-            [
-                "13a9b4457054c058"
-            ]
-        ]
-    },
-    {
-        "id": "d57ad9b001fdc2bc",
-        "type": "link in",
-        "z": "63bcc9db2b38df75",
-        "name": "获取Z2M数据",
-        "links": [
-            "34edf26e3f576c05"
-        ],
-        "x": 105,
-        "y": 220,
-        "wires": [
-            [
-                "c7fa18b4bd0ac250"
-            ]
-        ]
-    },
-    {
-        "id": "c7fa18b4bd0ac250",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "获取Z2M数据",
-        "func": "let _msg = {};\n_msg.collection = \"ndiot_z2m_datafile\";\n_msg.operation = \"find\";\n_msg.sort = { \"hd.tms\": -1};\n_msg.limit = 2;\n_msg.payload = {\"pld.id\": msg.payload.pld.id }\n\n_msg._topic =  msg._topic || \"find_ndiot_z2m_datafile\";\n_msg._payload = msg.payload;\nreturn _msg;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 220,
-        "wires": [
-            [
-                "1d7c8bf676bfd405"
-            ]
-        ]
-    },
-    {
-        "id": "8f366ee3986be4d3",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "Z2M数据返回",
-        "func": "return msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 500,
-        "y": 600,
-        "wires": [
-            [
-                "d5f2a9ab871bd1fe"
-            ]
-        ]
-    },
-    {
-        "id": "d5f2a9ab871bd1fe",
-        "type": "link out",
-        "z": "63bcc9db2b38df75",
-        "name": "",
-        "mode": "link",
-        "links": [
-            "ea899d2e95e95576"
-        ],
-        "x": 665,
-        "y": 600,
-        "wires": []
-    },
-    {
-        "id": "4b05f49dd8af684c",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "获取租户数据",
-        "func": "let data = global.get(\"data\");\nlet _msg = {};\n_msg.collection = \"ndiot_domains\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"app_id\": data.ids.app\n}\n\n_msg._topic =  msg._topic ||  \"find_ndiot_domains\";\n_msg._payload = msg.payload;\nreturn _msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 260,
-        "wires": [
-            [
-                "1d7c8bf676bfd405"
-            ]
-        ]
-    },
-    {
-        "id": "46c7be7c38c2cddc",
-        "type": "link in",
-        "z": "63bcc9db2b38df75",
-        "name": "获取租户数据输入",
-        "links": [
-            "35ef90ce6fa2dfd3"
-        ],
-        "x": 105,
-        "y": 260,
-        "wires": [
-            [
-                "4b05f49dd8af684c"
-            ]
-        ]
-    },
-    {
-        "id": "cc0a7e91c0aa45d3",
-        "type": "inject",
-        "z": "63bcc9db2b38df75",
-        "name": "刷新数据",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 180,
-        "y": 120,
-        "wires": [
-            [
-                "4b05f49dd8af684c"
-            ]
-        ]
-    },
-    {
-        "id": "c9ed042290e65893",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "获取平台数据",
-        "func": "let data = global.get(\"data\");\nlet _msg = {};\n_msg.collection = \"ndiot_platforms\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"app_id\": data.ids.app\n}\n\n_msg._topic =  msg._topic ||  \"find_ndiot_platforms\";\n_msg._payload = msg.payload;\nreturn _msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 420,
-        "wires": [
-            [
-                "1d7c8bf676bfd405"
-            ]
-        ]
-    },
-    {
-        "id": "9aacc904775bd744",
-        "type": "link in",
-        "z": "63bcc9db2b38df75",
-        "name": "获取平台数据输入",
-        "links": [
-            "ef593130e482cb73"
-        ],
-        "x": 105,
-        "y": 420,
-        "wires": [
-            [
-                "c9ed042290e65893"
-            ]
-        ]
-    },
-    {
-        "id": "b136be555d0b9756",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "平台数据返回处理",
-        "func": "common = global.get(\"common\");\n\nlet plfs = msg.payload;\nplfs.forEach(plf => {\n    common.fixUpPlf(plf, false, false);\n})\n\nmsg._topic = null",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 510,
-        "y": 800,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "324df872c458b301",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "更新设备数据",
-        "func": "let data = global.get(\"data\");\n\nlet pld = msg.payload.pld;\n\nlet _msg = {};\n_msg.collection = \"ndiot_devices\";\n_msg.operation = \"update\";\n\n_msg.payload = pld;\n_msg.query = {\n    \"id\": pld.id\n}\n\n_msg._topic =  msg._topic ||  \"upsert_ndiot_devices\";\n_msg._payload = msg.payload;\nreturn _msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 340,
-        "y": 1320,
-        "wires": [
-            [
-                "49ca1137482a85b9",
-                "0cb53f3e7d0bd8cb"
-            ]
-        ]
-    },
-    {
-        "id": "2b33ccdffdb43c37",
-        "type": "link in",
-        "z": "63bcc9db2b38df75",
-        "name": "更新设备数据输入",
-        "links": [
-            "34aa83c186d592f9",
-            "e9fd3750de45be3f",
-            "a18386423e629bcb"
-        ],
-        "x": 85,
-        "y": 1320,
-        "wires": [
-            [
-                "324df872c458b301"
-            ]
-        ]
-    },
-    {
-        "id": "49ca1137482a85b9",
-        "type": "debug",
-        "z": "63bcc9db2b38df75",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 570,
-        "y": 1300,
-        "wires": []
-    },
-    {
-        "id": "0cb53f3e7d0bd8cb",
-        "type": "link out",
-        "z": "63bcc9db2b38df75",
-        "name": "改增数据输出",
-        "mode": "link",
-        "links": [
-            "53e7a294eeb90f43"
-        ],
-        "x": 605,
-        "y": 1340,
-        "wires": []
-    },
-    {
-        "id": "4355ecb65b58c6d6",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "更新Z2M数据",
-        "func": "let data = global.get(\"data\");\n\nlet pld = msg.payload;\n\nlet _msg = {};\n_msg.collection = \"ndiot_z2m_datafile\";\n_msg.operation = \"update\";\n\n_msg.payload = pld;\n_msg.query = {\n    \"id\": pld.id\n}\n\n_msg._topic =  msg._topic ||  \"upsert_ndiot_z2m_datafile\";\n_msg._payload = msg.payload;\nreturn _msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 340,
-        "y": 1380,
-        "wires": [
-            [
-                "0cb53f3e7d0bd8cb"
-            ]
-        ]
-    },
-    {
-        "id": "1174792896cf4996",
-        "type": "link in",
-        "z": "63bcc9db2b38df75",
-        "name": "更新Z2M数据输入",
-        "links": [
-            "c7bc800d1c9dda6d"
-        ],
-        "x": 85,
-        "y": 1380,
-        "wires": [
-            [
-                "4355ecb65b58c6d6"
-            ]
-        ]
-    },
-    {
-        "id": "f876644da2af838c",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "状态上线发布",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n        app: \"0\",\n        dom: \"0\"\n    },\n    from: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dio,\n    online: 1\n};\n\nreturn {\n    payload:{\n        hd: hd,\n        pld: pld\n    },\n    qos: 2,\n    retain: true\n};\n\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 340,
-        "y": 1180,
-        "wires": [
-            [
-                "d9ded5bff98b6d8d"
-            ]
-        ]
-    },
-    {
-        "id": "cac9b036a1b34134",
-        "type": "link in",
-        "z": "63bcc9db2b38df75",
-        "name": "状态上线发布输入",
-        "links": [
-            "9505a529442793c0"
-        ],
-        "x": 85,
-        "y": 1180,
-        "wires": [
-            [
-                "f876644da2af838c"
-            ]
-        ]
-    },
-    {
-        "id": "d9ded5bff98b6d8d",
-        "type": "link out",
-        "z": "63bcc9db2b38df75",
-        "name": "主题发布输出",
-        "mode": "link",
-        "links": [
-            "f4460e5db856239e"
-        ],
-        "x": 615,
-        "y": 1180,
-        "wires": []
-    },
-    {
-        "id": "fa0a362c12abdc77",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "获取设备数据",
-        "func": "let data = global.get(\"data\");\nlet _msg = {};\n_msg.collection = \"ndiot_devices\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"app_id\": data.ids.app,\n}\n\n_msg._topic =  msg._topic ||  \"find_ndiot_devices\";\n_msg._payload = msg.payload;\nreturn _msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 380,
-        "wires": [
-            [
-                "1d7c8bf676bfd405"
-            ]
-        ]
-    },
-    {
-        "id": "ee53e76d0242e9d5",
-        "type": "link in",
-        "z": "63bcc9db2b38df75",
-        "name": "获取设备数据输入",
-        "links": [
-            "6956d225725ebcfb"
-        ],
-        "x": 105,
-        "y": 380,
-        "wires": [
-            [
-                "fa0a362c12abdc77"
-            ]
-        ]
-    },
-    {
-        "id": "1d66111cce615644",
-        "type": "link in",
-        "z": "63bcc9db2b38df75",
-        "name": "获取调度数据输入",
-        "links": [
-            "295c377cf477e68a"
-        ],
-        "x": 105,
-        "y": 300,
-        "wires": [
-            [
-                "9da6dcd3ccd273b5"
-            ]
-        ]
-    },
-    {
-        "id": "9da6dcd3ccd273b5",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "获取调度数据",
-        "func": "let data = global.get(\"data\");\nlet _msg = {};\n_msg.collection = \"ndiot_dispatchers\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"app_id\": data.ids.app\n}\n\n_msg._topic =  msg._topic ||  \"find_ndiot_dispatchers\";\n_msg._payload = msg.payload;\nreturn _msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 300,
-        "wires": [
-            [
-                "1d7c8bf676bfd405"
-            ]
-        ]
-    },
-    {
-        "id": "2b18a3e29ad392bc",
-        "type": "link in",
-        "z": "63bcc9db2b38df75",
-        "name": "获取边缘数据输入",
-        "links": [
-            "d1161b505c291875"
-        ],
-        "x": 105,
-        "y": 340,
-        "wires": [
-            [
-                "52be2cb6349ffd94"
-            ]
-        ]
-    },
-    {
-        "id": "52be2cb6349ffd94",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "获取边缘数据",
-        "func": "let data = global.get(\"data\");\nlet _msg = {};\n_msg.collection = \"ndiot_edges\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"app_id\": data.ids.app,\n}\n\n_msg._topic =  msg._topic ||  \"find_ndiot_edges\";\n_msg._payload = msg.payload;\nreturn _msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 340,
-        "wires": [
-            [
-                "1d7c8bf676bfd405"
-            ]
-        ]
-    },
-    {
-        "id": "5e9291d2b6187ea4",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "租户数据返回处理",
-        "func": "common = global.get(\"common\");\n\nlet doms = msg.payload;\ndoms.forEach(dom => {\n    common.fixUpDom(dom, false, false);\n})\n\nmsg._topic = null\nreturn msg\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 510,
-        "y": 640,
-        "wires": [
-            [
-                "295c377cf477e68a",
-                "b22fe37d91a17773"
-            ]
-        ]
-    },
-    {
-        "id": "627468f7c11147be",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "调度数据返回处理",
-        "func": "let common = global.get(\"common\");\nlet dsps = msg.payload;\ndsps.forEach(dsp => {\n    common.fixUpDsp(dsp, false, false);\n})\n\nmsg._topic = null\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 510,
-        "y": 680,
-        "wires": [
-            [
-                "d1161b505c291875",
-                "b22fe37d91a17773"
-            ]
-        ]
-    },
-    {
-        "id": "c609d682d722b625",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "边缘数据返回处理",
-        "func": "let common = global.get(\"common\");\nlet edgs = msg.payload;\nedgs.forEach(edg => {\n    common.fixUpEdg(edg, false, false);\n})\n\nmsg._topic = null\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 510,
-        "y": 720,
-        "wires": [
-            [
-                "6956d225725ebcfb",
-                "b22fe37d91a17773"
-            ]
-        ]
-    },
-    {
-        "id": "96a28f5c17c0712b",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "设备数据返回处理",
-        "func": "common = global.get(\"common\");\n\nlet devs = msg.payload;\ndevs.forEach(dev => {\n    common.fixUpDev(dev, false, false);\n})\n\nmsg._topic = null\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 510,
-        "y": 760,
-        "wires": [
-            [
-                "ef593130e482cb73",
-                "b22fe37d91a17773"
-            ]
-        ]
-    },
-    {
-        "id": "295c377cf477e68a",
-        "type": "link out",
-        "z": "63bcc9db2b38df75",
-        "name": "租户数据返回处理",
-        "mode": "link",
-        "links": [
-            "1d66111cce615644"
-        ],
-        "x": 665,
-        "y": 640,
-        "wires": []
-    },
-    {
-        "id": "d1161b505c291875",
-        "type": "link out",
-        "z": "63bcc9db2b38df75",
-        "name": "调度数据返回处理输出",
-        "mode": "link",
-        "links": [
-            "2b18a3e29ad392bc"
-        ],
-        "x": 665,
-        "y": 680,
-        "wires": []
-    },
-    {
-        "id": "6956d225725ebcfb",
-        "type": "link out",
-        "z": "63bcc9db2b38df75",
-        "name": "边缘数据返回处理",
-        "mode": "link",
-        "links": [
-            "ee53e76d0242e9d5"
-        ],
-        "x": 665,
-        "y": 720,
-        "wires": []
-    },
-    {
-        "id": "ef593130e482cb73",
-        "type": "link out",
-        "z": "63bcc9db2b38df75",
-        "name": "设备数据返回处理",
-        "mode": "link",
-        "links": [
-            "9aacc904775bd744"
-        ],
-        "x": 665,
-        "y": 760,
-        "wires": []
-    },
-    {
-        "id": "3e267f77b5d2211a",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "自定义查询数据",
-        "func": "msg.operation = msg.operation || \"find\";\nmsg._topic = msg._topic ||  \"custom_find\";\nmsg._payload = msg._payload || msg.payload;\nmsg._msg = msg._msg || msg;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 460,
-        "wires": [
-            [
-                "1d7c8bf676bfd405"
-            ]
-        ]
-    },
-    {
-        "id": "800621f0c9f46a27",
-        "type": "link in",
-        "z": "63bcc9db2b38df75",
-        "name": "自定义查询数据输入",
-        "links": [
-            "396f6c335713be25",
-            "d40518fc1ce83c76",
-            "b48d540577e24698"
-        ],
-        "x": 105,
-        "y": 460,
-        "wires": [
-            [
-                "3e267f77b5d2211a"
-            ]
-        ]
-    },
-    {
-        "id": "083a3a66372b8a7e",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "自定义查询返回处理",
-        "func": "common = global.get(\"common\");\n\nlet data = msg.payload;\nlet payload = msg._payload;\nlet hd = payload.hd;\nlet pld = payload.pld;\nlet _hd = Object.assign({}, hd);\n_hd.from = hd.to;\n_hd.to = hd.from;\n_hd.stp = 1;\ndelete _hd.tm;\ndelete _hd.tms;\ndelete _hd.tpc;\n\nlet _pld = {\n    data: data,\n    args: pld\n}\n\nreturn {\n    payload: {\n        hd: _hd,\n        pld: _pld\n    }\n}\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 520,
-        "y": 920,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "b41b12708ccf38fc",
-        "type": "link out",
-        "z": "63bcc9db2b38df75",
-        "name": "自定义查询数据输出",
-        "mode": "link",
-        "links": [
-            "8781379974d5e7ea",
-            "889ecc71f326a9bd"
-        ],
-        "x": 665,
-        "y": 840,
-        "wires": []
-    },
-    {
-        "id": "605abd3b667aff19",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "自定义查询返回处理",
-        "func": "\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 520,
-        "y": 840,
-        "wires": [
-            [
-                "b41b12708ccf38fc"
-            ]
-        ]
-    },
-    {
         "id": "2ff5101df1ab6584",
         "type": "link in",
         "z": "f7e96a32e56d72eb",
@@ -3514,6 +2664,856 @@
         "wires": []
     },
     {
+        "id": "3117ede74b04d9c4",
+        "type": "comment",
+        "z": "63bcc9db2b38df75",
+        "name": "MG数据查询",
+        "info": "",
+        "x": 150,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "95f8abc4558b9fe4",
+        "type": "link in",
+        "z": "63bcc9db2b38df75",
+        "name": "获取配置数据",
+        "links": [
+            "fcb9bbaa875f8ea9"
+        ],
+        "x": 105,
+        "y": 180,
+        "wires": [
+            [
+                "148e5a4f336db704"
+            ]
+        ]
+    },
+    {
+        "id": "148e5a4f336db704",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "获取配置数据",
+        "func": "let _msg = {};\n_msg.collection = \"ndiot_config\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"dataio.global.data.app.id\": env.get(\"IOT_APP_ID\")\n}\n\n_msg._topic = msg._topic || \"find_ndiot_config\";\n_msg._payload = msg.payload;\nreturn _msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "1d7c8bf676bfd405"
+            ]
+        ]
+    },
+    {
+        "id": "1d7c8bf676bfd405",
+        "type": "link out",
+        "z": "63bcc9db2b38df75",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "9bfc8855190691e9"
+        ],
+        "x": 555,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "6f39e4ac99d30a07",
+        "type": "switch",
+        "z": "63bcc9db2b38df75",
+        "name": "MG数据返回",
+        "property": "_topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "find_ndiot_config",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "find_ndiot_z2m_datafile",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "find_ndiot_domains",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "find_ndiot_dispatchers",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "find_ndiot_edges",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "find_ndiot_devices",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "find_ndiot_platforms",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "custom_find",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 8,
+        "x": 270,
+        "y": 600,
+        "wires": [
+            [
+                "361c77e72a85832a"
+            ],
+            [
+                "8f366ee3986be4d3"
+            ],
+            [
+                "5e9291d2b6187ea4"
+            ],
+            [
+                "627468f7c11147be"
+            ],
+            [
+                "c609d682d722b625"
+            ],
+            [
+                "96a28f5c17c0712b"
+            ],
+            [
+                "b136be555d0b9756"
+            ],
+            [
+                "605abd3b667aff19"
+            ]
+        ]
+    },
+    {
+        "id": "cfdf93b3e832d7d7",
+        "type": "link in",
+        "z": "63bcc9db2b38df75",
+        "name": "",
+        "links": [
+            "272546c8bfd46694"
+        ],
+        "x": 105,
+        "y": 600,
+        "wires": [
+            [
+                "6f39e4ac99d30a07"
+            ]
+        ]
+    },
+    {
+        "id": "b22fe37d91a17773",
+        "type": "debug",
+        "z": "63bcc9db2b38df75",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "13a9b4457054c058",
+        "type": "link out",
+        "z": "63bcc9db2b38df75",
+        "name": "配置数据输出",
+        "mode": "link",
+        "links": [
+            "b1a104c8f9b78d59"
+        ],
+        "x": 665,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "361c77e72a85832a",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "配置数据返回",
+        "func": "if (msg.payload && msg.payload[0]) {\n    return {\n        payload: msg.payload[0]\n    };\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 560,
+        "wires": [
+            [
+                "13a9b4457054c058"
+            ]
+        ]
+    },
+    {
+        "id": "d57ad9b001fdc2bc",
+        "type": "link in",
+        "z": "63bcc9db2b38df75",
+        "name": "获取Z2M数据",
+        "links": [
+            "34edf26e3f576c05"
+        ],
+        "x": 105,
+        "y": 220,
+        "wires": [
+            [
+                "c7fa18b4bd0ac250"
+            ]
+        ]
+    },
+    {
+        "id": "c7fa18b4bd0ac250",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "获取Z2M数据",
+        "func": "let _msg = {};\n_msg.collection = \"ndiot_z2m_datafile\";\n_msg.operation = \"find\";\n_msg.sort = { \"hd.tms\": -1};\n_msg.limit = 2;\n_msg.payload = {\"pld.id\": msg.payload.pld.id }\n\n_msg._topic =  msg._topic || \"find_ndiot_z2m_datafile\";\n_msg._payload = msg.payload;\nreturn _msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 220,
+        "wires": [
+            [
+                "1d7c8bf676bfd405"
+            ]
+        ]
+    },
+    {
+        "id": "8f366ee3986be4d3",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "Z2M数据返回",
+        "func": "return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 600,
+        "wires": [
+            [
+                "d5f2a9ab871bd1fe"
+            ]
+        ]
+    },
+    {
+        "id": "d5f2a9ab871bd1fe",
+        "type": "link out",
+        "z": "63bcc9db2b38df75",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "ea899d2e95e95576"
+        ],
+        "x": 665,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "4b05f49dd8af684c",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "获取租户数据",
+        "func": "let data = global.get(\"data\");\nlet _msg = {};\n_msg.collection = \"ndiot_domains\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"app_id\": data.ids.app\n}\n\n_msg._topic =  msg._topic ||  \"find_ndiot_domains\";\n_msg._payload = msg.payload;\nreturn _msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 260,
+        "wires": [
+            [
+                "1d7c8bf676bfd405"
+            ]
+        ]
+    },
+    {
+        "id": "46c7be7c38c2cddc",
+        "type": "link in",
+        "z": "63bcc9db2b38df75",
+        "name": "获取租户数据输入",
+        "links": [
+            "35ef90ce6fa2dfd3"
+        ],
+        "x": 105,
+        "y": 260,
+        "wires": [
+            [
+                "4b05f49dd8af684c"
+            ]
+        ]
+    },
+    {
+        "id": "cc0a7e91c0aa45d3",
+        "type": "inject",
+        "z": "63bcc9db2b38df75",
+        "name": "刷新数据",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 180,
+        "y": 120,
+        "wires": [
+            [
+                "4b05f49dd8af684c"
+            ]
+        ]
+    },
+    {
+        "id": "c9ed042290e65893",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "获取平台数据",
+        "func": "let data = global.get(\"data\");\nlet _msg = {};\n_msg.collection = \"ndiot_platforms\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"app_id\": data.ids.app\n}\n\n_msg._topic =  msg._topic ||  \"find_ndiot_platforms\";\n_msg._payload = msg.payload;\nreturn _msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 420,
+        "wires": [
+            [
+                "1d7c8bf676bfd405"
+            ]
+        ]
+    },
+    {
+        "id": "9aacc904775bd744",
+        "type": "link in",
+        "z": "63bcc9db2b38df75",
+        "name": "获取平台数据输入",
+        "links": [
+            "ef593130e482cb73"
+        ],
+        "x": 105,
+        "y": 420,
+        "wires": [
+            [
+                "c9ed042290e65893"
+            ]
+        ]
+    },
+    {
+        "id": "b136be555d0b9756",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "平台数据返回处理",
+        "func": "common = global.get(\"common\");\n\nlet plfs = msg.payload;\nplfs.forEach(plf => {\n    common.fixUpPlf(plf, false, false);\n})\n\nmsg._topic = null",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "324df872c458b301",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "更新设备数据",
+        "func": "let data = global.get(\"data\");\n\nlet pld = msg.payload.pld;\n\nlet _msg = {};\n_msg.collection = \"ndiot_devices\";\n_msg.operation = \"update\";\n\n_msg.payload = pld;\n_msg.query = {\n    \"id\": pld.id\n}\n\n_msg._topic =  msg._topic ||  \"upsert_ndiot_devices\";\n_msg._payload = msg.payload;\nreturn _msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 1320,
+        "wires": [
+            [
+                "49ca1137482a85b9",
+                "0cb53f3e7d0bd8cb"
+            ]
+        ]
+    },
+    {
+        "id": "2b33ccdffdb43c37",
+        "type": "link in",
+        "z": "63bcc9db2b38df75",
+        "name": "更新设备数据输入",
+        "links": [
+            "34aa83c186d592f9",
+            "e9fd3750de45be3f",
+            "a18386423e629bcb"
+        ],
+        "x": 85,
+        "y": 1320,
+        "wires": [
+            [
+                "324df872c458b301"
+            ]
+        ]
+    },
+    {
+        "id": "49ca1137482a85b9",
+        "type": "debug",
+        "z": "63bcc9db2b38df75",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 570,
+        "y": 1300,
+        "wires": []
+    },
+    {
+        "id": "0cb53f3e7d0bd8cb",
+        "type": "link out",
+        "z": "63bcc9db2b38df75",
+        "name": "改增数据输出",
+        "mode": "link",
+        "links": [
+            "53e7a294eeb90f43"
+        ],
+        "x": 605,
+        "y": 1340,
+        "wires": []
+    },
+    {
+        "id": "4355ecb65b58c6d6",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "更新Z2M数据",
+        "func": "let data = global.get(\"data\");\n\nlet pld = msg.payload;\n\nlet _msg = {};\n_msg.collection = \"ndiot_z2m_datafile\";\n_msg.operation = \"update\";\n\n_msg.payload = pld;\n_msg.query = {\n    \"id\": pld.id\n}\n\n_msg._topic =  msg._topic ||  \"upsert_ndiot_z2m_datafile\";\n_msg._payload = msg.payload;\nreturn _msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 1380,
+        "wires": [
+            [
+                "0cb53f3e7d0bd8cb"
+            ]
+        ]
+    },
+    {
+        "id": "1174792896cf4996",
+        "type": "link in",
+        "z": "63bcc9db2b38df75",
+        "name": "更新Z2M数据输入",
+        "links": [
+            "c7bc800d1c9dda6d"
+        ],
+        "x": 85,
+        "y": 1380,
+        "wires": [
+            [
+                "4355ecb65b58c6d6"
+            ]
+        ]
+    },
+    {
+        "id": "f876644da2af838c",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "状态上线发布",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet hd = {\n    pref: {\n        app: \"0\",\n        dom: \"0\"\n    },\n    from: {\n        type: \"dio\",\n        id: data.ids.dio\n    },\n    to: {\n        type: \"0\",\n        id: \"0\"\n    },\n    entry: {\n        type: \"evt\",\n        id: \"status\"\n    },\n    version: global.get(\"version\")\n};\n\nlet pld = {\n    id: data.ids.dio,\n    online: 1\n};\n\nreturn {\n    payload:{\n        hd: hd,\n        pld: pld\n    },\n    qos: 2,\n    retain: true\n};\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 1180,
+        "wires": [
+            [
+                "d9ded5bff98b6d8d"
+            ]
+        ]
+    },
+    {
+        "id": "cac9b036a1b34134",
+        "type": "link in",
+        "z": "63bcc9db2b38df75",
+        "name": "状态上线发布输入",
+        "links": [
+            "9505a529442793c0"
+        ],
+        "x": 85,
+        "y": 1180,
+        "wires": [
+            [
+                "f876644da2af838c"
+            ]
+        ]
+    },
+    {
+        "id": "d9ded5bff98b6d8d",
+        "type": "link out",
+        "z": "63bcc9db2b38df75",
+        "name": "主题发布输出",
+        "mode": "link",
+        "links": [
+            "f4460e5db856239e"
+        ],
+        "x": 615,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "fa0a362c12abdc77",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "获取设备数据",
+        "func": "let data = global.get(\"data\");\nlet _msg = {};\n_msg.collection = \"ndiot_devices\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"app_id\": data.ids.app,\n}\n\n_msg._topic =  msg._topic ||  \"find_ndiot_devices\";\n_msg._payload = msg.payload;\nreturn _msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 380,
+        "wires": [
+            [
+                "1d7c8bf676bfd405"
+            ]
+        ]
+    },
+    {
+        "id": "ee53e76d0242e9d5",
+        "type": "link in",
+        "z": "63bcc9db2b38df75",
+        "name": "获取设备数据输入",
+        "links": [
+            "6956d225725ebcfb"
+        ],
+        "x": 105,
+        "y": 380,
+        "wires": [
+            [
+                "fa0a362c12abdc77"
+            ]
+        ]
+    },
+    {
+        "id": "1d66111cce615644",
+        "type": "link in",
+        "z": "63bcc9db2b38df75",
+        "name": "获取调度数据输入",
+        "links": [
+            "295c377cf477e68a"
+        ],
+        "x": 105,
+        "y": 300,
+        "wires": [
+            [
+                "9da6dcd3ccd273b5"
+            ]
+        ]
+    },
+    {
+        "id": "9da6dcd3ccd273b5",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "获取调度数据",
+        "func": "let data = global.get(\"data\");\nlet _msg = {};\n_msg.collection = \"ndiot_dispatchers\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"app_id\": data.ids.app\n}\n\n_msg._topic =  msg._topic ||  \"find_ndiot_dispatchers\";\n_msg._payload = msg.payload;\nreturn _msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 300,
+        "wires": [
+            [
+                "1d7c8bf676bfd405"
+            ]
+        ]
+    },
+    {
+        "id": "2b18a3e29ad392bc",
+        "type": "link in",
+        "z": "63bcc9db2b38df75",
+        "name": "获取边缘数据输入",
+        "links": [
+            "d1161b505c291875"
+        ],
+        "x": 105,
+        "y": 340,
+        "wires": [
+            [
+                "52be2cb6349ffd94"
+            ]
+        ]
+    },
+    {
+        "id": "52be2cb6349ffd94",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "获取边缘数据",
+        "func": "let data = global.get(\"data\");\nlet _msg = {};\n_msg.collection = \"ndiot_edges\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"app_id\": data.ids.app,\n}\n\n_msg._topic =  msg._topic ||  \"find_ndiot_edges\";\n_msg._payload = msg.payload;\nreturn _msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 340,
+        "wires": [
+            [
+                "1d7c8bf676bfd405"
+            ]
+        ]
+    },
+    {
+        "id": "5e9291d2b6187ea4",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "租户数据返回处理",
+        "func": "common = global.get(\"common\");\n\nlet doms = msg.payload;\ndoms.forEach(dom => {\n    common.fixUpDom(dom, false, false);\n})\n\nmsg._topic = null\nreturn msg\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 640,
+        "wires": [
+            [
+                "295c377cf477e68a",
+                "b22fe37d91a17773"
+            ]
+        ]
+    },
+    {
+        "id": "627468f7c11147be",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "调度数据返回处理",
+        "func": "let common = global.get(\"common\");\nlet dsps = msg.payload;\ndsps.forEach(dsp => {\n    common.fixUpDsp(dsp, false, false);\n})\n\nmsg._topic = null\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 680,
+        "wires": [
+            [
+                "d1161b505c291875",
+                "b22fe37d91a17773"
+            ]
+        ]
+    },
+    {
+        "id": "c609d682d722b625",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "边缘数据返回处理",
+        "func": "let common = global.get(\"common\");\nlet edgs = msg.payload;\nedgs.forEach(edg => {\n    common.fixUpEdg(edg, false, false);\n})\n\nmsg._topic = null\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 720,
+        "wires": [
+            [
+                "6956d225725ebcfb",
+                "b22fe37d91a17773"
+            ]
+        ]
+    },
+    {
+        "id": "96a28f5c17c0712b",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "设备数据返回处理",
+        "func": "common = global.get(\"common\");\n\nlet devs = msg.payload;\ndevs.forEach(dev => {\n    common.fixUpDev(dev, false, false);\n})\n\nmsg._topic = null\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 760,
+        "wires": [
+            [
+                "ef593130e482cb73",
+                "b22fe37d91a17773"
+            ]
+        ]
+    },
+    {
+        "id": "295c377cf477e68a",
+        "type": "link out",
+        "z": "63bcc9db2b38df75",
+        "name": "租户数据返回处理",
+        "mode": "link",
+        "links": [
+            "1d66111cce615644"
+        ],
+        "x": 665,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "d1161b505c291875",
+        "type": "link out",
+        "z": "63bcc9db2b38df75",
+        "name": "调度数据返回处理输出",
+        "mode": "link",
+        "links": [
+            "2b18a3e29ad392bc"
+        ],
+        "x": 665,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "6956d225725ebcfb",
+        "type": "link out",
+        "z": "63bcc9db2b38df75",
+        "name": "边缘数据返回处理",
+        "mode": "link",
+        "links": [
+            "ee53e76d0242e9d5"
+        ],
+        "x": 665,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "ef593130e482cb73",
+        "type": "link out",
+        "z": "63bcc9db2b38df75",
+        "name": "设备数据返回处理",
+        "mode": "link",
+        "links": [
+            "9aacc904775bd744"
+        ],
+        "x": 665,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "3e267f77b5d2211a",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "自定义查询数据",
+        "func": "msg.operation = msg.operation || \"find\";\nmsg._topic = msg._topic ||  \"custom_find\";\nmsg._payload = msg._payload || msg.payload;\nmsg._msg = msg._msg || msg;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 460,
+        "wires": [
+            [
+                "1d7c8bf676bfd405"
+            ]
+        ]
+    },
+    {
+        "id": "800621f0c9f46a27",
+        "type": "link in",
+        "z": "63bcc9db2b38df75",
+        "name": "自定义查询数据输入",
+        "links": [
+            "396f6c335713be25",
+            "d40518fc1ce83c76",
+            "b48d540577e24698"
+        ],
+        "x": 105,
+        "y": 460,
+        "wires": [
+            [
+                "3e267f77b5d2211a"
+            ]
+        ]
+    },
+    {
+        "id": "083a3a66372b8a7e",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "自定义查询返回处理",
+        "func": "common = global.get(\"common\");\n\nlet data = msg.payload;\nlet payload = msg._payload;\nlet hd = payload.hd;\nlet pld = payload.pld;\nlet _hd = Object.assign({}, hd);\n_hd.from = hd.to;\n_hd.to = hd.from;\n_hd.stp = 1;\ndelete _hd.tm;\ndelete _hd.tms;\ndelete _hd.tpc;\n\nlet _pld = {\n    data: data,\n    args: pld\n}\n\nreturn {\n    payload: {\n        hd: _hd,\n        pld: _pld\n    }\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 920,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b41b12708ccf38fc",
+        "type": "link out",
+        "z": "63bcc9db2b38df75",
+        "name": "自定义查询数据输出",
+        "mode": "link",
+        "links": [
+            "8781379974d5e7ea",
+            "889ecc71f326a9bd"
+        ],
+        "x": 665,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "605abd3b667aff19",
+        "type": "function",
+        "z": "63bcc9db2b38df75",
+        "name": "自定义查询返回处理",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 840,
+        "wires": [
+            [
+                "b41b12708ccf38fc"
+            ]
+        ]
+    },
+    {
         "id": "9bfc8855190691e9",
         "type": "link in",
         "z": "25fe735d371c65bb",
@@ -3546,9 +3546,10 @@
         "id": "53e7a294eeb90f43",
         "type": "link in",
         "z": "25fe735d371c65bb",
-        "name": "改增数据输入",
+        "name": "更新数据输入",
         "links": [
-            "0cb53f3e7d0bd8cb"
+            "0cb53f3e7d0bd8cb",
+            "863a57772c22291c"
         ],
         "x": 195,
         "y": 340,
@@ -3652,7 +3653,7 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 310,
-        "y": 440,
+        "y": 400,
         "wires": [
             [
                 "98a36bcacf2ba435"
@@ -3667,7 +3668,7 @@
         "statusCode": "",
         "headers": {},
         "x": 1150,
-        "y": 500,
+        "y": 660,
         "wires": []
     },
     {
@@ -3682,7 +3683,7 @@
         "finalize": "",
         "libs": [],
         "x": 810,
-        "y": 300,
+        "y": 260,
         "wires": [
             [
                 "b48d540577e24698"
@@ -3698,8 +3699,8 @@
         "links": [
             "800621f0c9f46a27"
         ],
-        "x": 1105,
-        "y": 420,
+        "x": 1125,
+        "y": 400,
         "wires": []
     },
     {
@@ -3711,7 +3712,7 @@
             "b41b12708ccf38fc"
         ],
         "x": 195,
-        "y": 540,
+        "y": 860,
         "wires": [
             [
                 "9421c0903de71a95"
@@ -3730,7 +3731,7 @@
         "finalize": "",
         "libs": [],
         "x": 580,
-        "y": 520,
+        "y": 820,
         "wires": [
             [
                 "805382e936c84350",
@@ -3757,19 +3758,28 @@
                 "v": "/shadows_get_plugins",
                 "vt": "str",
                 "case": false
+            },
+            {
+                "t": "regex",
+                "v": "/shadows_get_device_config",
+                "vt": "str",
+                "case": false
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 2,
+        "outputs": 3,
         "x": 310,
-        "y": 540,
+        "y": 860,
         "wires": [
             [
                 "d9487b8639a82be2"
             ],
             [
                 "0fc3f1b496539a20"
+            ],
+            [
+                "655170033a30d40c"
             ]
         ]
     },
@@ -3777,18 +3787,19 @@
         "id": "98a36bcacf2ba435",
         "type": "function",
         "z": "b7b9b4f87ca81b1c",
-        "name": "查询",
+        "name": "数据表",
         "func": "msg.collection = \"ndiot_plugins\";\nmsg.operation = \"find\";\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 770,
-        "y": 440,
+        "x": 790,
+        "y": 400,
         "wires": [
             [
-                "b48d540577e24698"
+                "b48d540577e24698",
+                "dda269009cf562c8"
             ]
         ]
     },
@@ -3804,7 +3815,7 @@
         "finalize": "",
         "libs": [],
         "x": 580,
-        "y": 560,
+        "y": 860,
         "wires": [
             [
                 "805382e936c84350",
@@ -3825,8 +3836,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 840,
-        "y": 600,
+        "x": 940,
+        "y": 880,
         "wires": []
     },
     {
@@ -3848,12 +3859,22 @@
                 "vt": "str"
             },
             {
+                "t": "eq",
+                "v": "ndiot-edg-bfy",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ndiot-edg-ndv1",
+                "vt": "str"
+            },
+            {
                 "t": "else"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 3,
+        "outputs": 5,
         "x": 530,
         "y": 340,
         "wires": [
@@ -3862,6 +3883,12 @@
             ],
             [
                 "5d46a3f21447466d"
+            ],
+            [
+                "6f201eb39e35c7e9"
+            ],
+            [
+                "6f201eb39e35c7e9"
             ],
             [
                 "805382e936c84350"
@@ -3911,6 +3938,147 @@
         "z": "b7b9b4f87ca81b1c",
         "name": "ndiot-edg-nd",
         "func": "msg.collection = \"ndiot_devices\";\nmsg.operation = \"find\";\nmsg.payload = {\n    \"app_id\": \"ndiot\",\n    \"dom_id\": \"nd\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 300,
+        "wires": [
+            [
+                "b48d540577e24698"
+            ]
+        ]
+    },
+    {
+        "id": "d2c25d03779c3175",
+        "type": "http in",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "",
+        "url": "/shadows_set_device_config",
+        "method": "put",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 330,
+        "y": 520,
+        "wires": [
+            [
+                "d1aafadeee392082",
+                "805382e936c84350"
+            ]
+        ]
+    },
+    {
+        "id": "d1aafadeee392082",
+        "type": "function",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "更新设备配置数据",
+        "func": "let data = global.get(\"data\");\n\nlet pld = msg.payload;\n\nlet _msg = {};\n_msg.collection = \"ndiot_device_config\";\n_msg.operation = \"update\";\n\n_msg.payload = pld;\n_msg.query = {\n    \"id\": pld.id\n}\n\n_msg._topic =  msg._topic ||  \"upsert_ndiot_device_config\";\n_msg._payload = msg.payload;\nreturn _msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 520,
+        "wires": [
+            [
+                "863a57772c22291c"
+            ]
+        ]
+    },
+    {
+        "id": "863a57772c22291c",
+        "type": "link out",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "更新数据",
+        "mode": "link",
+        "links": [
+            "53e7a294eeb90f43"
+        ],
+        "x": 1145,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "e262446a5245cc17",
+        "type": "http in",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "",
+        "url": "/shadows_get_device_config",
+        "method": "put",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 340,
+        "y": 440,
+        "wires": [
+            [
+                "430e140195396d07"
+            ]
+        ]
+    },
+    {
+        "id": "430e140195396d07",
+        "type": "function",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "数据表",
+        "func": "msg.collection = \"ndiot_device_config\";\nmsg.operation = \"find\";\nmsg.payload = {\n    id: msg.payload.id\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 440,
+        "wires": [
+            [
+                "b48d540577e24698"
+            ]
+        ]
+    },
+    {
+        "id": "655170033a30d40c",
+        "type": "function",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "/shadows_get_device_config",
+        "func": "    return msg;\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 900,
+        "wires": [
+            [
+                "805382e936c84350",
+                "40463dd668190178"
+            ]
+        ]
+    },
+    {
+        "id": "dda269009cf562c8",
+        "type": "debug",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1170,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "6f201eb39e35c7e9",
+        "type": "function",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "ndiot-edg-bfy",
+        "func": "msg.collection = \"ndiot_devices\";\nmsg.operation = \"find\";\nmsg.payload = {\n    \"app_id\": \"ndiot\"\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",

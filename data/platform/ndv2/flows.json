@@ -11,7 +11,7 @@
         "id": "1b87c586f8186580",
         "type": "tab",
         "label": "订阅/发布",
-        "disabled": false,
+        "disabled": true,
         "info": "",
         "env": []
     },
@@ -19,7 +19,7 @@
         "id": "ab2973b47f51fab7",
         "type": "tab",
         "label": "接口调用",
-        "disabled": false,
+        "disabled": true,
         "info": "",
         "env": []
     },
@@ -27,7 +27,7 @@
         "id": "6a098faa50c428e7",
         "type": "tab",
         "label": "接口处理",
-        "disabled": false,
+        "disabled": true,
         "info": "",
         "env": []
     },
@@ -35,7 +35,7 @@
         "id": "4f6f6a4be1a5f2a2",
         "type": "tab",
         "label": "平台-订阅发布",
-        "disabled": false,
+        "disabled": true,
         "info": "",
         "env": []
     },
@@ -43,7 +43,7 @@
         "id": "a0c4930c5cd95a68",
         "type": "tab",
         "label": "平台-接口处理",
-        "disabled": false,
+        "disabled": true,
         "info": "",
         "env": []
     },
@@ -51,7 +51,7 @@
         "id": "3f5531b19892a842",
         "type": "tab",
         "label": "流程 1",
-        "disabled": false,
+        "disabled": true,
         "info": "",
         "env": []
     },
