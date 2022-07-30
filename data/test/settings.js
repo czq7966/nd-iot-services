@@ -448,7 +448,7 @@ module.exports = {
     //httpRequestTimeout: 120000,
 
     /** Retry time in milliseconds for MQTT connections */
-    mqttReconnectTime: 15000,
+    mqttReconnectTime: 1000,
 
     /** Retry time in milliseconds for Serial port connections */
     serialReconnectTime: 15000,

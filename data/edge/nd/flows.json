@@ -127,7 +127,7 @@
     {
         "id": "acbe893ce0e86722",
         "type": "mqtt-broker",
-        "name": "south",
+        "name": "south_input",
         "broker": "push-access.sdp.101.com",
         "port": "11882",
         "clientid": "",
@@ -153,9 +153,87 @@
     {
         "id": "b5ef31a7a90ee4e8",
         "type": "mqtt-broker",
-        "name": "north",
+        "name": "north_input",
         "broker": "push-access.sdp.101.com",
         "port": "11882",
+        "clientid": "",
+        "autoConnect": false,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "38d4df9bbbc86ac8",
+        "type": "mqtt-broker",
+        "name": "south_output",
+        "broker": "push-access.sdp.101.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": false,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "9d3969c0e96fa621",
+        "type": "mqtt-broker",
+        "name": "south_status",
+        "broker": "push-access.sdp.101.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": false,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "e0b970ba11de7cc5",
+        "type": "mqtt-broker",
+        "name": "north_output",
+        "broker": "push-access.sdp.101.com",
+        "port": "1883",
         "clientid": "",
         "autoConnect": false,
         "usetls": false,
@@ -5095,7 +5173,7 @@
         "type": "function",
         "z": "e783d53461d94d52",
         "name": "创建影子",
-        "func": "let shadows = msg.payload;\n\nfunction newShadow(model, id, pid){\n    let msg = {\n        type: \"shadows\",\n        action: \"create\",\n        payload: {\n            model: model,\n            id: id,\n            pid: pid\n        }\n    }\n    msg._payload = msg.payload\n    node.send(msg)\n}\n\nshadows.forEach(shadow => {\n    newShadow(shadow.model, shadow.id, shadow.pid)\n})\n",
+        "func": "let shadows = msg.payload;\n\nfunction newShadow(model, id, pid){\n    let msg = {\n        type: \"shadows\",\n        action: \"create\",\n        payload: {\n            model: model,\n            id: id,\n            pid: pid\n        }\n    }\n    msg._payload = msg.payload\n    node.send(msg)\n}\n\n// shadows.forEach(shadow => {\n//     new Promise((resolve, reject) => {\n//         newShadow(shadow.model, shadow.id, shadow.pid);\n//         resolve();\n//     })\n// })\n\nlet len = shadows.length;\nlet pos = 0;\n\nfunction newPosShadow() {\n    if (pos < len) {\n        let shadow = shadows[pos];\n        newShadow(shadow.model, shadow.id, shadow.pid);\n        pos++;\n        setTimeout(() => {\n             newPosShadow();\n        }, 100)\n    }\n}\n\nnewPosShadow();\n\n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -5105,7 +5183,8 @@
         "y": 680,
         "wires": [
             [
-                "33a3e92a73a4235c"
+                "33a3e92a73a4235c",
+                "4803076b7899fa1c"
             ]
         ]
     },
@@ -6064,10 +6143,26 @@
         "name": "订阅设备主题输出",
         "mode": "link",
         "links": [
-            "cb11d32cb643517e"
+            "5230373797183e4e"
         ],
         "x": 1135,
         "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "4803076b7899fa1c",
+        "type": "debug",
+        "z": "e783d53461d94d52",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 680,
         "wires": []
     },
     {
@@ -6097,10 +6192,9 @@
         "z": "0d352f1d7c785601",
         "name": "南向订阅",
         "links": [
-            "9e37d384371f67cd",
-            "faa7103ab3cdb32e"
+            "9e37d384371f67cd"
         ],
-        "x": 215,
+        "x": 165,
         "y": 400,
         "wires": [
             [
@@ -6116,8 +6210,8 @@
         "links": [
             "8a709b1a39d198bd"
         ],
-        "x": 215,
-        "y": 460,
+        "x": 165,
+        "y": 480,
         "wires": [
             [
                 "799983fe4c972017"
@@ -6136,7 +6230,7 @@
         "finalize": "",
         "libs": [],
         "x": 310,
-        "y": 460,
+        "y": 480,
         "wires": [
             [
                 "4e176511107e7771",
@@ -6153,7 +6247,7 @@
         "links": [
             "6e1b243376ea48e3"
         ],
-        "x": 715,
+        "x": 805,
         "y": 400,
         "wires": []
     },
@@ -6171,7 +6265,7 @@
         "rh": 0,
         "inputs": 1,
         "x": 460,
-        "y": 620,
+        "y": 660,
         "wires": [
             [
                 "820f08a18a27abbf"
@@ -6187,7 +6281,7 @@
             "717675b7e9e6ca34"
         ],
         "x": 215,
-        "y": 620,
+        "y": 660,
         "wires": [
             [
                 "1023e03ef3a77189"
@@ -6200,10 +6294,11 @@
         "z": "0d352f1d7c785601",
         "name": "北向输出",
         "links": [
-            "49a8b560db5011dd"
+            "49a8b560db5011dd",
+            "b9b3b0731dab17c3"
         ],
         "x": 215,
-        "y": 700,
+        "y": 720,
         "wires": [
             [
                 "3134d006736621c4"
@@ -6222,7 +6317,7 @@
         "finalize": "",
         "libs": [],
         "x": 310,
-        "y": 700,
+        "y": 720,
         "wires": [
             [
                 "6cb182dc40c0572c"
@@ -6238,8 +6333,8 @@
         "links": [
             "44b456873768ef74"
         ],
-        "x": 715,
-        "y": 620,
+        "x": 805,
+        "y": 660,
         "wires": []
     },
     {
@@ -6255,9 +6350,9 @@
         "userProps": "",
         "correl": "",
         "expiry": "",
-        "broker": "acbe893ce0e86722",
+        "broker": "38d4df9bbbc86ac8",
         "x": 460,
-        "y": 460,
+        "y": 480,
         "wires": []
     },
     {
@@ -6273,9 +6368,9 @@
         "userProps": "",
         "correl": "",
         "expiry": "",
-        "broker": "b5ef31a7a90ee4e8",
+        "broker": "e0b970ba11de7cc5",
         "x": 460,
-        "y": 700,
+        "y": 720,
         "wires": []
     },
     {
@@ -6289,7 +6384,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 610,
+        "x": 650,
         "y": 400,
         "wires": [
             [
@@ -6309,7 +6404,7 @@
         "finalize": "",
         "libs": [],
         "x": 610,
-        "y": 620,
+        "y": 660,
         "wires": [
             [
                 "adeb7a4edd9ba86a",
@@ -6428,7 +6523,8 @@
         "y": 180,
         "wires": [
             [
-                "094870fa884c4cc9"
+                "094870fa884c4cc9",
+                "89b5920226e99050"
             ]
         ]
     },
@@ -6497,92 +6593,18 @@
         "wires": []
     },
     {
-        "id": "f116efc670c6c6fc",
-        "type": "mqtt in",
-        "z": "0d352f1d7c785601",
-        "name": "",
-        "topic": "0/0/dev/#",
-        "qos": "2",
-        "datatype": "json",
-        "broker": "acbe893ce0e86722",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 460,
-        "y": 800,
-        "wires": [
-            [
-                "948f3fd3857562dd"
-            ]
-        ]
-    },
-    {
-        "id": "948f3fd3857562dd",
-        "type": "debug",
-        "z": "0d352f1d7c785601",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 650,
-        "y": 800,
-        "wires": []
-    },
-    {
-        "id": "0dea05963582bfd1",
-        "type": "mqtt in",
-        "z": "0d352f1d7c785601",
-        "name": "",
-        "topic": "#",
-        "qos": "2",
-        "datatype": "auto",
-        "broker": "acbe893ce0e86722",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 450,
-        "y": 860,
-        "wires": [
-            [
-                "2358be289d23ad88"
-            ]
-        ]
-    },
-    {
-        "id": "2358be289d23ad88",
-        "type": "debug",
-        "z": "0d352f1d7c785601",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 630,
-        "y": 860,
-        "wires": []
-    },
-    {
         "id": "985bc775adafa0bb",
         "type": "debug",
         "z": "0d352f1d7c785601",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 830,
+        "x": 930,
         "y": 620,
         "wires": []
     },
@@ -6599,8 +6621,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 650,
-        "y": 460,
+        "x": 470,
+        "y": 520,
         "wires": []
     },
     {
@@ -6614,8 +6636,8 @@
         "once": true,
         "onceDelay": "1",
         "topic": "",
-        "x": 330,
-        "y": 360,
+        "x": 170,
+        "y": 300,
         "wires": [
             [
                 "dd907b890a084ac6"
@@ -6627,17 +6649,19 @@
         "type": "function",
         "z": "0d352f1d7c785601",
         "name": "南向连接",
-        "func": "let data = global.get(\"data\")\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false\n}\nObject.assign(msg.broker, data.shadows.mqtt.south.broker);\nreturn msg;",
+        "func": "let data = global.get(\"data\");\n// let common = global.get(\"common\");\n// data.mqtt.clientid = data.mqtt.clientid || (data.ids.edg + \"-\" + common.guid(8));\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    cleansession: false,\n    force: false,\n    // clientid: data.mqtt.clientid\n}\nObject.assign(msg.broker, data.shadows.mqtt.south.broker);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 460,
-        "y": 360,
+        "x": 300,
+        "y": 300,
         "wires": [
             [
-                "a5fab40b8a440bb5"
+                "a3e19843923ca69b",
+                "619cb1edad5ffd76",
+                "b399a669eadfaf77"
             ]
         ]
     },
@@ -6652,8 +6676,8 @@
         "once": true,
         "onceDelay": "1",
         "topic": "",
-        "x": 330,
-        "y": 580,
+        "x": 170,
+        "y": 600,
         "wires": [
             [
                 "19a5b67690622647"
@@ -6665,13 +6689,198 @@
         "type": "function",
         "z": "0d352f1d7c785601",
         "name": "北向连接",
-        "func": "let data = global.get(\"data\")\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false\n}\nObject.assign(msg.broker, data.shadows.mqtt.north.broker);\nreturn msg;",
+        "func": "let data = global.get(\"data\");\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    cleansession: false,\n    force: false,\n}\nObject.assign(msg.broker, data.shadows.mqtt.north.broker);\nreturn msg;\n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 460,
+        "x": 300,
+        "y": 600,
+        "wires": [
+            [
+                "3a4b1b544f3aad0a",
+                "29f8942fd39250f8"
+            ]
+        ]
+    },
+    {
+        "id": "b1b26ec4df650231",
+        "type": "status",
+        "z": "0d352f1d7c785601",
+        "name": "",
+        "scope": [
+            "a5fab40b8a440bb5",
+            "1023e03ef3a77189",
+            "4e176511107e7771",
+            "6cb182dc40c0572c",
+            "90174b97386a8810"
+        ],
+        "x": 990,
+        "y": 340,
+        "wires": [
+            [
+                "94dd8bc1db031114"
+            ]
+        ]
+    },
+    {
+        "id": "94dd8bc1db031114",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "",
+        "func": "\nreturn {payload: msg};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1190,
+        "y": 340,
+        "wires": [
+            [
+                "d0f89949e624aa9e"
+            ]
+        ]
+    },
+    {
+        "id": "d0f89949e624aa9e",
+        "type": "debug",
+        "z": "0d352f1d7c785601",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1350,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "89b5920226e99050",
+        "type": "debug",
+        "z": "0d352f1d7c785601",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1010,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "90174b97386a8810",
+        "type": "mqtt in",
+        "z": "0d352f1d7c785601",
+        "name": "南向状态订阅",
+        "topic": "",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "9d3969c0e96fa621",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 470,
+        "y": 440,
+        "wires": [
+            [
+                "821bd3a334fab03b"
+            ]
+        ]
+    },
+    {
+        "id": "5230373797183e4e",
+        "type": "link in",
+        "z": "0d352f1d7c785601",
+        "name": "南向状态订阅",
+        "links": [
+            "faa7103ab3cdb32e"
+        ],
+        "x": 165,
+        "y": 440,
+        "wires": [
+            [
+                "90174b97386a8810"
+            ]
+        ]
+    },
+    {
+        "id": "a3e19843923ca69b",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "south_input",
+        "func": "let common = global.get(\"common\");\n \nmsg.broker.clientid = \"south_input_\" + common.guid(8)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 260,
+        "wires": [
+            [
+                "a5fab40b8a440bb5"
+            ]
+        ]
+    },
+    {
+        "id": "619cb1edad5ffd76",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "south_status",
+        "func": "let common = global.get(\"common\");\n\nmsg.broker.clientid = \"south_status_\" + common.guid(8)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 300,
+        "wires": [
+            [
+                "90174b97386a8810"
+            ]
+        ]
+    },
+    {
+        "id": "b399a669eadfaf77",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "south_output",
+        "func": "let common = global.get(\"common\");\n\nmsg.broker.clientid = \"south_output_\" + common.guid(8)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 340,
+        "wires": [
+            [
+                "4e176511107e7771"
+            ]
+        ]
+    },
+    {
+        "id": "3a4b1b544f3aad0a",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "north_input",
+        "func": "let common = global.get(\"common\");\n \nmsg.broker.clientid = \"north_input_\" + common.guid(8)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
         "y": 580,
         "wires": [
             [
@@ -6680,57 +6889,21 @@
         ]
     },
     {
-        "id": "b74dbe0c35cd4e4c",
-        "type": "http request",
-        "z": "0d352f1d7c785601",
-        "name": "shadows_save_z2m_config",
-        "method": "PUT",
-        "ret": "txt",
-        "paytoqs": "query",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "senderr": false,
-        "x": 760,
-        "y": 1260,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "9c91f0c14161e0a9",
+        "id": "29f8942fd39250f8",
         "type": "function",
         "z": "0d352f1d7c785601",
-        "name": "保存Z2M配置数据",
-        "func": "let data = global.get(\"data\");\nlet url = data.shadows.dio_url;\n\n\nlet _msg = {}\n_msg.url = url + \"/shadows_save_z2m_config\";\n_msg.payload = msg\n_msg._msg = msg\nreturn msg;",
+        "name": "north_output",
+        "func": "let common = global.get(\"common\");\n\nmsg.broker.clientid = \"north_output_\" + common.guid(8)\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 510,
-        "y": 1260,
+        "x": 470,
+        "y": 620,
         "wires": [
             [
-                "b74dbe0c35cd4e4c"
-            ]
-        ]
-    },
-    {
-        "id": "fe2e50cc4e53fc22",
-        "type": "json",
-        "z": "0d352f1d7c785601",
-        "name": "",
-        "property": "payload",
-        "action": "",
-        "pretty": false,
-        "x": 330,
-        "y": 1260,
-        "wires": [
-            [
-                "9c91f0c14161e0a9"
+                "6cb182dc40c0572c"
             ]
         ]
     },
@@ -6945,6 +7118,92 @@
         "statusType": "auto",
         "x": 790,
         "y": 960,
+        "wires": []
+    },
+    {
+        "id": "9197f6ae4186b556",
+        "type": "function",
+        "z": "258449913ea08d71",
+        "name": "",
+        "func": "msg = {\n    id: \"0x54ef441000182925\",\n    payload: {\n        hd: {\n            entry: {\n                type: \"svc\",\n                id: \"test\"\n            }\n        },\n        pld: {\n            id: \"0x54ef441000182925\"\n        }\n    }\n}\nreturn msg ;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 200,
+        "wires": [
+            [
+                "b9b3b0731dab17c3"
+            ]
+        ]
+    },
+    {
+        "id": "b9b3b0731dab17c3",
+        "type": "link out",
+        "z": "258449913ea08d71",
+        "name": "",
+        "mode": "link",
+        "links": [
+            "1cc085b57aa685b5"
+        ],
+        "x": 735,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "3a316e8b93b88030",
+        "type": "inject",
+        "z": "258449913ea08d71",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 250,
+        "y": 300,
+        "wires": [
+            [
+                "fb4dea7593679ad3"
+            ]
+        ]
+    },
+    {
+        "id": "fb4dea7593679ad3",
+        "type": "function",
+        "z": "258449913ea08d71",
+        "name": "",
+        "func": "\nnew Promise((resolve, reject) => {\n    node.send({payload: \"1111111\"})\n    resolve();\n    \n})",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 300,
+        "wires": [
+            [
+                "ebd609086b555a79"
+            ]
+        ]
+    },
+    {
+        "id": "ebd609086b555a79",
+        "type": "debug",
+        "z": "258449913ea08d71",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 550,
+        "y": 340,
         "wires": []
     }
 ]
