@@ -85,7 +85,7 @@
     {
         "id": "acbe893ce0e86722",
         "type": "mqtt-broker",
-        "name": "south",
+        "name": "south_input",
         "broker": "push-access.sdp.101.com",
         "port": "11882",
         "clientid": "",
@@ -111,9 +111,61 @@
     {
         "id": "b5ef31a7a90ee4e8",
         "type": "mqtt-broker",
-        "name": "north",
+        "name": "north_input",
         "broker": "push-access.sdp.101.com",
         "port": "11882",
+        "clientid": "",
+        "autoConnect": false,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "790bcfc072decbef",
+        "type": "mqtt-broker",
+        "name": "south_output",
+        "broker": "push-access.sdp.101.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": false,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "7a928bcc4b06cbcc",
+        "type": "mqtt-broker",
+        "name": "north_output",
+        "broker": "push-access.sdp.101.com",
+        "port": "1883",
         "clientid": "",
         "autoConnect": false,
         "usetls": false,
@@ -1233,27 +1285,6 @@
         ]
     },
     {
-        "id": "dd907b890a084ac6",
-        "type": "function",
-        "z": "a94bd1cc5a6fde26",
-        "name": "南向连接",
-        "func": "let data = global.get(\"data\")\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false\n}\nObject.assign(msg.broker, data.shadows.mqtt.south.broker);\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 520,
-        "y": 240,
-        "wires": [
-            [
-                "5dd7b802a624a206",
-                "d43f3585a9691357",
-                "6e5c83e13f8d8156"
-            ]
-        ]
-    },
-    {
         "id": "489eca10a9043253",
         "type": "function",
         "z": "a94bd1cc5a6fde26",
@@ -1271,25 +1302,6 @@
                 "160e3ce504dc0b49",
                 "2eb444bcc2d2bf9a"
             ]
-        ]
-    },
-    {
-        "id": "5dd7b802a624a206",
-        "type": "mqtt in",
-        "z": "a94bd1cc5a6fde26",
-        "name": "南向连接",
-        "topic": "",
-        "qos": "2",
-        "datatype": "json",
-        "broker": "acbe893ce0e86722",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 1,
-        "x": 700,
-        "y": 240,
-        "wires": [
-            []
         ]
     },
     {
@@ -1319,7 +1331,7 @@
         "topic": "",
         "qos": "2",
         "datatype": "json",
-        "broker": "acbe893ce0e86722",
+        "broker": "790bcfc072decbef",
         "nl": false,
         "rap": true,
         "rh": 0,
@@ -1378,7 +1390,7 @@
         "topic": "",
         "qos": "2",
         "datatype": "json",
-        "broker": "b5ef31a7a90ee4e8",
+        "broker": "7a928bcc4b06cbcc",
         "nl": false,
         "rap": true,
         "rh": 0,
@@ -1522,46 +1534,6 @@
         ]
     },
     {
-        "id": "f46edcda532fafa9",
-        "type": "mqtt in",
-        "z": "a94bd1cc5a6fde26",
-        "name": "北向连接",
-        "topic": "",
-        "qos": "2",
-        "datatype": "json",
-        "broker": "b5ef31a7a90ee4e8",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 1,
-        "x": 700,
-        "y": 560,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "b105debece3dcb9f",
-        "type": "function",
-        "z": "a94bd1cc5a6fde26",
-        "name": "北向连接",
-        "func": "let data = global.get(\"data\")\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false\n}\nObject.assign(msg.broker, data.shadows.mqtt.north.broker);\n\nreturn msg\n\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 500,
-        "y": 560,
-        "wires": [
-            [
-                "f46edcda532fafa9",
-                "fc7833f37a875434",
-                "8c09ccba3e53bf78"
-            ]
-        ]
-    },
-    {
         "id": "2eb444bcc2d2bf9a",
         "type": "debug",
         "z": "a94bd1cc5a6fde26",
@@ -1605,9 +1577,184 @@
         "y": 380,
         "wires": [
             [
-                "dd907b890a084ac6",
-                "b105debece3dcb9f"
+                "eb9e9fa256d0641d",
+                "d8f1c129a601bcb8"
             ]
         ]
+    },
+    {
+        "id": "eb9e9fa256d0641d",
+        "type": "function",
+        "z": "a94bd1cc5a6fde26",
+        "name": "南向连接",
+        "func": "let data = global.get(\"data\");\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    cleansession: false,\n    force: false\n}\nObject.assign(msg.broker, data.shadows.mqtt.south.broker);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 240,
+        "wires": [
+            [
+                "f1a0ac73c19ca88a",
+                "52c6cafec2fba95c"
+            ]
+        ]
+    },
+    {
+        "id": "d8f1c129a601bcb8",
+        "type": "function",
+        "z": "a94bd1cc5a6fde26",
+        "name": "北向连接",
+        "func": "let data = global.get(\"data\");\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    cleansession: false,\n    force: false,\n}\nObject.assign(msg.broker, data.shadows.mqtt.north.broker);\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 580,
+        "wires": [
+            [
+                "552c7e9a7e20e7fd",
+                "857e4fed962e8f46"
+            ]
+        ]
+    },
+    {
+        "id": "f1a0ac73c19ca88a",
+        "type": "function",
+        "z": "a94bd1cc5a6fde26",
+        "name": "south_input",
+        "func": "let common = global.get(\"common\");\n \nmsg.broker.clientid = \"south_input_\" + common.guid(8)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 220,
+        "wires": [
+            [
+                "d43f3585a9691357",
+                "a5fab40b8a440bb5"
+            ]
+        ]
+    },
+    {
+        "id": "52c6cafec2fba95c",
+        "type": "function",
+        "z": "a94bd1cc5a6fde26",
+        "name": "south_output",
+        "func": "let common = global.get(\"common\");\n\nmsg.broker.clientid = \"south_output_\" + common.guid(8)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 260,
+        "wires": [
+            [
+                "6e5c83e13f8d8156",
+                "1a767b83756902e3"
+            ]
+        ]
+    },
+    {
+        "id": "552c7e9a7e20e7fd",
+        "type": "function",
+        "z": "a94bd1cc5a6fde26",
+        "name": "north_input",
+        "func": "let common = global.get(\"common\");\n \nmsg.broker.clientid = \"north_input_\" + common.guid(8)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 560,
+        "wires": [
+            [
+                "8c09ccba3e53bf78",
+                "12e60e1c4abf3055"
+            ]
+        ]
+    },
+    {
+        "id": "857e4fed962e8f46",
+        "type": "function",
+        "z": "a94bd1cc5a6fde26",
+        "name": "north_output",
+        "func": "let common = global.get(\"common\");\n\nmsg.broker.clientid = \"north_output_\" + common.guid(8)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 600,
+        "wires": [
+            [
+                "fc7833f37a875434",
+                "630c60951558c248"
+            ]
+        ]
+    },
+    {
+        "id": "b1b26ec4df650231",
+        "type": "status",
+        "z": "a94bd1cc5a6fde26",
+        "name": "",
+        "scope": [
+            "a5fab40b8a440bb5",
+            "1a767b83756902e3",
+            "630c60951558c248",
+            "12e60e1c4abf3055"
+        ],
+        "x": 850,
+        "y": 160,
+        "wires": [
+            [
+                "94dd8bc1db031114"
+            ]
+        ]
+    },
+    {
+        "id": "94dd8bc1db031114",
+        "type": "function",
+        "z": "a94bd1cc5a6fde26",
+        "name": "",
+        "func": "\nreturn {payload: msg};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1050,
+        "y": 160,
+        "wires": [
+            [
+                "d0f89949e624aa9e"
+            ]
+        ]
+    },
+    {
+        "id": "d0f89949e624aa9e",
+        "type": "debug",
+        "z": "a94bd1cc5a6fde26",
+        "name": "连接断开",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1200,
+        "y": 160,
+        "wires": []
     }
 ]
