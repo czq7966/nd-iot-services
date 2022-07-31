@@ -1082,8 +1082,10 @@
         "z": "edb25e171bdb8773",
         "name": "存储输入",
         "links": [
-            "e1bdc0cff71a3dbf",
-            "adc25cedfc423e9f"
+            "075507d108ce592a",
+            "160e3ce504dc0b49",
+            "adc25cedfc423e9f",
+            "e1bdc0cff71a3dbf"
         ],
         "x": 285,
         "y": 240,
@@ -1289,7 +1291,7 @@
         "type": "function",
         "z": "a94bd1cc5a6fde26",
         "name": "数据表",
-        "func": "\nlet tm = new Date()\nmsg.tms=tm.valueOf();\nmsg.tm=tm.toLocaleString();\nmsg.from = \"south\"\n\nlet year = tm.getFullYear().toString()\nlet month = (tm.getMonth() + 101).toString().substr(1,2)\nlet date = (tm.getDate() + 100).toString().substr(1,2)\n\nlet _msg = {}\n_msg.collection=\"ndiot_\" + year+month+date\n_msg.payload = msg;\n\n\nreturn _msg;",
+        "func": "\nlet tm = new Date()\nmsg.tms=tm.valueOf();\nmsg.tm=tm.toLocaleString();\nmsg.from = \"south\"\n\nlet year = tm.getFullYear().toString()\nlet month = (tm.getMonth() + 101).toString().substr(1,2)\nlet date = (tm.getDate() + 100).toString().substr(1,2)\n\nlet _msg = {}\n_msg.collection=\"ndiot_shadows_\" + year+month+date\n_msg.payload = msg;\n\n\nreturn _msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1440,7 +1442,7 @@
         "type": "function",
         "z": "a94bd1cc5a6fde26",
         "name": "数据表",
-        "func": "\nlet tm = new Date()\nmsg.tms=tm.valueOf();\nmsg.tm=tm.toLocaleString();\nmsg.from = \"north\"\n\nlet year = tm.getFullYear().toString()\nlet month = (tm.getMonth() + 101).toString().substr(1,2)\nlet date = (tm.getDate() + 100).toString().substr(1,2)\n\nlet _msg = {}\n_msg.collection=\"ndiot_\" + year+month+date\n_msg.payload = msg;\n\n\nreturn _msg;",
+        "func": "\nlet tm = new Date()\nmsg.tms=tm.valueOf();\nmsg.tm=tm.toLocaleString();\nmsg.from = \"north\"\n\nlet year = tm.getFullYear().toString()\nlet month = (tm.getMonth() + 101).toString().substr(1,2)\nlet date = (tm.getDate() + 100).toString().substr(1,2)\n\nlet _msg = {}\n_msg.collection=\"ndiot_shadows_\" + year+month+date\n_msg.payload = msg;\n\n\nreturn _msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",

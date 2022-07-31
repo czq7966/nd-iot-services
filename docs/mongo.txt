@@ -1,11 +1,11 @@
 // 福州/飘渺庄空调 离线检测
 
-let deviceStr = `SELECT * FROM ndiot_devices where "model" = 'FZPMZF2ACGREE'`
+let deviceStr = `SELECT * FROM ndiot_devices where "model" = 'FZPMZF2ACGREE' or "model" = 'FZYTACGREE' or "model" = 'FZYTACMIDEA'  `
 let offTms = new Date().valueOf() - 1000 * 60 * 2 ;
 mb.runSQLQuery(deviceStr)
 .forEach(dev => {
     print(dev.name)
-    let str = `select * from ndiot_20220718 where "hd.entry.id" = 'report' and "pld.id" = '` + dev.id + "'";
+    let str = `select * from ndiot_shadows_20220718 where "hd.entry.id" = 'report' and "pld.id" = '` + dev.id + "'";
     mb.runSQLQuery(str)
     .sort({_id:-1})
     .limit(1)
@@ -52,3 +52,16 @@ mb.runSQLQuery(deviceStr)
     }
     
 })
+
+
+==========================================
+
+let offTms = new Date().valueOf() - 1000 * 60 * 2 ;
+let tms = new Date("2022-7-31 15:11:00").valueOf()
+let stms = new Date("2022-7-31 17:11:00").valueOf()
+let etms =new Date("2022-7-31 19:11:00").valueOf()
+
+    let str = `select * from ndiot_shadows_20220731 where "payload.hd.entry.id" = 'report' ` + ` and "tms" > ` + stms  
+    mb.runSQLQuery(str)
+    .sort({_id:-1})
+    .limit(100)
