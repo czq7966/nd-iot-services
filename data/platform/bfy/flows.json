@@ -1038,8 +1038,7 @@
             "9bdce921275b0acd",
             "b45b2eba09115dae",
             "f2d3874c6b2d73f3",
-            "250ffb893d37d89a",
-            "b92885d63c1f2156"
+            "250ffb893d37d89a"
         ],
         "x": 225,
         "y": 540,
@@ -2635,7 +2634,7 @@
         "type": "function",
         "z": "33ea2d5b80781f0b",
         "name": "子设备_协议转换",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        func: \"set\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\n\nlet c= msg.payload;\nlet len = c.length;\nlet pld = {};\n\n//插座，1路开关\nif (c == \"0\" || c ==\"1\" || c ==\"2\") {\n    let name = \"state\";\n    pld[name] = c == \"0\" ? \"off\" : \n                c == \"1\" ? \"on\"  : \"\";\n            \n}\n\n//多路开关\nif (len == 2) {\n    let name;\n    let c0 = c[0];\n    let c1 = c[1];\n    if (c0 == \"1\" || c0 == \"2\" || c0 == \"3\") {\n        name = \"state_\" + c0;\n        pld[name] = c1 == \"0\" ? \"off\" : \n                    c1 == \"1\" ? \"on\"  : \"\";\n    }\n    \n    if (c0 == \"l\" || c0 == \"c\" || c0 == \"r\") {\n        name = \"state_\" + (c0 == \"l\" ? \"left\" : c0 == \"r\" ? \"right\" : \"center\");\n        pld[name] = c1 == \"0\" ? \"off\" : \n                    c1 == \"1\" ? \"on\"  : \"\";\n    }\n    \n}\n\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"set\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\n\nlet c= msg.payload;\nlet len = c.length;\nlet pld = {};\n\n//插座，1路开关\nif (c == \"0\" || c ==\"1\" || c ==\"2\") {\n    let name = \"state\";\n    pld[name] = c == \"0\" ? \"off\" : \n                c == \"1\" ? \"on\"  : \"\";\n            \n}\n\n//多路开关\nif (len == 2) {\n    let name;\n    let c0 = c[0];\n    let c1 = c[1];\n    if (c0 == \"1\" || c0 == \"2\" || c0 == \"3\") {\n        name = \"state_\" + c0;\n        pld[name] = c1 == \"0\" ? \"off\" : \n                    c1 == \"1\" ? \"on\"  : \"\";\n    }\n    \n    if (c0 == \"l\" || c0 == \"c\" || c0 == \"r\") {\n        name = \"state_\" + (c0 == \"l\" ? \"left\" : c0 == \"r\" ? \"right\" : \"center\");\n        pld[name] = c1 == \"0\" ? \"off\" : \n                    c1 == \"1\" ? \"on\"  : \"\";\n    }\n    \n}\n\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2654,7 +2653,7 @@
         "type": "function",
         "z": "33ea2d5b80781f0b",
         "name": "中转",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\n\nlet topic = common.getHDTopic({\n    pref: {app: ids.app, dom: \"0\"},\n    to: {type: \"dio\", id: ids.dio},\n    entry: {type: \"svc\", id: \"turn\"}\n    \n});\n\n\nreturn {\n    topic: topic,\n    payload: msg.payload\n};",
+        "func": "// let data = global.get(\"data\");\n// let common = global.get(\"common\");\n// let ids = data.ids;\n\n// let topic = common.getHDTopic({\n//     pref: {app: ids.app, dom: \"0\"},\n//     to: {type: \"dio\", id: ids.dio},\n//     entry: {type: \"svc\", id: \"turn\"}\n    \n// });\n\n\n// return {\n//     topic: topic,\n//     payload: msg.payload\n// };\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2676,11 +2675,10 @@
         "name": "控制输入",
         "mode": "link",
         "links": [
-            "774d0cb8ef787fc2",
             "1cc085b57aa685b5"
         ],
         "x": 1205,
-        "y": 420,
+        "y": 500,
         "wires": []
     },
     {
@@ -2688,7 +2686,7 @@
         "type": "function",
         "z": "33ea2d5b80781f0b",
         "name": "协调器_协议转换",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"request\",\n        func: \"permit_join\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet value = msg.payload.toLowerCase() == \"on\" ? true : false;\n\nlet pld = {\"value\": value, \"time\": 254}\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "func": "// let data = global.get(\"data\");\n// let common = global.get(\"common\");\n// let ids = data.ids;\n// let devId = msg.topic;\n\n// let hd = {\n//     pref: {\n//         app: ids.app,\n//         dom: \"\"\n//     },\n//     from: {\n//         type: \"0\",\n//         id: \"0\"\n//     },\n//     to: {\n//         type: \"dev\",\n//         id: devId,\n//     },\n//     entry: {\n//         type: \"svc\",\n//         id: \"request\",\n//         func: \"permit_join\"\n//     },\n//     sid: common.guid(10),\n//     stp: 0\n// }\n\n// let value = msg.payload.toLowerCase() == \"on\" ? true : false;\n\n// let pld = {\"value\": value, \"time\": 254}\n\n\n\n// return {\n//     payload: {\n//         hd: hd,\n//         pld: pld\n//     }\n// };\n\n\n\n\nlet data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"set\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet value = msg.payload.toLowerCase();\nvalue = (value === \"on\" || value === \"1\") ? true : false;\n\nlet pld = {\"permit_join\": value}\n\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2803,6 +2801,7 @@
         "id": "2d359a4c69b7db5f",
         "type": "change",
         "z": "33ea2d5b80781f0b",
+        "d": true,
         "name": "设备分类",
         "rules": [],
         "action": "",
