@@ -19,7 +19,7 @@ let updateCode = (codeDir, sync) => {
     console.log(codeDir);
 
     let branch = process.env.IOT_CODE_BRANCH || "dev";
-    let cmd = "cd " + codeDir +" && git fetch && git reset --hard && git checkout origin/" + branch + " || echo";
+    let cmd = "cd " + codeDir +" && git fetch && git reset --hard && git checkout origin/" + branch + " && npm run nd:install || echo";
     if (sync) {
         execSync(cmd, {stdio: 'inherit'})
     } else {
