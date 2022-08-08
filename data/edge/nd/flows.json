@@ -5282,7 +5282,7 @@
         "type": "debug",
         "z": "e783d53461d94d52",
         "name": "北向输出",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -5299,7 +5299,7 @@
         "type": "debug",
         "z": "e783d53461d94d52",
         "name": "配置输出",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -5333,7 +5333,7 @@
         "type": "debug",
         "z": "e783d53461d94d52",
         "name": "影子输出",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -5741,7 +5741,7 @@
         "type": "debug",
         "z": "e783d53461d94d52",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -5799,7 +5799,7 @@
         "type": "debug",
         "z": "e783d53461d94d52",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -5905,7 +5905,7 @@
         "type": "debug",
         "z": "e783d53461d94d52",
         "name": "配置输入",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -6166,7 +6166,7 @@
         "type": "debug",
         "z": "e783d53461d94d52",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -6181,6 +6181,7 @@
         "id": "7fa151f373825f57",
         "type": "function",
         "z": "e783d53461d94d52",
+        "d": true,
         "name": "北向订阅入网主题",
         "func": "let id = msg.payload.id;\nlet topics = [\n    \"0/0/dev/\"+id+\"/0/0/evt/device_joined\",\n    \"0/0/dev/\"+id+\"/0/0/evt/device_leave\",\n    \"0/0/dev/\"+id+\"/0/0/evt/device_interview\",\n    ]\nnode.send([{\n        action: \"subscribe\",\n        topic: topics\n}, null])\n",
         "outputs": 1,
@@ -6202,9 +6203,7 @@
         "z": "e783d53461d94d52",
         "name": "北向订阅子设备入网主题输出",
         "mode": "link",
-        "links": [
-            "54d5ea7c0e306a6c"
-        ],
+        "links": [],
         "x": 1185,
         "y": 1140,
         "wires": []
@@ -6214,7 +6213,7 @@
         "type": "debug",
         "z": "e783d53461d94d52",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -6230,7 +6229,7 @@
         "type": "debug",
         "z": "e783d53461d94d52",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -6282,7 +6281,7 @@
         "type": "debug",
         "z": "e783d53461d94d52",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -6317,6 +6316,7 @@
         "id": "768e5f2daf216c2b",
         "type": "function",
         "z": "e783d53461d94d52",
+        "d": true,
         "name": "北向退订阅入网主题",
         "func": "let id = msg.id;\nlet topics = [\n    \"0/0/dev/\"+id+\"/0/0/evt/device_joined\",\n    \"0/0/dev/\"+id+\"/0/0/evt/device_leave\",\n    \"0/0/dev/\"+id+\"/0/0/evt/device_interview\",\n    ]\nnode.send([{\n        action: \"unsubscribe\",\n        topic: topics\n}, null])\n",
         "outputs": 1,
@@ -6796,6 +6796,7 @@
         "name": "获取设备输出",
         "mode": "link",
         "links": [
+            "54d5ea7c0e306a6c",
             "b5034fa324ebdc56"
         ],
         "x": 1005,
@@ -6958,7 +6959,7 @@
         "type": "debug",
         "z": "0d352f1d7c785601",
         "name": "连接断开",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -7123,7 +7124,7 @@
         "id": "6e965839895c77db",
         "type": "mqtt in",
         "z": "0d352f1d7c785601",
-        "name": "北向入网订阅",
+        "name": "北向边缘订阅",
         "topic": "",
         "qos": "2",
         "datatype": "json",
@@ -7144,15 +7145,15 @@
         "id": "54d5ea7c0e306a6c",
         "type": "link in",
         "z": "0d352f1d7c785601",
-        "name": "北向子设备入网订阅",
+        "name": "北向设备入网订阅",
         "links": [
-            "0960e647ecb860f4"
+            "094870fa884c4cc9"
         ],
         "x": 215,
         "y": 700,
         "wires": [
             [
-                "6e965839895c77db"
+                "91b4cdd17e0db665"
             ]
         ]
     },
@@ -7161,7 +7162,7 @@
         "type": "function",
         "z": "0d352f1d7c785601",
         "name": "设备ID",
-        "func": "msg.topics = msg.topic.split(\"/\");\nmsg.id = msg.topics[3]\nreturn msg;",
+        "func": "//msg.topics = msg.topic.split(\"/\");\n//msg.id = msg.topics[3]\nmsg.id = msg.payload.pld.id\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -7179,7 +7180,7 @@
         "id": "6f19c62b466942fa",
         "type": "switch",
         "z": "0d352f1d7c785601",
-        "name": "",
+        "name": "入/退网",
         "property": "payload.hd.entry.id",
         "propertyType": "msg",
         "rules": [
@@ -7202,7 +7203,7 @@
         "checkall": "true",
         "repair": false,
         "outputs": 3,
-        "x": 770,
+        "x": 780,
         "y": 700,
         "wires": [
             [
@@ -7339,15 +7340,16 @@
         "id": "c45acefadf3f106e",
         "type": "debug",
         "z": "0d352f1d7c785601",
-        "name": "",
+        "name": "设备入网",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1170,
+        "x": 1160,
         "y": 620,
         "wires": []
     },
@@ -7439,302 +7441,22 @@
         ]
     },
     {
-        "id": "491349dbf92a1ad4",
-        "type": "http in",
-        "z": "258449913ea08d71",
-        "name": "",
-        "url": "/test",
-        "method": "put",
-        "upload": true,
-        "swaggerDoc": "",
-        "x": 540,
-        "y": 560,
-        "wires": [
-            [
-                "b006690de2037d81",
-                "b2179d33216734a6",
-                "cb44f47d1fbb90ea"
-            ]
-        ]
-    },
-    {
-        "id": "b006690de2037d81",
-        "type": "http response",
-        "z": "258449913ea08d71",
-        "name": "",
-        "statusCode": "",
-        "headers": {},
-        "x": 950,
-        "y": 580,
-        "wires": []
-    },
-    {
-        "id": "b2179d33216734a6",
-        "type": "debug",
-        "z": "258449913ea08d71",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 730,
-        "y": 480,
-        "wires": []
-    },
-    {
-        "id": "b708eff9f78a6577",
-        "type": "http request",
-        "z": "258449913ea08d71",
-        "name": "",
-        "method": "PUT",
-        "ret": "txt",
-        "paytoqs": "query",
-        "url": "https://iot-mqtt.beta.ndaeweb.com/dio/shadows_get_device_config",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "senderr": false,
-        "x": 540,
-        "y": 840,
-        "wires": [
-            [
-                "6b72a5091086f066"
-            ]
-        ]
-    },
-    {
-        "id": "69f6d05166f9586c",
-        "type": "inject",
-        "z": "258449913ea08d71",
-        "name": "",
-        "props": [
-            {
-                "p": "payload.id",
-                "v": "11111111111111111111",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 270,
-        "y": 820,
-        "wires": [
-            [
-                "b708eff9f78a6577"
-            ]
-        ]
-    },
-    {
-        "id": "6b72a5091086f066",
-        "type": "debug",
-        "z": "258449913ea08d71",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 770,
-        "y": 840,
-        "wires": []
-    },
-    {
-        "id": "cb44f47d1fbb90ea",
-        "type": "debug",
-        "z": "258449913ea08d71",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "req.body",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 740,
-        "y": 540,
-        "wires": []
-    },
-    {
-        "id": "16d884658d9666f5",
-        "type": "http request",
-        "z": "258449913ea08d71",
-        "name": "",
-        "method": "PUT",
-        "ret": "txt",
-        "paytoqs": "query",
-        "url": "https://iot-mqtt.beta.ndaeweb.com/dio/shadows_set_device_config",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "senderr": false,
-        "x": 580,
-        "y": 960,
-        "wires": [
-            [
-                "b2cf2df9f9790c1f"
-            ]
-        ]
-    },
-    {
-        "id": "efbbc06a2342e228",
-        "type": "inject",
-        "z": "258449913ea08d71",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "id",
-                "v": "11111111",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "test",
-        "payloadType": "str",
-        "x": 190,
-        "y": 960,
-        "wires": [
-            [
-                "533dad5c6c547805"
-            ]
-        ]
-    },
-    {
-        "id": "533dad5c6c547805",
+        "id": "91b4cdd17e0db665",
         "type": "function",
-        "z": "258449913ea08d71",
-        "name": "",
-        "func": "let _msg = {\n    payload: msg\n}\nreturn _msg;",
+        "z": "0d352f1d7c785601",
+        "name": "边缘订阅",
+        "func": "let data = global.get(\"data\");\n\nlet id = data.ids.edg;\nlet topics = [\n    \"0/0/0/0/edg/\"+id+\"/+/+\"\n    ]\nnode.send([{\n        action: \"subscribe\",\n        topic: topics\n}, null])\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 370,
-        "y": 960,
+        "x": 320,
+        "y": 700,
         "wires": [
             [
-                "16d884658d9666f5"
+                "6e965839895c77db"
             ]
         ]
-    },
-    {
-        "id": "b2cf2df9f9790c1f",
-        "type": "debug",
-        "z": "258449913ea08d71",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 790,
-        "y": 960,
-        "wires": []
-    },
-    {
-        "id": "9197f6ae4186b556",
-        "type": "function",
-        "z": "258449913ea08d71",
-        "name": "",
-        "func": "msg = {\n    id: \"0x54ef441000182925\",\n    payload: {\n        hd: {\n            entry: {\n                type: \"svc\",\n                id: \"test\"\n            }\n        },\n        pld: {\n            id: \"0x54ef441000182925\"\n        }\n    }\n}\nreturn msg ;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 570,
-        "y": 200,
-        "wires": [
-            [
-                "b9b3b0731dab17c3"
-            ]
-        ]
-    },
-    {
-        "id": "b9b3b0731dab17c3",
-        "type": "link out",
-        "z": "258449913ea08d71",
-        "name": "",
-        "mode": "link",
-        "links": [
-            "1cc085b57aa685b5"
-        ],
-        "x": 735,
-        "y": 300,
-        "wires": []
-    },
-    {
-        "id": "3a316e8b93b88030",
-        "type": "inject",
-        "z": "258449913ea08d71",
-        "name": "",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 250,
-        "y": 300,
-        "wires": [
-            [
-                "fb4dea7593679ad3"
-            ]
-        ]
-    },
-    {
-        "id": "fb4dea7593679ad3",
-        "type": "function",
-        "z": "258449913ea08d71",
-        "name": "",
-        "func": "\nnew Promise((resolve, reject) => {\n    node.send({payload: \"1111111\"})\n    resolve();\n    \n})",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 390,
-        "y": 300,
-        "wires": [
-            [
-                "ebd609086b555a79"
-            ]
-        ]
-    },
-    {
-        "id": "ebd609086b555a79",
-        "type": "debug",
-        "z": "258449913ea08d71",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 550,
-        "y": 340,
-        "wires": []
     }
 ]

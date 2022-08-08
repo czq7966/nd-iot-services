@@ -5,6 +5,7 @@
     "private": true,
     "dependencies": {
         "@prescient-devices/node-red-contrib-home-dir": "~1.0.0",
+        "mqtt": "^4.3.7",
         "node-red-contrib-os": "~0.2.1",
         "node-red-nd-device-shadow": "^0.0.3",
         "node-red-nd-mongodb": "^0.0.5",

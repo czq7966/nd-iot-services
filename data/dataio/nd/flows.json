@@ -58,7 +58,7 @@
     {
         "id": "8ef2d550b8e4f725",
         "type": "tab",
-        "label": "修改设备配置",
+        "label": "修改设备配置（测试）",
         "disabled": false,
         "info": "",
         "env": []
@@ -470,7 +470,7 @@
         "type": "function",
         "z": "7c7a09edf982e2f4",
         "name": "数据补全",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet fixUpDom = function(_dom, notNewIfNotExist, recu) {\n    if (!_dom || !_dom.id) return;\n    \n    let domId = _dom.id;\n    let doms = data.app.domains;\n    \n    let dom = doms[domId];\n    if (!dom) {\n        if (notNewIfNotExist)\n            dom = _dom;\n        else\n            dom = Object.assign({}, _dom);\n    } else {\n         dom = Object.assign(dom, _dom);\n    }\n\n    dom.id = domId;\n    dom.app = data.app;\n    dom.dispatchers = dom.dispatchers || {};\n    dom.edges = dom.edges || {};\n    dom.devices = dom.devices || {};\n    doms[domId] = dom;\n\n    if (recu) {\n        Object.keys(dom.dispatchers).forEach(dspId => {\n            let dsp = dom.dispatchers[dspId];\n            dsp.id = dspId;\n            dsp.app_id = dom.app.id;\n            dsp.dom_id = domId;\n            this.fixUpDsp(dsp, notNewIfNotExist, recu);\n        })\n    }\n}\n\nlet fixUpDsp = function(_dsp, notNewIfNotExist, recu) {\n    if (!_dsp || !_dsp.id || !_dsp.dom_id) {\n        if (_dsp && _dsp.id) \n            data.dispatchers[_dsp.id] = _dsp;\n        return;\n    }\n\n    let domId = _dsp.dom_id;\n    let dspId = _dsp.id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let dsps = data.dispatchers;\n    let dsp = dsps[dspId];\n    let dysub = false;\n    \n    if (!dom) {\n        node.error(\"dsp没有租户：\" + dspId);\n        return;\n    };\n    \n    if (!dsp) {\n        if (notNewIfNotExist)\n            dsp = _dsp;\n        else\n            dsp = Object.assign({}, _dsp);\n        dysub = true;\n    } else {\n        dsp = Object.assign(dsp, _dsp);\n    }\n    \n    \n    dsp.id = dspId;\n    dsp.domain = dom;\n    dsp.edges = dsp.edges || {};\n    dom.dispatchers[dspId] = dsp;\n    data.dispatchers[dspId] = dsp;\n    //订阅调度上下线\n    if (dysub) node.send([{dispatcher: dsp}, null]);\n    \n    if (recu) {\n        Object.keys(dsp.edges).forEach(edgId => {\n            let edg = dsp.edges[edgId];\n            edg.id =edgId;\n            edg.app_id = dom.app.id;\n            edg.dom_id = dom.id;\n            edg.dsp_id = dsp.id;\n            this.fixUpEdg(edg, notNewIfNotExist, recu);\n        })\n    }\n}\n\nlet fixUpEdg = function(_edg, notNewIfNotExist, recu) {\n    if (!_edg || !_edg.id || !_edg.dom_id || !_edg.dsp_id){\n        if (_edg && _edg.id) \n            data.edges[_edg.id] = _edg;\n        return;  \n    } \n\n    let domId = _edg.dom_id;\n    let dspId = _edg.dsp_id;\n    let edgId = _edg.id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let dsps = data.dispatchers;\n    let dsp = dsps[dspId];\n    let edgs = data.edges;\n    let edg = edgs[edgId];\n    let dysub = false;\n    \n    if (!dom || !dsp) {\n        node.error(\"edg 没有租户或DSP:\" + edgId);\n        return;\n    };\n    \n    if (!edg) {\n        if (notNewIfNotExist)\n            edg = _edg;\n        else\n            edg = Object.assign({}, _edg);\n        dysub = true;\n    } else {\n        edg = Object.assign(edg, _edg);\n    }\n    \n    edg.id = edgId;\n    edg.dispatcher = dsp;\n    edg.devices = edg.devices || {};\n    dsp.edges[edgId] = edg;\n    dom.edges[edgId] = edg;\n    data.edges[edgId] = edg;\n    \n    //订阅边缘上下线\n    if (dysub) node.send([{edge: edg}, null])\n}\n\nlet fixUpDev = function(_dev, notNewIfNotExist) {\n    if (!_dev || !_dev.id || !_dev.dom_id) {\n        if (_dev && _dev.id)\n            data.devices[_dev.id] = _dev;\n        return;\n    }\n\n    let devId = _dev.id;\n    let domId = _dev.dom_id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let devs = data.devices;\n    let dev = devs[devId];\n    let dysub = false;\n    \n    if (!dom) {\n        node.error(\"dev没有租户:\" + devId);\n        return;\n    };\n    \n    if (!dev) {\n        if (notNewIfNotExist)\n            dev = _dev;\n        else\n            dev = Object.assign({}, _dev);\n        dysub = true;\n    } else {\n        dev = Object.assign(dev, _dev);\n    }\n    \n    dev.id = devId;\n    dev.domain = dom;\n    dom.devices[devId] = dev;\n    data.devices[devId] = dev;\n    \n    //订阅设备上下线\n    if (dysub)  node.send([{device: dev}, null]);\n    \n}\n\nlet fixUpPlf = function(_plf, notNewIfNotExist) {\n    if (!_plf || !_plf.id) return;\n    \n    let plfId = _plf.id;\n    let plfs = data.app.platforms;\n    let dysub = false;\n    \n    let plf = plfs[plfId];\n    if (!plf) {\n        if (notNewIfNotExist)\n            plf = _plf;\n        else\n            plf = Object.assign({}, _plf);\n        dysub = true;\n    } else {\n        plf = Object.assign(plf, _plf);\n    }\n\n    plf.id = plfId;\n    plf.app = data.app;\n    plfs[plfId] = plf;\n    \n    //订阅平台上下线\n    if (dysub)  node.send([{platform: plf}, null])\n\n}\n\n\nlet fixUpData = function() {\n    let doms = data.app.domains;\n    Object.keys(doms).forEach(domId => {\n        let dom = doms[domId];\n        dom.id = domId;\n        this.fixUpDom(dom, true, true);\n        if (dom.reg_devices) {\n            regDevs = dom.reg_devices;\n            Object.keys(regDevs).forEach(devId => {\n                let val = regDevs[devId];\n                dev = {};\n                if (typeof val == \"object\" ) {\n                    dev = Object.assign(dev, val);\n                } else {\n                    dev.name = val;\n                }\n                dev.id = devId;\n                dev.app_id = dev.app_id || dom.app.id;\n                dev.dom_id = dev.dom_id || dom.id;\n                 \n                this.fixUpDev(dev, false)\n            })\n        }\n    });\n    \n    let plfs = data.app.platforms;\n    Object.keys(plfs).forEach(plfId => {\n        let plf = plfs[plfId];\n        plf.id = plfId;\n        this.fixUpPlf(plf, true);\n    })\n    \n}\n\ncommon.fixUpData = fixUpData;\ncommon.fixUpDom = fixUpDom;\ncommon.fixUpDsp = fixUpDsp;\ncommon.fixUpEdg = fixUpEdg;\ncommon.fixUpDev = fixUpDev;\ncommon.fixUpPlf = fixUpPlf;\n\ncommon.expandTopic.expand(data.ids);   \ncommon.expandTopic.expand(data.topics.subs);\ncommon.expandTopic.expand(data.topics.services);\ndata.app.id = data.ids.app;\n\ncommon.fixUpData();\ncommon.keyToObjId(data.domains);\ncommon.keyToObjId(data.dispatchers);\ncommon.keyToObjId(data.edges);\ncommon.keyToObjId(data.devices);\n\n\n\nreturn [null, {payload: data}];",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet fixUpDom = function(_dom, notNewIfNotExist, recu) {\n    if (!_dom || !_dom.id) return;\n    \n    let domId = _dom.id;\n    let doms = data.app.domains;\n    \n    let dom = doms[domId];\n    if (!dom) {\n        if (notNewIfNotExist)\n            dom = _dom;\n        else\n            dom = Object.assign({}, _dom);\n    } else {\n         dom = Object.assign(dom, _dom);\n    }\n\n    dom.id = domId;\n    dom.app = data.app;\n    dom.dispatchers = dom.dispatchers || {};\n    dom.edges = dom.edges || {};\n    dom.devices = dom.devices || {};\n    dom.attrs = _dom;\n    doms[domId] = dom;\n\n    if (recu) {\n        Object.keys(dom.dispatchers).forEach(dspId => {\n            let dsp = dom.dispatchers[dspId];\n            dsp.id = dspId;\n            dsp.app_id = dom.app.id;\n            dsp.dom_id = domId;\n            this.fixUpDsp(dsp, notNewIfNotExist, recu);\n        })\n    }\n}\n\nlet fixUpDsp = function(_dsp, notNewIfNotExist, recu) {\n    if (!_dsp || !_dsp.id || !_dsp.dom_id) {\n        if (_dsp && _dsp.id) \n            data.dispatchers[_dsp.id] = _dsp;\n        return;\n    }\n\n    let domId = _dsp.dom_id;\n    let dspId = _dsp.id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let dsps = data.dispatchers;\n    let dsp = dsps[dspId];\n    let dysub = false;\n    \n    if (!dom) {\n        node.error(\"dsp没有租户：\" + dspId);\n        return;\n    };\n    \n    if (!dsp) {\n        if (notNewIfNotExist)\n            dsp = _dsp;\n        else\n            dsp = Object.assign({}, _dsp);\n        dysub = true;\n    } else {\n        dsp = Object.assign(dsp, _dsp);\n    }\n    \n    \n    dsp.id = dspId;\n    dsp.domain = dom;\n    dsp.edges = dsp.edges || {};\n    dom.dispatchers[dspId] = dsp;\n    data.dispatchers[dspId] = dsp;\n    //订阅调度上下线\n    if (dysub) node.send([{dispatcher: dsp}, null]);\n    \n    if (recu) {\n        Object.keys(dsp.edges).forEach(edgId => {\n            let edg = dsp.edges[edgId];\n            edg.id =edgId;\n            edg.app_id = dom.app.id;\n            edg.dom_id = dom.id;\n            edg.dsp_id = dsp.id;\n            this.fixUpEdg(edg, notNewIfNotExist, recu);\n        })\n    }\n}\n\nlet fixUpEdg = function(_edg, notNewIfNotExist, recu) {\n    if (!_edg || !_edg.id || !_edg.dom_id || !_edg.dsp_id){\n        if (_edg && _edg.id) \n            data.edges[_edg.id] = _edg;\n        return;  \n    } \n\n    let domId = _edg.dom_id;\n    let dspId = _edg.dsp_id;\n    let edgId = _edg.id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let dsps = data.dispatchers;\n    let dsp = dsps[dspId];\n    let edgs = data.edges;\n    let edg = edgs[edgId];\n    let dysub = false;\n    \n    if (!dom || !dsp) {\n        node.error(\"edg 没有租户或DSP:\" + edgId);\n        return;\n    };\n    \n    if (!edg) {\n        if (notNewIfNotExist)\n            edg = _edg;\n        else\n            edg = Object.assign({}, _edg);\n        dysub = true;\n    } else {\n        edg = Object.assign(edg, _edg);\n    }\n    \n    edg.id = edgId;\n    edg.dispatcher = dsp;\n    edg.devices = edg.devices || {};\n    dsp.edges[edgId] = edg;\n    dom.edges[edgId] = edg;\n    data.edges[edgId] = edg;\n    \n    //订阅边缘上下线\n    if (dysub) node.send([{edge: edg}, null])\n}\n\nlet fixUpDev = function(_dev, notNewIfNotExist) {\n    if (!_dev || !_dev.id || !_dev.dom_id) {\n        if (_dev && _dev.id)\n            data.devices[_dev.id] = _dev;\n        return;\n    }\n\n    let devId = _dev.id;\n    let domId = _dev.dom_id;\n    let doms = data.domains;\n    let dom = doms[domId];\n    let devs = data.devices;\n    let dev = devs[devId];\n    let dysub = false;\n    \n    if (!dom) {\n        node.error(\"dev没有租户:\" + devId);\n        return;\n    };\n    \n    if (!dev) {\n        if (notNewIfNotExist)\n            dev = _dev;\n        else\n            dev = Object.assign({}, _dev);\n        dysub = true;\n    } else {\n        dev = Object.assign(dev, _dev);\n    }\n    \n    dev.id = devId;\n    dev.domain = dom;\n    dom.devices[devId] = dev;\n    data.devices[devId] = dev;\n    \n    //订阅设备上下线\n    if (dysub)  node.send([{device: dev}, null]);\n    \n}\n\nlet fixUpPlf = function(_plf, notNewIfNotExist) {\n    if (!_plf || !_plf.id) return;\n    \n    let plfId = _plf.id;\n    let plfs = data.app.platforms;\n    let dysub = false;\n    \n    let plf = plfs[plfId];\n    if (!plf) {\n        if (notNewIfNotExist)\n            plf = _plf;\n        else\n            plf = Object.assign({}, _plf);\n        dysub = true;\n    } else {\n        plf = Object.assign(plf, _plf);\n    }\n\n    plf.id = plfId;\n    plf.app = data.app;\n    plfs[plfId] = plf;\n    \n    //订阅平台上下线\n    if (dysub)  node.send([{platform: plf}, null])\n\n}\n\n\nlet fixUpData = function() {\n    let doms = data.app.domains;\n    Object.keys(doms).forEach(domId => {\n        let dom = doms[domId];\n        dom.id = domId;\n        this.fixUpDom(dom, true, true);\n        if (dom.reg_devices) {\n            regDevs = dom.reg_devices;\n            Object.keys(regDevs).forEach(devId => {\n                let val = regDevs[devId];\n                dev = {};\n                if (typeof val == \"object\" ) {\n                    dev = Object.assign(dev, val);\n                } else {\n                    dev.name = val;\n                }\n                dev.id = devId;\n                dev.app_id = dev.app_id || dom.app.id;\n                dev.dom_id = dev.dom_id || dom.id;\n                 \n                this.fixUpDev(dev, false)\n            })\n        }\n    });\n    \n    let plfs = data.app.platforms;\n    Object.keys(plfs).forEach(plfId => {\n        let plf = plfs[plfId];\n        plf.id = plfId;\n        this.fixUpPlf(plf, true);\n    })\n    \n}\n\ncommon.fixUpData = fixUpData;\ncommon.fixUpDom = fixUpDom;\ncommon.fixUpDsp = fixUpDsp;\ncommon.fixUpEdg = fixUpEdg;\ncommon.fixUpDev = fixUpDev;\ncommon.fixUpPlf = fixUpPlf;\n\ncommon.expandTopic.expand(data.ids);   \ncommon.expandTopic.expand(data.topics.subs);\ncommon.expandTopic.expand(data.topics.services);\ndata.app.id = data.ids.app;\n\ncommon.fixUpData();\ncommon.keyToObjId(data.domains);\ncommon.keyToObjId(data.dispatchers);\ncommon.keyToObjId(data.edges);\ncommon.keyToObjId(data.devices);\n\n\n\nreturn [null, {payload: data}];",
         "outputs": 2,
         "noerr": 0,
         "initialize": "",
@@ -2919,7 +2919,7 @@
         "type": "debug",
         "z": "63bcc9db2b38df75",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2982,6 +2982,7 @@
         "id": "c7fa18b4bd0ac250",
         "type": "function",
         "z": "63bcc9db2b38df75",
+        "d": true,
         "name": "获取Z2M数据",
         "func": "let _msg = {};\n_msg.collection = \"ndiot_z2m_datafile\";\n_msg.operation = \"find\";\n_msg.sort = { \"hd.tms\": -1};\n_msg.limit = 2;\n_msg.payload = {\"pld.id\": msg.payload.pld.id }\n\n_msg._topic =  msg._topic || \"find_ndiot_z2m_datafile\";\n_msg._payload = msg.payload;\nreturn _msg;\n",
         "outputs": 1,
@@ -3001,6 +3002,7 @@
         "id": "8f366ee3986be4d3",
         "type": "function",
         "z": "63bcc9db2b38df75",
+        "d": true,
         "name": "Z2M数据返回",
         "func": "return msg;",
         "outputs": 1,
@@ -3087,6 +3089,7 @@
         "id": "c9ed042290e65893",
         "type": "function",
         "z": "63bcc9db2b38df75",
+        "d": true,
         "name": "获取平台数据",
         "func": "let data = global.get(\"data\");\nlet _msg = {};\n_msg.collection = \"ndiot_platforms\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"app_id\": data.ids.app\n}\n\n_msg._topic =  msg._topic ||  \"find_ndiot_platforms\";\n_msg._payload = msg.payload;\nreturn _msg;",
         "outputs": 1,
@@ -3122,6 +3125,7 @@
         "id": "b136be555d0b9756",
         "type": "function",
         "z": "63bcc9db2b38df75",
+        "d": true,
         "name": "平台数据返回处理",
         "func": "common = global.get(\"common\");\n\nlet plfs = msg.payload;\nplfs.forEach(plf => {\n    common.fixUpPlf(plf, false, false);\n})\n\nmsg._topic = null",
         "outputs": 1,
@@ -3289,6 +3293,7 @@
         "id": "fa0a362c12abdc77",
         "type": "function",
         "z": "63bcc9db2b38df75",
+        "d": true,
         "name": "获取设备数据",
         "func": "let data = global.get(\"data\");\nlet _msg = {};\n_msg.collection = \"ndiot_devices\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"app_id\": data.ids.app,\n}\n\n_msg._topic =  msg._topic ||  \"find_ndiot_devices\";\n_msg._payload = msg.payload;\nreturn _msg;",
         "outputs": 1,
@@ -3325,9 +3330,7 @@
         "type": "link in",
         "z": "63bcc9db2b38df75",
         "name": "获取调度数据输入",
-        "links": [
-            "295c377cf477e68a"
-        ],
+        "links": [],
         "x": 105,
         "y": 300,
         "wires": [
@@ -3340,6 +3343,7 @@
         "id": "9da6dcd3ccd273b5",
         "type": "function",
         "z": "63bcc9db2b38df75",
+        "d": true,
         "name": "获取调度数据",
         "func": "let data = global.get(\"data\");\nlet _msg = {};\n_msg.collection = \"ndiot_dispatchers\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"app_id\": data.ids.app\n}\n\n_msg._topic =  msg._topic ||  \"find_ndiot_dispatchers\";\n_msg._payload = msg.payload;\nreturn _msg;",
         "outputs": 1,
@@ -3375,6 +3379,7 @@
         "id": "52be2cb6349ffd94",
         "type": "function",
         "z": "63bcc9db2b38df75",
+        "d": true,
         "name": "获取边缘数据",
         "func": "let data = global.get(\"data\");\nlet _msg = {};\n_msg.collection = \"ndiot_edges\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"app_id\": data.ids.app,\n}\n\n_msg._topic =  msg._topic ||  \"find_ndiot_edges\";\n_msg._payload = msg.payload;\nreturn _msg;",
         "outputs": 1,
@@ -3414,6 +3419,7 @@
         "id": "627468f7c11147be",
         "type": "function",
         "z": "63bcc9db2b38df75",
+        "d": true,
         "name": "调度数据返回处理",
         "func": "let common = global.get(\"common\");\nlet dsps = msg.payload;\ndsps.forEach(dsp => {\n    common.fixUpDsp(dsp, false, false);\n})\n\nmsg._topic = null\nreturn msg;",
         "outputs": 1,
@@ -3434,6 +3440,7 @@
         "id": "c609d682d722b625",
         "type": "function",
         "z": "63bcc9db2b38df75",
+        "d": true,
         "name": "边缘数据返回处理",
         "func": "let common = global.get(\"common\");\nlet edgs = msg.payload;\nedgs.forEach(edg => {\n    common.fixUpEdg(edg, false, false);\n})\n\nmsg._topic = null\nreturn msg;",
         "outputs": 1,
@@ -3454,6 +3461,7 @@
         "id": "96a28f5c17c0712b",
         "type": "function",
         "z": "63bcc9db2b38df75",
+        "d": true,
         "name": "设备数据返回处理",
         "func": "common = global.get(\"common\");\n\nlet devs = msg.payload;\ndevs.forEach(dev => {\n    common.fixUpDev(dev, false, false);\n})\n\nmsg._topic = null\nreturn msg;",
         "outputs": 1,
@@ -3476,9 +3484,7 @@
         "z": "63bcc9db2b38df75",
         "name": "租户数据返回处理",
         "mode": "link",
-        "links": [
-            "1d66111cce615644"
-        ],
+        "links": [],
         "x": 665,
         "y": 640,
         "wires": []
@@ -3557,23 +3563,6 @@
             [
                 "3e267f77b5d2211a"
             ]
-        ]
-    },
-    {
-        "id": "083a3a66372b8a7e",
-        "type": "function",
-        "z": "63bcc9db2b38df75",
-        "name": "自定义查询返回处理",
-        "func": "common = global.get(\"common\");\n\nlet data = msg.payload;\nlet payload = msg._payload;\nlet hd = payload.hd;\nlet pld = payload.pld;\nlet _hd = Object.assign({}, hd);\n_hd.from = hd.to;\n_hd.to = hd.from;\n_hd.stp = 1;\ndelete _hd.tm;\ndelete _hd.tms;\ndelete _hd.tpc;\n\nlet _pld = {\n    data: data,\n    args: pld\n}\n\nreturn {\n    payload: {\n        hd: _hd,\n        pld: _pld\n    }\n}\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 520,
-        "y": 920,
-        "wires": [
-            []
         ]
     },
     {
@@ -3829,7 +3818,7 @@
         "finalize": "",
         "libs": [],
         "x": 810,
-        "y": 260,
+        "y": 180,
         "wires": [
             [
                 "b48d540577e24698"
@@ -4030,7 +4019,7 @@
         "y": 340,
         "wires": [
             [
-                "01576f8d65769792"
+                "41628a9d98307655"
             ],
             [
                 "01576f8d65769792"
@@ -4098,7 +4087,7 @@
         "finalize": "",
         "libs": [],
         "x": 790,
-        "y": 300,
+        "y": 220,
         "wires": [
             [
                 "b48d540577e24698"
@@ -4240,7 +4229,7 @@
         "finalize": "",
         "libs": [],
         "x": 790,
-        "y": 340,
+        "y": 260,
         "wires": [
             [
                 "b48d540577e24698"
@@ -4252,7 +4241,7 @@
         "type": "debug",
         "z": "b7b9b4f87ca81b1c",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -4262,6 +4251,25 @@
         "x": 650,
         "y": 640,
         "wires": []
+    },
+    {
+        "id": "41628a9d98307655",
+        "type": "function",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "获取区域设备",
+        "func": "let data = global.get(\"data\");\nlet doms = data.domains;\nlet edg_id = msg.payload.edg_id;\n\nlet dom_ids = []\nObject.values(doms).forEach(dom => {\n    if (dom.attrs.edg_id === edg_id) {\n        dom_ids.push({dom_id: dom.id})\n    }\n})\n\nmsg.collection = \"ndiot_devices\";\nmsg.operation = \"find\";\nmsg.payload = {\n    app_id: \"ndiot\",\n    $or: dom_ids\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 340,
+        "wires": [
+            [
+                "b48d540577e24698"
+            ]
+        ]
     },
     {
         "id": "7ac83b1b92988b8b",
@@ -4363,7 +4371,7 @@
         "type": "debug",
         "z": "e3c37262fcb472bd",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -4379,7 +4387,7 @@
         "type": "function",
         "z": "e3c37262fcb472bd",
         "name": "更新设备数据",
-        "func": "let data = global.get(\"data\");\n\nlet hd = msg.payload.hd;\nlet pld = msg.payload.pld;\nif (hd.entry.id == \"device_leave\") {\n    pld.pid = null;\n    pld.dom_id = null;\n}\n\nlet _msg = {};\n_msg.collection = \"ndiot_devices\";\n_msg.operation = \"update\";\n\n_msg.payload = {$set: pld};\n_msg.query = {\n    \"id\": pld.id\n}\n\n_msg._topic =  msg._topic ||  \"upsert_ndiot_devices\";\n_msg._payload = msg.payload;\nreturn _msg;",
+        "func": "let data = global.get(\"data\");\n\nlet hd = msg.payload.hd;\nlet pld = Object.assign({}, msg.payload.pld);\nif (hd.entry.id == \"device_leave\") {\n    pld.pid = null;\n    pld.dom_id = null;\n}\n\nlet _msg = {};\n_msg.collection = \"ndiot_devices\";\n_msg.operation = \"update\";\n\n_msg.payload = {$set: pld};\n_msg.query = {\n    \"id\": pld.id\n}\n\n_msg._topic =  msg._topic ||  \"upsert_ndiot_devices\";\n_msg._payload = msg.payload;\nreturn _msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -4425,13 +4433,16 @@
         "y": 380,
         "wires": [
             [
-                "3d4e67c7e0a7f6be"
+                "3d4e67c7e0a7f6be",
+                "112c832c3d3cb857"
             ],
             [
-                "3d4e67c7e0a7f6be"
+                "3d4e67c7e0a7f6be",
+                "112c832c3d3cb857"
             ],
             [
-                "3d4e67c7e0a7f6be"
+                "3d4e67c7e0a7f6be",
+                "112c832c3d3cb857"
             ]
         ]
     },
@@ -4651,6 +4662,89 @@
         "wires": []
     },
     {
+        "id": "112c832c3d3cb857",
+        "type": "function",
+        "z": "e3c37262fcb472bd",
+        "name": "通知边缘",
+        "func": "let data = global.get(\"data\");\nlet doms = data.domains;\nlet pld = msg.payload.pld;\n\nlet dom_id = pld.dom_id || \"default\";\nlet dom = doms[dom_id];\nlet edg_id = dom && dom.edg_id || \"ndiot-edg-default\";\n\nmsg.topic = \"0/0/0/0/edg/\" + edg_id + \"/0/0\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 460,
+        "wires": [
+            [
+                "deaea4c177315b5e"
+            ]
+        ]
+    },
+    {
+        "id": "9928c9a5edaf72b0",
+        "type": "mqtt out",
+        "z": "e3c37262fcb472bd",
+        "name": "北向边缘输出发布",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "790bcfc072decbef",
+        "x": 570,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "b9bbfeb42454da1f",
+        "type": "link in",
+        "z": "e3c37262fcb472bd",
+        "name": "北向输出",
+        "links": [
+            "deaea4c177315b5e"
+        ],
+        "x": 195,
+        "y": 460,
+        "wires": [
+            [
+                "9928c9a5edaf72b0",
+                "6a6f1265f603ae95"
+            ]
+        ]
+    },
+    {
+        "id": "deaea4c177315b5e",
+        "type": "link out",
+        "z": "e3c37262fcb472bd",
+        "name": "通知边缘设备入网输出",
+        "mode": "link",
+        "links": [
+            "b9bbfeb42454da1f"
+        ],
+        "x": 1155,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "6a6f1265f603ae95",
+        "type": "debug",
+        "z": "e3c37262fcb472bd",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 350,
+        "y": 560,
+        "wires": []
+    },
+    {
         "id": "478997ca6b48d67e",
         "type": "inject",
         "z": "8ef2d550b8e4f725",
@@ -4663,7 +4757,7 @@
             },
             {
                 "p": "payload.pld",
-                "v": "{\"config\":{\"serial_baud\":115200,\"co_serial_baud\":115200},\"reboot\":1}",
+                "v": "{\"config\":{\"serial_baud\":9600,\"co_serial_baud\":9600},\"reboot\":1}",
                 "vt": "json"
             },
             {
