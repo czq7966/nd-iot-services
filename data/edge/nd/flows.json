@@ -6959,7 +6959,7 @@
         "type": "debug",
         "z": "0d352f1d7c785601",
         "name": "连接断开",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
