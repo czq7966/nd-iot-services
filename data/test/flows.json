@@ -2359,6 +2359,7 @@
         "id": "b44486d7e2a518c2",
         "type": "inject",
         "z": "0d352f1d7c785601",
+        "d": true,
         "name": "shadows_get_plugins",
         "props": [],
         "repeat": "",
