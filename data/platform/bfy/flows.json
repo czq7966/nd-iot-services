@@ -2877,7 +2877,7 @@
         "type": "function",
         "z": "33ea2d5b80781f0b",
         "name": "窗帘_协议转换",
-        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"set\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet pld = {id: devId};\n\nlet code= parseInt(msg.payload);\n\nswitch(code) {\n    case -1:   \n        hd.entry.id = \"get\"\n        break;    \n    case 101:   \n        hd.entry.name = \"open\"\n        break;\n    case 102:\n        hd.entry.name = \"close\"\n        break;   \n    case 103:\n        hd.entry.name = \"stop\"\n        break;  \n    case 200:\n        hd.entry.name = \"dir\"\n        pld.dir = 0;\n        break;\n    case 201:\n        hd.entry.name = \"dir\"\n        pld.dir = 1;\n        break;\n    case 210:\n        hd.entry.name = \"up_travel\"\n        break;  \n    case 211:\n        hd.entry.name = \"down_travel\"\n        break;\n    case 212:\n        hd.entry.name = \"del_travel\"\n        break;        \n    case 220:\n        hd.entry.name = \"power_on_prompt\"\n        pld.prompt = 0\n        break;        \n    case 221:\n        hd.entry.name = \"power_on_prompt\"\n        pld.prompt = 1\n        break;        \n    case 222:\n        hd.entry.name = \"power_on_prompt\"\n        pld.prompt = 2\n        break;        \n    case 223:\n        hd.entry.name = \"power_on_prompt\"\n        pld.prompt = 3\n        break;  \n    default:\n        pld.pos = code;\n        break;      \n}\n\n// pld.code = \"0x55FEFE030414E6ED\"\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: pld\n    }\n};",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet ids = data.ids;\nlet devId = msg.topic;\n\nlet hd = {\n    pref: {\n        app: ids.app,\n        dom: \"\"\n    },\n    from: {\n        type: \"0\",\n        id: \"0\"\n    },\n    to: {\n        type: \"dev\",\n        id: devId,\n    },\n    entry: {\n        type: \"svc\",\n        id: \"set\"\n    },\n    sid: common.guid(10),\n    stp: 0\n}\n\nlet pld = {id: devId};\n\nlet code= parseInt(msg.payload);\n\nswitch(code) {\n    case -1:   \n        hd.entry.id = \"get\"\n        break;    \n    case 101:   \n        hd.entry.name = \"open\"\n        break;\n    case 102:\n        hd.entry.name = \"close\"\n        break;   \n    case 103:\n        hd.entry.name = \"stop\"\n        break;  \n    case 200:\n        hd.entry.name = \"dir\"\n        pld.dir = 0;\n        break;\n    case 201:\n        hd.entry.name = \"dir\"\n        pld.dir = 1;\n        break;\n    case 210:\n        hd.entry.name = \"up_travel\"\n        break;  \n    case 211:\n        hd.entry.name = \"down_travel\"\n        break;\n    case 212:\n        hd.entry.name = \"del_travel\"\n        break;        \n    case 220:\n        hd.entry.name = \"power_on_prompt\"\n        pld.prompt = 0\n        break;        \n    case 221:\n        hd.entry.name = \"power_on_prompt\"\n        pld.prompt = 1\n        break;        \n    case 222:\n        hd.entry.name = \"power_on_prompt\"\n        pld.prompt = 2\n        break;        \n    case 223:\n        hd.entry.name = \"power_on_prompt\"\n        pld.prompt = 3\n        break;  \n    default:\n        pld.pos = code;\n        break;      \n}\n\n// pld.code = \"0x55FEFE030414E6ED\"\n\n\nreturn {\n    payload: {\n        hd: hd,\n        pld: {\n            open: code\n        }\n    }\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -3351,5 +3351,74 @@
         "x": 650,
         "y": 380,
         "wires": []
+    },
+    {
+        "id": "b1b26ec4df650231",
+        "type": "status",
+        "z": "8790bac5eca885ba",
+        "name": "",
+        "scope": [
+            "5dd7b802a624a206"
+        ],
+        "x": 450,
+        "y": 720,
+        "wires": [
+            [
+                "21f8b284430ba53f"
+            ]
+        ]
+    },
+    {
+        "id": "21f8b284430ba53f",
+        "type": "function",
+        "z": "8790bac5eca885ba",
+        "name": "",
+        "func": "let date = new Date()\nmsg.tm=date.toLocaleString();\n\nreturn {payload: msg};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 720,
+        "wires": [
+            [
+                "d6cadcc63d204593",
+                "fee3b5c053f26757"
+            ]
+        ]
+    },
+    {
+        "id": "d6cadcc63d204593",
+        "type": "debug",
+        "z": "8790bac5eca885ba",
+        "name": "连接断开",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "fee3b5c053f26757",
+        "type": "file",
+        "z": "8790bac5eca885ba",
+        "name": "",
+        "filename": "log.txt",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 790,
+        "y": 640,
+        "wires": [
+            []
+        ]
     }
 ]
