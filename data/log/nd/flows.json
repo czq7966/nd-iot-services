@@ -187,6 +187,16 @@
         "sessionExpiry": ""
     },
     {
+        "id": "50bb7e3aeb2787cf",
+        "type": "nd-mongodb",
+        "hostname": "m2.all.debug2.mongod3.sdp",
+        "topology": "direct",
+        "connectOptions": "",
+        "port": "34005",
+        "db": "qa_mdb_iot_edge",
+        "name": ""
+    },
+    {
         "id": "f544f205.d51a7",
         "type": "inject",
         "z": "7c7a09edf982e2f4",
@@ -1133,8 +1143,8 @@
         "name": "http获取设备",
         "method": "GET",
         "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "https://iot-mqtt.beta.ndaeweb.com/dio/get_devices",
+        "paytoqs": "query",
+        "url": "https://iot-mqtt.beta.ndaeweb.com/dio/shadows_get_devices",
         "tls": "",
         "persist": false,
         "proxy": "",
@@ -1154,7 +1164,13 @@
         "type": "inject",
         "z": "05ab6743f31497ca",
         "name": "同步设备数据",
-        "props": [],
+        "props": [
+            {
+                "p": "payload.edg_id",
+                "v": "ndiot-edg-bfy",
+                "vt": "str"
+            }
+        ],
         "repeat": "",
         "crontab": "",
         "once": false,
@@ -1200,7 +1216,8 @@
         "wires": [
             [
                 "7b365c51d1bfe085",
-                "8733b4729c2b3329"
+                "8733b4729c2b3329",
+                "7c0e4049300cacde"
             ]
         ]
     },
@@ -1209,7 +1226,7 @@
         "type": "debug",
         "z": "05ab6743f31497ca",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1231,6 +1248,21 @@
         ],
         "x": 1015,
         "y": 260,
+        "wires": []
+    },
+    {
+        "id": "7c0e4049300cacde",
+        "type": "nd-mg-out",
+        "z": "05ab6743f31497ca",
+        "mongodb": "50bb7e3aeb2787cf",
+        "name": "qa_update",
+        "collection": "",
+        "payonly": true,
+        "upsert": true,
+        "multi": false,
+        "operation": "update",
+        "x": 1010,
+        "y": 600,
         "wires": []
     },
     {

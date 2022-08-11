@@ -134,6 +134,58 @@
         "sessionExpiry": ""
     },
     {
+        "id": "ccc535250cd7677b",
+        "type": "mqtt-broker",
+        "name": "dataio_output",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": false,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "340486ab3bf5bf39",
+        "type": "mqtt-broker",
+        "name": "dataio_input",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": false,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
         "id": "f544f205.d51a7",
         "type": "inject",
         "z": "7c7a09edf982e2f4",
@@ -280,7 +332,8 @@
         "mode": "link",
         "links": [
             "906bb62a708b4c0c",
-            "59181471dbc6175b"
+            "59181471dbc6175b",
+            "b2168926188a5904"
         ],
         "x": 975,
         "y": 540,
@@ -2897,7 +2950,8 @@
         "z": "33ea2d5b80781f0b",
         "name": "",
         "links": [
-            "094870fa884c4cc9"
+            "094870fa884c4cc9",
+            "1bdc14d23c7d0019"
         ],
         "x": 225,
         "y": 180,
@@ -3230,113 +3284,6 @@
         ]
     },
     {
-        "id": "ee8c2f3a2721a58c",
-        "type": "inject",
-        "z": "8790bac5eca885ba",
-        "name": "shadows_get_devices",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": "1",
-        "topic": "",
-        "x": 260,
-        "y": 60,
-        "wires": [
-            [
-                "024c5c7923b1db29"
-            ]
-        ]
-    },
-    {
-        "id": "a017cabe55d2e3c1",
-        "type": "http request",
-        "z": "8790bac5eca885ba",
-        "name": "shadows_get_devices",
-        "method": "GET",
-        "ret": "txt",
-        "paytoqs": "query",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "senderr": false,
-        "x": 680,
-        "y": 60,
-        "wires": [
-            [
-                "188254f9b561e229"
-            ]
-        ]
-    },
-    {
-        "id": "188254f9b561e229",
-        "type": "json",
-        "z": "8790bac5eca885ba",
-        "name": "",
-        "property": "payload",
-        "action": "",
-        "pretty": false,
-        "x": 870,
-        "y": 60,
-        "wires": [
-            [
-                "094870fa884c4cc9",
-                "22ea6ff54f741b4d"
-            ]
-        ]
-    },
-    {
-        "id": "024c5c7923b1db29",
-        "type": "function",
-        "z": "8790bac5eca885ba",
-        "name": "获取设备",
-        "func": "let data = global.get(\"data\");\nlet url = data.shadows.dio_url;\n\n\nmsg = {}\nmsg.url = url + \"/shadows_get_devices\";\nmsg.payload = msg.payload || {}\nmsg.payload.edg_id = \"ndiot-edg-bfy\"\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 480,
-        "y": 60,
-        "wires": [
-            [
-                "a017cabe55d2e3c1"
-            ]
-        ]
-    },
-    {
-        "id": "094870fa884c4cc9",
-        "type": "link out",
-        "z": "8790bac5eca885ba",
-        "name": "获取设备输出",
-        "mode": "link",
-        "links": [
-            "b5034fa324ebdc56",
-            "94c787385fe89583"
-        ],
-        "x": 1045,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "22ea6ff54f741b4d",
-        "type": "debug",
-        "z": "8790bac5eca885ba",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1090,
-        "y": 120,
-        "wires": []
-    },
-    {
         "id": "4e76d74694bb3924",
         "type": "debug",
         "z": "8790bac5eca885ba",
@@ -3419,6 +3366,312 @@
         "y": 640,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "b2168926188a5904",
+        "type": "link in",
+        "z": "8790bac5eca885ba",
+        "name": "数据连接输入",
+        "links": [
+            "1188b78d61e6e2a8"
+        ],
+        "x": 335,
+        "y": 1060,
+        "wires": [
+            [
+                "88a125ccc32b4a71",
+                "aef6ad1ee73fbcd5"
+            ]
+        ]
+    },
+    {
+        "id": "88a125ccc32b4a71",
+        "type": "function",
+        "z": "8790bac5eca885ba",
+        "name": "数据连接",
+        "func": "let data = global.get(\"data\");\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    cleansession: false,\n    force: false\n}\nObject.assign(msg.broker, data.shadows.mqtt.south.broker);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 1060,
+        "wires": [
+            [
+                "cd4afa8b8133945b",
+                "3ecc698ece0dd59f",
+                "a33fdc542c669b38"
+            ]
+        ]
+    },
+    {
+        "id": "cd4afa8b8133945b",
+        "type": "function",
+        "z": "8790bac5eca885ba",
+        "name": "dataio_output",
+        "func": "let common = global.get(\"common\");\n\nmsg.broker.clientid = \"dataio_output_\" + common.guid(8)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 1060,
+        "wires": [
+            [
+                "04bebc4484d6545e"
+            ]
+        ]
+    },
+    {
+        "id": "04bebc4484d6545e",
+        "type": "mqtt out",
+        "z": "8790bac5eca885ba",
+        "name": "数据服务发布",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ccc535250cd7677b",
+        "x": 710,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "b887e394a5738c26",
+        "type": "function",
+        "z": "8790bac5eca885ba",
+        "name": "发布主题",
+        "func": "\nlet data = global.get(\"data\");\nlet id = data.ids.plf;\nlet hd = msg.payload.hd;\nlet topic = \"0/0/plf/\" + id + \n            \"/\" + (hd.to && hd.to.type || \"dio\") + \n            \"/\" + (hd.to && hd.to.id || data.ids.dio || \"ndiot-dio\") +\n            \"/\" +hd.entry.type + \"/\" + hd.entry.id\n            \nmsg.topic = msg.topic || topic\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 1180,
+        "wires": [
+            [
+                "04bebc4484d6545e",
+                "ed6cc0f42be8422c"
+            ]
+        ]
+    },
+    {
+        "id": "77a6699fe0159bd7",
+        "type": "link in",
+        "z": "8790bac5eca885ba",
+        "name": "数据发布输入",
+        "links": [
+            "4ebb953fc2da0575",
+            "4f7045dc033c2a06"
+        ],
+        "x": 335,
+        "y": 1180,
+        "wires": [
+            [
+                "b887e394a5738c26"
+            ]
+        ]
+    },
+    {
+        "id": "93954e61143fa48c",
+        "type": "mqtt in",
+        "z": "8790bac5eca885ba",
+        "name": "数据服务订阅",
+        "topic": "",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "340486ab3bf5bf39",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 700,
+        "y": 1120,
+        "wires": [
+            [
+                "f64765ee0e62dc76"
+            ]
+        ]
+    },
+    {
+        "id": "3ecc698ece0dd59f",
+        "type": "function",
+        "z": "8790bac5eca885ba",
+        "name": "dataio_input",
+        "func": "let common = global.get(\"common\");\n\nmsg.broker.clientid = \"dataio_input_\" + common.guid(8)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 1020,
+        "wires": [
+            [
+                "93954e61143fa48c"
+            ]
+        ]
+    },
+    {
+        "id": "a33fdc542c669b38",
+        "type": "function",
+        "z": "8790bac5eca885ba",
+        "name": "订阅主题",
+        "func": "\nlet data = global.get(\"data\");\n\nlet id = data.ids.plf;\nlet topics = [\n    \"+/+/+/+/plf/\" + id + \"/+/+\"\n    ]\n    \nreturn {\n        action: \"subscribe\",\n        topic: topics\n    }\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 1120,
+        "wires": [
+            [
+                "93954e61143fa48c"
+            ]
+        ]
+    },
+    {
+        "id": "9d1336cb73be0cad",
+        "type": "debug",
+        "z": "8790bac5eca885ba",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1310,
+        "y": 1280,
+        "wires": []
+    },
+    {
+        "id": "ed6cc0f42be8422c",
+        "type": "debug",
+        "z": "8790bac5eca885ba",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 1260,
+        "wires": []
+    },
+    {
+        "id": "f64765ee0e62dc76",
+        "type": "switch",
+        "z": "8790bac5eca885ba",
+        "name": "数据服务",
+        "property": "payload.hd.entry.id",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "shadows_get_devices",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 960,
+        "y": 1120,
+        "wires": [
+            [
+                "cfbe796f07da9f3e"
+            ]
+        ]
+    },
+    {
+        "id": "cfbe796f07da9f3e",
+        "type": "function",
+        "z": "8790bac5eca885ba",
+        "name": "转换",
+        "func": "\nreturn {payload: msg.payload.pld};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1150,
+        "y": 1120,
+        "wires": [
+            [
+                "9d1336cb73be0cad",
+                "1bdc14d23c7d0019"
+            ]
+        ]
+    },
+    {
+        "id": "6d73c3dbf25efcd9",
+        "type": "function",
+        "z": "8790bac5eca885ba",
+        "name": "获取设备",
+        "func": "let data = global.get(\"data\");\n\npayload = {\n    hd: {\n        entry: {\n            type: \"svc\",\n            id: \"shadows_get_devices\"\n        }\n    },\n    pld: {\n        edg_id: data.ids.plf\n    }\n    \n}\n\nreturn {payload: payload};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 1280,
+        "wires": [
+            [
+                "b887e394a5738c26"
+            ]
+        ]
+    },
+    {
+        "id": "1bdc14d23c7d0019",
+        "type": "link out",
+        "z": "8790bac5eca885ba",
+        "name": "获取设备输出",
+        "mode": "link",
+        "links": [
+            "b5034fa324ebdc56",
+            "94c787385fe89583"
+        ],
+        "x": 1275,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "aef6ad1ee73fbcd5",
+        "type": "delay",
+        "z": "8790bac5eca885ba",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 260,
+        "y": 1280,
+        "wires": [
+            [
+                "6d73c3dbf25efcd9"
+            ]
         ]
     }
 ]

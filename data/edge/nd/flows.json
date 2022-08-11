@@ -255,6 +255,58 @@
         "sessionExpiry": ""
     },
     {
+        "id": "ccc535250cd7677b",
+        "type": "mqtt-broker",
+        "name": "dataio_output",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": false,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "340486ab3bf5bf39",
+        "type": "mqtt-broker",
+        "name": "dataio_input",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": false,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
         "id": "f544f205.d51a7",
         "type": "inject",
         "z": "7c7a09edf982e2f4",
@@ -360,7 +412,8 @@
         "mode": "link",
         "links": [
             "3fdb98726d73125a",
-            "906bb62a708b4c0c"
+            "906bb62a708b4c0c",
+            "b2168926188a5904"
         ],
         "x": 825,
         "y": 600,
@@ -5351,7 +5404,8 @@
         "z": "e783d53461d94d52",
         "name": "注册插件输入",
         "links": [
-            "aa6bdebe7db93d5a"
+            "aa6bdebe7db93d5a",
+            "d10a7d8322cab14b"
         ],
         "x": 265,
         "y": 640,
@@ -5368,7 +5422,8 @@
         "name": "创建影子输入",
         "links": [
             "094870fa884c4cc9",
-            "fd0f21d14e7ee260"
+            "fd0f21d14e7ee260",
+            "c277da7464c9b62a"
         ],
         "x": 265,
         "y": 680,
@@ -5658,7 +5713,8 @@
         "y": 840,
         "wires": [
             [
-                "e52b39fce43ad18c"
+                "e52b39fce43ad18c",
+                "8905f1fd3708ab28"
             ]
         ]
     },
@@ -5677,7 +5733,8 @@
         "y": 880,
         "wires": [
             [
-                "c85e3530df64757b"
+                "c85e3530df64757b",
+                "840738339878fdf6"
             ]
         ]
     },
@@ -5685,6 +5742,7 @@
         "id": "af86d00370bfee30",
         "type": "http request",
         "z": "e783d53461d94d52",
+        "d": true,
         "name": "shadows_get_device_config",
         "method": "PUT",
         "ret": "txt",
@@ -5695,8 +5753,8 @@
         "proxy": "",
         "authType": "",
         "senderr": false,
-        "x": 980,
-        "y": 840,
+        "x": 1000,
+        "y": 1420,
         "wires": [
             [
                 "b05ef4132c44b1f9"
@@ -5714,12 +5772,11 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 760,
-        "y": 840,
+        "x": 780,
+        "y": 1420,
         "wires": [
             [
-                "af86d00370bfee30",
-                "dfd1d4c38c318813"
+                "af86d00370bfee30"
             ]
         ]
     },
@@ -5733,23 +5790,7 @@
             "c7c8fd1da752ce1a"
         ],
         "x": 1355,
-        "y": 840,
-        "wires": []
-    },
-    {
-        "id": "576db1389186759b",
-        "type": "debug",
-        "z": "e783d53461d94d52",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1370,
-        "y": 680,
+        "y": 860,
         "wires": []
     },
     {
@@ -5763,8 +5804,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 760,
-        "y": 880,
+        "x": 780,
+        "y": 1460,
         "wires": [
             [
                 "b2bf5b28c83e9460",
@@ -5776,6 +5817,7 @@
         "id": "b2bf5b28c83e9460",
         "type": "http request",
         "z": "e783d53461d94d52",
+        "d": true,
         "name": "shadows_set_device_config",
         "method": "PUT",
         "ret": "txt",
@@ -5786,8 +5828,8 @@
         "proxy": "",
         "authType": "",
         "senderr": false,
-        "x": 980,
-        "y": 880,
+        "x": 1000,
+        "y": 1460,
         "wires": [
             [
                 "f5f1917b305b4189"
@@ -5806,8 +5848,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1410,
-        "y": 880,
+        "x": 1470,
+        "y": 1460,
         "wires": []
     },
     {
@@ -5821,8 +5863,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1200,
-        "y": 880,
+        "x": 1260,
+        "y": 1460,
         "wires": [
             [
                 "f9bddef64b5b0a37"
@@ -5834,17 +5876,16 @@
         "type": "function",
         "z": "e783d53461d94d52",
         "name": "获取配置返回",
-        "func": "if (msg.payload) {\n    let payload = JSON.parse(msg.payload);\n    if (Array.isArray(payload) && payload.length > 0) {\n        payload = payload[0];\n    } else {\n        payload = {}\n    }\n    \n    let _msg = msg._msg;\n    \n    \n    return {\n        action: \"get_res\",\n        id: _msg.id,\n        payload: payload.payload || \"\"\n    };\n}",
+        "func": "if (msg.payload) {\n    let payload = msg.payload;\n    if (typeof payload == \"string\")\n        payload = JSON.parse(msg.payload);\n    \n    if (Array.isArray(payload) && payload.length > 0) {\n        payload = payload[0];\n    } else {\n        payload = {}\n    }\n    \n    let _msg = msg._msg;\n    \n    \n    return {\n        action: \"get_res\",\n        id: msg.id || _msg && _msg.id,\n        payload: payload.payload || \"\"\n    };\n}",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 1200,
-        "y": 840,
+        "y": 860,
         "wires": [
             [
-                "576db1389186759b",
                 "1aa48ea6374ea037"
             ]
         ]
@@ -6220,24 +6261,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 930,
-        "y": 920,
-        "wires": []
-    },
-    {
-        "id": "dfd1d4c38c318813",
-        "type": "debug",
-        "z": "e783d53461d94d52",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 990,
-        "y": 720,
+        "x": 970,
+        "y": 1520,
         "wires": []
     },
     {
@@ -6372,6 +6397,98 @@
         "wires": [
             [
                 "27f5ef14479b09fa"
+            ]
+        ]
+    },
+    {
+        "id": "8905f1fd3708ab28",
+        "type": "function",
+        "z": "e783d53461d94d52",
+        "name": "请求配置数据",
+        "func": "let data = global.get(\"data\");\n\npayload = {\n    hd: {\n        entry: {\n            type: \"svc\",\n            id: \"shadows_get_device_config\"\n        },\n        sid: msg.id\n    },\n    pld: msg\n    \n}\n\nreturn {payload: payload};\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 840,
+        "wires": [
+            [
+                "4f7045dc033c2a06"
+            ]
+        ]
+    },
+    {
+        "id": "4f7045dc033c2a06",
+        "type": "link out",
+        "z": "e783d53461d94d52",
+        "name": "请求配置数据输出",
+        "mode": "link",
+        "links": [
+            "77a6699fe0159bd7"
+        ],
+        "x": 925,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "ac20d7b05bd8d11e",
+        "type": "link in",
+        "z": "e783d53461d94d52",
+        "name": "获取配置返回输入",
+        "links": [
+            "bb8da9155e0fae25"
+        ],
+        "x": 1055,
+        "y": 860,
+        "wires": [
+            [
+                "b05ef4132c44b1f9"
+            ]
+        ]
+    },
+    {
+        "id": "91cc5e6f7ce768b8",
+        "type": "inject",
+        "z": "e783d53461d94d52",
+        "name": "",
+        "props": [
+            {
+                "p": "id",
+                "v": "ESP8266x005dce30",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 430,
+        "y": 1200,
+        "wires": [
+            [
+                "8905f1fd3708ab28"
+            ]
+        ]
+    },
+    {
+        "id": "840738339878fdf6",
+        "type": "function",
+        "z": "e783d53461d94d52",
+        "name": "保存配置数据",
+        "func": "let data = global.get(\"data\");\n\npayload = {\n    hd: {\n        entry: {\n            type: \"svc\",\n            id: \"shadows_set_device_config\"\n        },\n        sid: msg.id\n    },\n    pld: msg\n    \n}\n\nreturn {payload: payload};\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 880,
+        "wires": [
+            [
+                "4f7045dc033c2a06"
             ]
         ]
     },
@@ -6652,7 +6769,7 @@
         "props": [],
         "repeat": "",
         "crontab": "",
-        "once": true,
+        "once": false,
         "onceDelay": "5",
         "topic": "",
         "x": 220,
@@ -7111,7 +7228,8 @@
         "z": "0d352f1d7c785601",
         "name": "北向设备入网订阅",
         "links": [
-            "094870fa884c4cc9"
+            "094870fa884c4cc9",
+            "c277da7464c9b62a"
         ],
         "x": 215,
         "y": 700,
@@ -7475,5 +7593,431 @@
         "wires": [
             []
         ]
+    },
+    {
+        "id": "b2168926188a5904",
+        "type": "link in",
+        "z": "0d352f1d7c785601",
+        "name": "数据连接输入",
+        "links": [
+            "f70a2bb4819417da"
+        ],
+        "x": 215,
+        "y": 1080,
+        "wires": [
+            [
+                "88a125ccc32b4a71"
+            ]
+        ]
+    },
+    {
+        "id": "88a125ccc32b4a71",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "数据连接",
+        "func": "let data = global.get(\"data\");\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    cleansession: false,\n    force: false\n}\nObject.assign(msg.broker, data.shadows.mqtt.south.broker);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 1080,
+        "wires": [
+            [
+                "cd4afa8b8133945b",
+                "3ecc698ece0dd59f",
+                "a33fdc542c669b38"
+            ]
+        ]
+    },
+    {
+        "id": "cd4afa8b8133945b",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "dataio_output",
+        "func": "let common = global.get(\"common\");\n\nmsg.broker.clientid = \"dataio_output_\" + common.guid(8)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 1080,
+        "wires": [
+            [
+                "04bebc4484d6545e"
+            ]
+        ]
+    },
+    {
+        "id": "04bebc4484d6545e",
+        "type": "mqtt out",
+        "z": "0d352f1d7c785601",
+        "name": "数据服务发布",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ccc535250cd7677b",
+        "x": 590,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "b887e394a5738c26",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "发布主题",
+        "func": "\nlet data = global.get(\"data\");\nlet id = data.ids.edg;\nlet hd = msg.payload.hd;\nlet topic = \"0/0/edg/\" + id + \n            \"/\" + (hd.to && hd.to.type || \"dio\") + \n            \"/\" + (hd.to && hd.to.id || data.ids.dio || \"ndiot-dio\") +\n            \"/\" +hd.entry.type + \"/\" + hd.entry.id\n            \nmsg.topic = msg.topic || topic\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 1200,
+        "wires": [
+            [
+                "04bebc4484d6545e",
+                "ed6cc0f42be8422c"
+            ]
+        ]
+    },
+    {
+        "id": "77a6699fe0159bd7",
+        "type": "link in",
+        "z": "0d352f1d7c785601",
+        "name": "数据发布输入",
+        "links": [
+            "4ebb953fc2da0575",
+            "4f7045dc033c2a06"
+        ],
+        "x": 215,
+        "y": 1200,
+        "wires": [
+            [
+                "b887e394a5738c26"
+            ]
+        ]
+    },
+    {
+        "id": "93954e61143fa48c",
+        "type": "mqtt in",
+        "z": "0d352f1d7c785601",
+        "name": "数据服务订阅",
+        "topic": "",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "340486ab3bf5bf39",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 580,
+        "y": 1140,
+        "wires": [
+            [
+                "f64765ee0e62dc76"
+            ]
+        ]
+    },
+    {
+        "id": "3ecc698ece0dd59f",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "dataio_input",
+        "func": "let common = global.get(\"common\");\n\nmsg.broker.clientid = \"dataio_input_\" + common.guid(8)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 1040,
+        "wires": [
+            [
+                "93954e61143fa48c"
+            ]
+        ]
+    },
+    {
+        "id": "a33fdc542c669b38",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "订阅主题",
+        "func": "\nlet data = global.get(\"data\");\n\nlet id = data.ids.edg;\nlet topics = [\n    \"+/+/+/+/edg/\" + id + \"/+/+\"\n    ]\n    \nreturn {\n        action: \"subscribe\",\n        topic: topics\n    }\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 1140,
+        "wires": [
+            [
+                "93954e61143fa48c"
+            ]
+        ]
+    },
+    {
+        "id": "9d1336cb73be0cad",
+        "type": "debug",
+        "z": "0d352f1d7c785601",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1190,
+        "y": 1300,
+        "wires": []
+    },
+    {
+        "id": "ed6cc0f42be8422c",
+        "type": "debug",
+        "z": "0d352f1d7c785601",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 1280,
+        "wires": []
+    },
+    {
+        "id": "dbb174eced0e90b2",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "获取插件",
+        "func": "let data = global.get(\"data\");\n\npayload = {\n    hd: {\n        entry: {\n            type: \"svc\",\n            id: \"shadows_get_plugins\"\n        }\n    },\n    pld: {\n        edg_id: data.ids.edg\n    }\n    \n}\n\nreturn {payload: payload};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 1440,
+        "wires": [
+            [
+                "b887e394a5738c26"
+            ]
+        ]
+    },
+    {
+        "id": "1c375e15a1a8b95f",
+        "type": "inject",
+        "z": "0d352f1d7c785601",
+        "name": "shadows_get_plugins",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "",
+        "x": 260,
+        "y": 1440,
+        "wires": [
+            [
+                "dbb174eced0e90b2"
+            ]
+        ]
+    },
+    {
+        "id": "f64765ee0e62dc76",
+        "type": "switch",
+        "z": "0d352f1d7c785601",
+        "name": "数据服务",
+        "property": "payload.hd.entry.id",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "shadows_get_plugins",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "shadows_get_devices",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "shadows_get_device_config",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "shadows_set_device_config",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 840,
+        "y": 1140,
+        "wires": [
+            [
+                "9f62c7a67b12296b",
+                "6d73c3dbf25efcd9"
+            ],
+            [
+                "cfbe796f07da9f3e"
+            ],
+            [
+                "336fd322e21dfe9e"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "d10a7d8322cab14b",
+        "type": "link out",
+        "z": "0d352f1d7c785601",
+        "name": "获取插件输出",
+        "mode": "link",
+        "links": [
+            "d36460ad49511b88"
+        ],
+        "x": 1145,
+        "y": 1100,
+        "wires": []
+    },
+    {
+        "id": "c277da7464c9b62a",
+        "type": "link out",
+        "z": "0d352f1d7c785601",
+        "name": "获取设备输出",
+        "mode": "link",
+        "links": [
+            "54d5ea7c0e306a6c",
+            "b5034fa324ebdc56"
+        ],
+        "x": 1145,
+        "y": 1140,
+        "wires": []
+    },
+    {
+        "id": "9f62c7a67b12296b",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "转换",
+        "func": "\nreturn {payload: msg.payload.pld};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1030,
+        "y": 1100,
+        "wires": [
+            [
+                "d10a7d8322cab14b",
+                "9d1336cb73be0cad"
+            ]
+        ]
+    },
+    {
+        "id": "cfbe796f07da9f3e",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "转换",
+        "func": "\nreturn {payload: msg.payload.pld};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1030,
+        "y": 1140,
+        "wires": [
+            [
+                "c277da7464c9b62a",
+                "9d1336cb73be0cad"
+            ]
+        ]
+    },
+    {
+        "id": "6d73c3dbf25efcd9",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "获取设备",
+        "func": "let data = global.get(\"data\");\n\npayload = {\n    hd: {\n        entry: {\n            type: \"svc\",\n            id: \"shadows_get_devices\"\n        }\n    },\n    pld: {\n        edg_id: data.ids.edg\n    }\n    \n}\n\nreturn {payload: payload};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 1440,
+        "wires": [
+            [
+                "b887e394a5738c26"
+            ]
+        ]
+    },
+    {
+        "id": "2a215b8d792b5bdd",
+        "type": "inject",
+        "z": "0d352f1d7c785601",
+        "name": "shadows_get_devices",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 260,
+        "y": 1500,
+        "wires": [
+            [
+                "6d73c3dbf25efcd9"
+            ]
+        ]
+    },
+    {
+        "id": "336fd322e21dfe9e",
+        "type": "function",
+        "z": "0d352f1d7c785601",
+        "name": "转换",
+        "func": "return {\n    id: msg.payload.hd.sid,\n    payload: msg.payload.pld\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1030,
+        "y": 1180,
+        "wires": [
+            [
+                "bb8da9155e0fae25",
+                "9d1336cb73be0cad"
+            ]
+        ]
+    },
+    {
+        "id": "bb8da9155e0fae25",
+        "type": "link out",
+        "z": "0d352f1d7c785601",
+        "name": "获取配置数据输出",
+        "mode": "link",
+        "links": [
+            "ac20d7b05bd8d11e"
+        ],
+        "x": 1145,
+        "y": 1180,
+        "wires": []
     }
 ]
