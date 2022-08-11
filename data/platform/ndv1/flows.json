@@ -2668,7 +2668,7 @@
         "type": "function",
         "z": "c2fb860326aa680d",
         "name": "设备事件请求",
-        "func": "let hd = msg.payload.hd;\nif (hd.stp == 0 && hd.entry.type == \"evt\" && hd.from.type == \"dev\" ||\n    hd.stp == 1 && hd.entry.id == \"get\" && hd.from.type == \"dev\"\n) {\n    return msg;\n}",
+        "func": "let hd = msg.payload.hd;\nif (hd.stp == 0 && hd.entry.type == \"evt\"  ||\n    hd.stp == 1 && hd.entry.id == \"get\" \n) {\n    return msg;\n}",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",

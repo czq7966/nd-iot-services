@@ -1,6 +1,7 @@
 服务 docker 镜像 生成命令：
-docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-amd64:0.1.2 .
-docker build -t nd-iot-services-amd64:0.1.2 .
+docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-amd64:0.1.3 .
+#nd-iot-edge docker build -t registry.101.com/62f36682a30e9400102f4f23/nd-iot-services-amd64:0.1.3 .
+docker build -t nd-iot-services-amd64:0.1.3 .
 
 docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-armv7:0.0.2 .
 
@@ -129,3 +130,13 @@ docker run -it -p 80:8080  -e IOT_CODE_BRANCH=dev -e IOT_ENABLE_AUTO_UPDATE=0  -
 //ArmBian 安装Docker
 curl -fsSL https://get.docker.com -o get-docker.sh
 sh get-docker.sh --mirror Aliyun
+
+
+
+
+RUN mkdir -p /services \
+    &&  cd /services \
+    &&  git clone https://github.com/czq7966/zigbee2mqtt.git zigbee2mqtt -b dev \
+    &&  cd /services/zigbee2mqtt \
+    &&  npm install --save-dev cross-env 
+    &&  cross-env NODE_OPTIONS=--max-old-space-size=8196 npm install  
