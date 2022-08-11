@@ -56,7 +56,7 @@
                                 }                                
                             },
                             "shadows": {
-                                "dio_url": "https://nd-iot-edge.debug.ndaeweb.com//dio",
+                                "dio_url": "https://nd-iot-edge.debug.ndaeweb.com/dio",
                                 "mqtt": {
                                     "south": {
                                         "broker" : {
@@ -163,7 +163,7 @@
                                 }                                
                             },
                             "shadows": {
-                                "dio_url": "https://nd-iot-edge.debug.ndaeweb.com//dio",
+                                "dio_url": "https://nd-iot-edge.debug.ndaeweb.com/dio",
                                 "mqtt": {
                                     "south": {
                                         "broker" : {
@@ -254,7 +254,7 @@
                                 }                                
                             },
                             "shadows": {
-                                "dio_url": "https://nd-iot-edge.debug.ndaeweb.com//dio",
+                                "dio_url": "https://nd-iot-edge.debug.ndaeweb.com/dio",
                                 "mqtt": {
                                     "south": {
                                         "broker" : {
@@ -342,7 +342,7 @@
                                 }                                
                             },
                             "shadows": {
-                                "dio_url": "https://nd-iot-edge.debug.ndaeweb.com//dio",
+                                "dio_url": "https://nd-iot-edge.debug.ndaeweb.com/dio",
                                 "mqtt": {
                                     "south": {
                                         "broker" : {
@@ -469,7 +469,7 @@
                                     }                                
                                 },
                                 "shadows": {
-                                    "dio_url": "https://nd-iot-edge.debug.ndaeweb.com//dio",
+                                    "dio_url": "https://nd-iot-edge.debug.ndaeweb.com/dio",
                                     "mqtt": {
                                         "south": {
                                             "broker" : {
@@ -623,7 +623,7 @@
                         }                                
                     },
                     "shadows": {
-                        "dio_url": "https://nd-iot-edge.debug.ndaeweb.com//dio",
+                        "dio_url": "https://nd-iot-edge.debug.ndaeweb.com/dio",
                         "mqtt": {
                             "south": {
                                 "broker" : {
@@ -715,7 +715,7 @@
                         }                                
                     },
                     "shadows": {
-                        "dio_url": "https://nd-iot-edge.debug.ndaeweb.com//dio",
+                        "dio_url": "https://nd-iot-edge.debug.ndaeweb.com/dio",
                         "mqtt": {
                             "south": {
                                 "broker" : {

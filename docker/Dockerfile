@@ -44,13 +44,7 @@ RUN cd /services \
     && ./configure && make && sudo make install
 
 COPY ./nginx/conf/. /usr/local/nginx/conf/.
-# COPY ./service/. /lib/systemd/system/.
 
-# RUN sudo systemctl enable nd-iot-mqtt-broker
-# RUN sudo systemctl enable nd-iot-service-dio
-# RUN sudo systemctl enable nd-iot-service-dsp
-# RUN sudo systemctl enable nd-iot-service-edg
-# RUN sudo systemctl daemon-reload
 
 RUN mkdir -p /services \
     &&  cd /services \
