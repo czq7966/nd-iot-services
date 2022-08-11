@@ -43,20 +43,20 @@
                             },
                             "mongodb": {
                                 "develop": {
-                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m1.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 },
                                 "test": {
-                                    "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 },
                                 "preproduct": {
-                                    "url": "mongodb://preproduction_mdb_iot_data:jBZsDUZSnnT0@m3.edu.pre-prod.mongod.sdp:34001/preproduction_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 },
                                 "product": {
-                                    "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 }                                
                             },
                             "shadows": {
-                                "dio_url": "https://iot-mqtt.beta.ndaeweb.com/dio",
+                                "dio_url": "https://nd-iot-edge.debug.ndaeweb.com//dio",
                                 "mqtt": {
                                     "south": {
                                         "broker" : {
@@ -73,7 +73,7 @@
                                         }                                        
                                     }                                          
                                 }
-                            }             
+                            }              
                         }
                 
                     },
@@ -150,20 +150,20 @@
                             },
                             "mongodb": {
                                 "develop": {
-                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m1.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 },
                                 "test": {
-                                    "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 },
                                 "preproduct": {
-                                    "url": "mongodb://preproduction_mdb_iot_data:jBZsDUZSnnT0@m3.edu.pre-prod.mongod.sdp:34001/preproduction_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 },
                                 "product": {
-                                    "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 }                                
                             },
                             "shadows": {
-                                "dio_url": "https://iot-mqtt.beta.ndaeweb.com/dio",
+                                "dio_url": "https://nd-iot-edge.debug.ndaeweb.com//dio",
                                 "mqtt": {
                                     "south": {
                                         "broker" : {
@@ -241,20 +241,20 @@
                             },
                             "mongodb": {
                                 "develop": {
-                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m1.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 },
                                 "test": {
-                                    "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 },
                                 "preproduct": {
-                                    "url": "mongodb://preproduction_mdb_iot_data:jBZsDUZSnnT0@m3.edu.pre-prod.mongod.sdp:34001/preproduction_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 },
                                 "product": {
-                                    "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 }                                
                             },
                             "shadows": {
-                                "dio_url": "https://iot-mqtt.beta.ndaeweb.com/dio",
+                                "dio_url": "https://nd-iot-edge.debug.ndaeweb.com//dio",
                                 "mqtt": {
                                     "south": {
                                         "broker" : {
@@ -329,53 +329,20 @@
                             },
                             "mongodb": {
                                 "develop": {
-                                    "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m1.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 },
                                 "test": {
-                                    "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 },
                                 "preproduct": {
-                                    "url": "mongodb://preproduction_mdb_iot_data:jBZsDUZSnnT0@m3.edu.pre-prod.mongod.sdp:34001/preproduction_mdb_iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 },
                                 "product": {
-                                    "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
+                                    "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                 }                                
-                            },             
-
-                            "z2m": {
-                                "defaultDatafile": {
-                                    "configuration.yaml": {
-                                        "homeassistant": false,
-                                        "permit_join": false,
-                                        "mqtt": {
-                                            "base_topic": "{mqtt_base_topic}",
-                                            "server": "{mqtt_server}",
-                                            "user": "{mqtt_user}",
-                                            "password": "{mqtt_password}"
-                                        },
-                                        "serial": {
-                                            "port": "{serial_port}"
-                                        },
-                                        "device_options": {
-                                            "legacy": false
-                                        },
-                                        "advanced": {
-                                            "pan_id": "GENERATE",                                        
-                                            "channel": 11,
-                                            "network_key": "GENERATE",
-                                            "baudrate": 115200,
-                                            "homeassistant_legacy_entity_attributes": false,
-                                            "legacy_api": false,
-                                            "log_level": "debug"
-                                        },
-                                        "frontend": {
-                                            "port": "{frontend_port}"
-                                        }
-                                    }
-                                }
                             },
                             "shadows": {
-                                "dio_url": "https://iot-mqtt.beta.ndaeweb.com/dio",
+                                "dio_url": "https://nd-iot-edge.debug.ndaeweb.com//dio",
                                 "mqtt": {
                                     "south": {
                                         "broker" : {
@@ -489,28 +456,20 @@
                                 },
                                 "mongodb": {
                                     "develop": {
-                                        "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m1.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                                        "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                     },
                                     "test": {
-                                        "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
+                                        "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                     },
                                     "preproduct": {
-                                        "url": "mongodb://preproduction_mdb_iot_data:jBZsDUZSnnT0@m3.edu.pre-prod.mongod.sdp:34001/preproduction_mdb_iot_data?autoConnectRetry=true"
+                                        "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                     },
                                     "product": {
-                                        "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
+                                        "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                                     }                                
                                 },
-                                "z2m": {
-                                    "tcpPort": 18190,
-                                    "frontendPort": 18090,
-                                    "z2mDir": "/services/zigbee2mqtt",
-                                    "dataDir": "/data/zigbee2mqtt/data",
-                                    "z2mDir_win": "E:/data/zigbee2mqtt",
-                                    "dataDir_win": "E:/iotdata/zigbee2mqtt/data"
-                                },
                                 "shadows": {
-                                    "dio_url": "https://iot-mqtt.beta.ndaeweb.com/dio",
+                                    "dio_url": "https://nd-iot-edge.debug.ndaeweb.com//dio",
                                     "mqtt": {
                                         "south": {
                                             "broker" : {
@@ -527,7 +486,15 @@
                                             }                                        
                                         }                                          
                                     }
-                                }    
+                                },  
+                                "z2m": {
+                                    "tcpPort": 18190,
+                                    "frontendPort": 18090,
+                                    "z2mDir": "/services/zigbee2mqtt",
+                                    "dataDir": "/data/zigbee2mqtt/data",
+                                    "z2mDir_win": "E:/data/zigbee2mqtt",
+                                    "dataDir_win": "E:/iotdata/zigbee2mqtt/data"
+                                }  
                             }
                         }                        
                     }
@@ -643,17 +610,36 @@
                     },
                     "mongodb": {
                         "develop": {
-                            "url": "mongodb://dev_mdb_iot_data:cae1r8cq0vae@m1.all.dev2.mongod3.sdp:34004/dev_mdb_iot_data?autoConnectRetry=true"
+                            "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                         },
                         "test": {
-                            "url": "mongodb://qa_mdb_iot_data:59LVqxvPfmgV@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_data?autoConnectRetry=true"
+                            "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                         },
                         "preproduct": {
-                            "url": "mongodb://preproduction_mdb_iot_data:jBZsDUZSnnT0@m3.edu.pre-prod.mongod.sdp:34001/preproduction_mdb_iot_data?autoConnectRetry=true"
+                            "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                         },
                         "product": {
-                            "url": "mongodb://iot_data:0hh85sjG9ftt@m5.edu.prod.mongod.sdp:34002/iot_data?autoConnectRetry=true"
+                            "url": "mongodb://qa_mdb_iot_edge:XOCDU0AWqeeT@m2.all.debug2.mongod3.sdp:34005/qa_mdb_iot_edge?autoConnectRetry=true"
                         }                                
+                    },
+                    "shadows": {
+                        "dio_url": "https://nd-iot-edge.debug.ndaeweb.com//dio",
+                        "mqtt": {
+                            "south": {
+                                "broker" : {
+                                    "url": "mqtt://push-access.sdp.101.com:1780",
+                                    "username": "south",
+                                    "password": ""
+                                }                                        
+                            },
+                            "north": {
+                                "broker" : {
+                                    "url": "mqtt://push-access.sdp.101.com:1780",
+                                    "username": "north",
+                                    "password": ""
+                                }                                        
+                            }                                          
+                        }
                     },
                     "z2m": {
                         "defaultDatafile": {
@@ -685,25 +671,6 @@
                                     "port": "{frontend_port}"
                                 }
                             }
-                        }
-                    },
-                    "shadows": {
-                        "dio_url": "https://iot-mqtt.beta.ndaeweb.com/dio",
-                        "mqtt": {
-                            "south": {
-                                "broker" : {
-                                    "url": "mqtt://push-access.sdp.101.com:1780",
-                                    "username": "south",
-                                    "password": ""
-                                }                                        
-                            },
-                            "north": {
-                                "broker" : {
-                                    "url": "mqtt://push-access.sdp.101.com:1780",
-                                    "username": "north",
-                                    "password": ""
-                                }                                        
-                            }                                          
                         }
                     }     
                 }                            
