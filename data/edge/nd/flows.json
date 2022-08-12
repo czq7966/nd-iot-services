@@ -2027,7 +2027,8 @@
         "y": 860,
         "wires": [
             [
-                "b05ef4132c44b1f9"
+                "b05ef4132c44b1f9",
+                "dd36fe46c42acedb"
             ]
         ]
     },
@@ -2074,6 +2075,47 @@
                 "4f7045dc033c2a06"
             ]
         ]
+    },
+    {
+        "id": "b5d9eff78b86897c",
+        "type": "inject",
+        "z": "e783d53461d94d52",
+        "name": "",
+        "props": [
+            {
+                "p": "id",
+                "v": "ESP8266x00c17ca1",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 810,
+        "y": 740,
+        "wires": [
+            [
+                "8905f1fd3708ab28"
+            ]
+        ]
+    },
+    {
+        "id": "dd36fe46c42acedb",
+        "type": "debug",
+        "z": "e783d53461d94d52",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1390,
+        "y": 720,
+        "wires": []
     },
     {
         "id": "a5fab40b8a440bb5",
