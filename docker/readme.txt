@@ -1,8 +1,9 @@
 服务 docker 镜像 生成命令：
 #docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-amd64:0.1.3 .
 docker build -t registry.101.com/62f36682a30e9400102f4f23/nd-iot-services-amd64:18 .
-docker build -t nd-iot-services-amd64:17 .
-scp nd-iot-services-amd64.17 root@172.24.135.38:/data/.   hyperledger123
+docker build -t nd-iot-services-amd64:18 .
+docker save -o nd-iot-services-amd64.18 registry.101.com/62f36682a30e9400102f4f23/nd-iot-services-amd64:18
+scp nd-iot-services-amd64.18 root@172.24.135.38:/data/.   hyperledger123
 
 docker build -t registry.101.com/60b603a0d9419c00107e378d/nd-iot-services-armv7:0.0.2 .
 
