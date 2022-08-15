@@ -52,6 +52,7 @@ RUN mkdir -p /services \
     &&  cd /services \
     &&  cd /services \
     &&  cd /services \    
+    &&  cd /services \    
     &&  git clone https://github.com/czq7966/nd-iot-services.git nd-iot-services -b dev \
     &&  cd /services/nd-iot-services \
     &&  npm run nd:install \

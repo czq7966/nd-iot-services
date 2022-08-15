@@ -8,7 +8,7 @@
         "mqtt": "^4.3.7",
         "node-red-contrib-os": "~0.2.1",
         "node-red-contrib-zip": "^1.1.0",
-        "node-red-nd-device-shadow": "^0.0.6",
+        "node-red-nd-device-shadow": "^0.0.7",
         "node-red-nd-mongodb": "^0.0.5",
         "node-red-nd-mtcp-server": "0.0.6",
         "node-red-nd-set-env": "^0.0.1",
