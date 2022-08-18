@@ -1,22 +1,17 @@
-FROM node:16.13.0
-COPY sources.list /etc/apt/sources.list
-RUN apt-get update \
-    && apt-get install systemctl \
-    && apt-get install sudo \
-    && apt-get install vim -y \
-    && apt-get install nano
+FROM koenkk/zigbee2mqtt:1.22.0
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+RUN apk add --no-cache --virtual .buildtools sudo tzdata eudev tini zlib-dev pcre-dev make gcc g++ python3 linux-headers git 
 
 RUN rm -f /etc/localtime \
     && ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && mkdir -p /home/iot \
-    && groupadd -r iot \
-    && useradd -r -g iot -d /home/iot -u 8080 iot \
-    && usermod -a -G sudo iot \
-    && usermod -a -G adm iot \
-    && usermod -a -G staff iot \
+    && addgroup iot \
+    && adduser -D -G iot -h /home/iot -u 8080 iot  \
     && chown -R iot:iot /home/iot \
     && mkdir -p /services \
     && mkdir -p /data \
+    && mv /app /services/zigbee2mqtt \
     && chown -R iot:iot /services \
     && chown -R iot:iot /data \
     && echo "iot    ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers \
@@ -30,28 +25,13 @@ RUN cd /services \
     && tar -xvf nginx-1.22.0.tar.gz \
     && cd /services/nginx-1.22.0 \
     && ./configure && make && sudo make install
-
 COPY ./nginx/conf/. /usr/local/nginx/conf/.    
 
-# RUN mkdir -p /services \
-#     &&  cd /services \
-#     &&  git clone https://github.com/czq7966/nd-iot-mqtt-broker.git nd-iot-mqtt-broker -b dev \
-#     &&  cd /services/nd-iot-mqtt-broker \
-#     &&  npm install   
-
-# RUN mkdir -p /services \
-#     &&  cd /services \
-#     &&  git clone https://github.com/czq7966/zigbee2mqtt.git zigbee2mqtt -b dev \
-#     &&  cd /services/zigbee2mqtt \
-#     &&  npm install  
-
-COPY ./mqtt-broker/amd64/nd-iot-mqtt-broker.tar /services/. 
-RUN cd /services \
-    && tar -xvf nd-iot-mqtt-broker.tar
-
-COPY ./zigbee2mqtt/1.22.0/amd64/zigbee2mqtt.tar /services/. 
-RUN cd /services \
-    && tar -xvf zigbee2mqtt.tar
+RUN mkdir -p /services \
+    &&  cd /services \
+    &&  git clone https://github.com/czq7966/nd-iot-mqtt-broker.git nd-iot-mqtt-broker -b dev \
+    &&  cd /services/nd-iot-mqtt-broker \
+    &&  npm install   
 
 
 RUN mkdir -p /services \
@@ -66,4 +46,5 @@ WORKDIR /services/nd-iot-services
 
 EXPOSE 1880-1884 8080-8090 18090-18199 11880-11889
 USER iot
+ENTRYPOINT []
 CMD ["npm","start"]
