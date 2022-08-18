@@ -25,34 +25,37 @@ RUN rm -f /etc/localtime \
 
 USER iot     
 
-RUN mkdir -p /services \
-    &&  cd /services \
-    &&  git clone https://github.com/czq7966/nd-iot-mqtt-broker.git nd-iot-mqtt-broker -b dev \
-    &&  cd /services/nd-iot-mqtt-broker \
-    &&  npm install   
-
-RUN mkdir -p /services \
-    &&  cd /services \
-    &&  git clone https://github.com/czq7966/zigbee2mqtt.git zigbee2mqtt -b dev \
-    &&  cd /services/zigbee2mqtt \
-    &&  npm install  
-
 RUN cd /services \
     && wget http://nginx.org/download/nginx-1.22.0.tar.gz   \
     && tar -xvf nginx-1.22.0.tar.gz \
     && cd /services/nginx-1.22.0 \
     && ./configure && make && sudo make install
 
-COPY ./nginx/conf/. /usr/local/nginx/conf/.
+COPY ./nginx/conf/. /usr/local/nginx/conf/.    
+
+# RUN mkdir -p /services \
+#     &&  cd /services \
+#     &&  git clone https://github.com/czq7966/nd-iot-mqtt-broker.git nd-iot-mqtt-broker -b dev \
+#     &&  cd /services/nd-iot-mqtt-broker \
+#     &&  npm install   
+
+# RUN mkdir -p /services \
+#     &&  cd /services \
+#     &&  git clone https://github.com/czq7966/zigbee2mqtt.git zigbee2mqtt -b dev \
+#     &&  cd /services/zigbee2mqtt \
+#     &&  npm install  
+
+COPY ./mqtt-broker/amd64/nd-iot-mqtt-broker.tar /services/. 
+RUN cd /services \
+    && tar -xvf nd-iot-mqtt-broker.tar
+
+COPY ./zigbee2mqtt/1.22.0/amd64/zigbee2mqtt.tar /services/. 
+RUN cd /services \
+    && tar -xvf zigbee2mqtt.tar
 
 
 RUN mkdir -p /services \
     &&  cd /services \
-    &&  cd /services \
-    &&  cd /services \
-    &&  cd /services \
-    &&  cd /services \    
-    &&  cd /services \    
     &&  git clone https://github.com/czq7966/nd-iot-services.git nd-iot-services -b dev \
     &&  cd /services/nd-iot-services \
     &&  npm run nd:install \
