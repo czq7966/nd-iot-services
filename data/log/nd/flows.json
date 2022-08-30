@@ -1144,7 +1144,7 @@
         "method": "GET",
         "ret": "obj",
         "paytoqs": "query",
-        "url": "https://iot-mqtt.beta.ndaeweb.com/dio/shadows_get_devices",
+        "url": "http://nd-iot-edge.debug.ndaeweb.com/dio/shadows_get_devices",
         "tls": "",
         "persist": false,
         "proxy": "",
@@ -1167,7 +1167,7 @@
         "props": [
             {
                 "p": "payload.edg_id",
-                "v": "ndiot-edg-bfy",
+                "v": "ndiot-plf-bfy",
                 "vt": "str"
             }
         ],
@@ -1272,7 +1272,7 @@
         "name": "南向输入订阅",
         "topic": "",
         "qos": "2",
-        "datatype": "json",
+        "datatype": "auto",
         "broker": "acbe893ce0e86722",
         "nl": false,
         "rap": true,
@@ -1282,7 +1282,8 @@
         "y": 340,
         "wires": [
             [
-                "821bd3a334fab03b"
+                "615669b1330a651f",
+                "39e5ad23d4337e8e"
             ]
         ]
     },
@@ -1310,8 +1311,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 690,
-        "y": 340,
+        "x": 850,
+        "y": 280,
         "wires": [
             [
                 "489eca10a9043253"
@@ -1807,5 +1808,37 @@
         "wires": [
             []
         ]
+    },
+    {
+        "id": "615669b1330a651f",
+        "type": "json",
+        "z": "a94bd1cc5a6fde26",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 690,
+        "y": 320,
+        "wires": [
+            [
+                "821bd3a334fab03b"
+            ]
+        ]
+    },
+    {
+        "id": "39e5ad23d4337e8e",
+        "type": "debug",
+        "z": "a94bd1cc5a6fde26",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 240,
+        "wires": []
     }
 ]

@@ -303,7 +303,7 @@
         "payload": "data",
         "payloadType": "global",
         "x": 220,
-        "y": 840,
+        "y": 900,
         "wires": [
             [
                 "61299e55f08ac3e1"
@@ -323,7 +323,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 410,
-        "y": 840,
+        "y": 900,
         "wires": []
     },
     {
@@ -339,7 +339,7 @@
             "b2168926188a5904"
         ],
         "x": 935,
-        "y": 660,
+        "y": 720,
         "wires": []
     },
     {
@@ -356,7 +356,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 470,
-        "y": 760,
+        "y": 820,
         "wires": []
     },
     {
@@ -453,7 +453,7 @@
         "y": 620,
         "wires": [
             [
-                "fc89e9165d2ffb12"
+                "ae41ab375db2ecf6"
             ]
         ]
     },
@@ -488,7 +488,7 @@
         "finalize": "",
         "libs": [],
         "x": 380,
-        "y": 660,
+        "y": 700,
         "wires": [
             [
                 "806baee163cb44cc"
@@ -755,7 +755,7 @@
         "finalize": "",
         "libs": [],
         "x": 780,
-        "y": 620,
+        "y": 680,
         "wires": [
             [
                 "c681ca1c09bbf5eb",
@@ -773,7 +773,7 @@
             "1fbea7baf2a0c450"
         ],
         "x": 935,
-        "y": 620,
+        "y": 680,
         "wires": []
     },
     {
@@ -790,7 +790,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1000,
-        "y": 520,
+        "y": 580,
         "wires": []
     },
     {
@@ -803,7 +803,7 @@
             "46c7be7c38c2cddc"
         ],
         "x": 935,
-        "y": 700,
+        "y": 760,
         "wires": []
     },
     {
@@ -824,7 +824,7 @@
         "allowrate": false,
         "outputs": 1,
         "x": 580,
-        "y": 700,
+        "y": 760,
         "wires": [
             [
                 "35ef90ce6fa2dfd3",
@@ -850,7 +850,7 @@
         "allowrate": false,
         "outputs": 1,
         "x": 780,
-        "y": 740,
+        "y": 800,
         "wires": [
             [
                 "9505a529442793c0"
@@ -867,7 +867,7 @@
             "cac9b036a1b34134"
         ],
         "x": 935,
-        "y": 740,
+        "y": 800,
         "wires": []
     },
     {
@@ -953,6 +953,25 @@
         "wires": [
             [
                 "1924f7fd90ef314c"
+            ]
+        ]
+    },
+    {
+        "id": "ae41ab375db2ecf6",
+        "type": "function",
+        "z": "7c7a09edf982e2f4",
+        "name": "事件触发器",
+        "func": "let EventEmitter = {\n  _events: {} ,\n\n  on: function(event, cb) {\n    const query = this._events[event] || [] \n    query.push(cb)  \n    this._events[event] = query \n    return this\n  },\n\n  off: function(event, cb) {\n    const query = this._events[event] \n    this._events[event] = query && query.filter(fn => fn !== cb) \n    return this\n  },\n\n\n  emit: function(...args) {\n    const query = this._events[args[0]],  params = Array.prototype.slice.call(args, 1) \n    query.forEach(fn => {\n      fn(...params)\n    })\n    return this\n  },\n\n\n  once: function(event, cb) {\n    const wrapperFun = (...args) => {\n      cb(...args) \n      this.off(event, wrapperFun) \n    }\n    this.on(event, wrapperFun) \n    return this\n  }\n}\n\nlet common = global.get(\"common\");\ncommon.eventEmitter = EventEmitter;\nreturn {payload: common};\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 660,
+        "wires": [
+            [
+                "fc89e9165d2ffb12"
             ]
         ]
     },
@@ -1602,7 +1621,8 @@
         "links": [
             "396f6c335713be25",
             "d40518fc1ce83c76",
-            "b48d540577e24698"
+            "b48d540577e24698",
+            "a3e69ee53f0edc11"
         ],
         "x": 105,
         "y": 460,
@@ -1690,7 +1710,8 @@
         "y": 340,
         "wires": [
             [
-                "46f6c14ebaa1abda"
+                "46f6c14ebaa1abda",
+                "3e6fb8f12a7e5395"
             ]
         ]
     },
@@ -1767,7 +1788,7 @@
         "type": "debug",
         "z": "25fe735d371c65bb",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1827,6 +1848,22 @@
                 "e8afb74a0a312c24"
             ]
         ]
+    },
+    {
+        "id": "3e6fb8f12a7e5395",
+        "type": "debug",
+        "z": "25fe735d371c65bb",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 350,
+        "y": 400,
+        "wires": []
     },
     {
         "id": "964acd93ebf1e118",
@@ -2388,7 +2425,8 @@
         "y": 480,
         "wires": [
             [
-                "f01ae5911ec33e8e"
+                "f01ae5911ec33e8e",
+                "5c51603785e22b20"
             ]
         ]
     },
@@ -2516,11 +2554,14 @@
                 "t": "eq",
                 "v": "shadows_get_device_config",
                 "vt": "str"
+            },
+            {
+                "t": "else"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 3,
+        "outputs": 4,
         "x": 270,
         "y": 1000,
         "wires": [
@@ -2532,6 +2573,10 @@
             ],
             [
                 "84bc3ebc8365ea38"
+            ],
+            [
+                "d2c7f9872cce023a",
+                "d930fd01a2ee311e"
             ]
         ]
     },
@@ -2631,6 +2676,56 @@
                 "f64765ee0e62dc76"
             ]
         ]
+    },
+    {
+        "id": "5c51603785e22b20",
+        "type": "debug",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "d2c7f9872cce023a",
+        "type": "function",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "事件回调",
+        "func": "let common = global.get(\"common\");\nlet sid = msg._msg.sid;\ncommon.eventEmitter.emit(sid, msg);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 1060,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d930fd01a2ee311e",
+        "type": "debug",
+        "z": "b7b9b4f87ca81b1c",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "_msg",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 290,
+        "y": 1120,
+        "wires": []
     },
     {
         "id": "7ac83b1b92988b8b",
@@ -2795,15 +2890,15 @@
         "wires": [
             [
                 "3d4e67c7e0a7f6be",
-                "112c832c3d3cb857"
+                "d7dcb0b4081c919c"
             ],
             [
                 "3d4e67c7e0a7f6be",
-                "112c832c3d3cb857"
+                "d7dcb0b4081c919c"
             ],
             [
                 "3d4e67c7e0a7f6be",
-                "112c832c3d3cb857"
+                "d7dcb0b4081c919c"
             ]
         ]
     },
@@ -3026,18 +3121,23 @@
         "id": "112c832c3d3cb857",
         "type": "function",
         "z": "e3c37262fcb472bd",
-        "name": "通知边缘",
-        "func": "let data = global.get(\"data\");\nlet doms = data.domains;\nlet pld = msg.payload.pld;\n\nlet dom_id = pld.dom_id || \"default\";\nlet dom = doms[dom_id];\nlet edg_id = dom && dom.edg_id || \"ndiot-edg-default\";\n\nmsg.topic = \"0/0/0/0/edg/\" + edg_id + \"/0/0\"\nreturn msg;",
-        "outputs": 1,
+        "name": "获取设备通知边缘",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\nlet pld = msg.payload.pld;\nlet sid = common.guid(10);\n\ncommon.eventEmitter.once(sid, _msg => {\n    let recs = _msg.payload;\n    if (recs && recs.length > 0) {\n        let dev = recs[0];\n\n        Object.keys(dev).forEach(key => {\n            pld[key] = dev[key] || pld[key];\n        })\n        delete pld._id;\n\n        let doms = data.domains;\n        let dom_id = pld.dom_id || \"default\";\n        let dom = doms[dom_id];\n        let edg_id = dom && dom.edg_id || \"ndiot-edg-default\";\n        \n        msg.topic = \"0/0/0/0/edg/\" + edg_id + \"/0/0\"\n        node.send([null, msg])\n    }\n\n})\n\n\nlet _msg = {}\n_msg.sid = sid;\n_msg.collection = \"ndiot_devices\";\n_msg.operation = \"find\";\n_msg.payload = {\n    \"id\": pld.id\n}\n\nreturn [_msg, null];\n\n",
+        "outputs": 2,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 940,
+        "x": 970,
         "y": 460,
         "wires": [
             [
-                "deaea4c177315b5e"
+                "a3e69ee53f0edc11",
+                "85576523df118e2f"
+            ],
+            [
+                "deaea4c177315b5e",
+                "0986da6ec9f87061"
             ]
         ]
     },
@@ -3086,7 +3186,7 @@
             "b9bbfeb42454da1f"
         ],
         "x": 1155,
-        "y": 460,
+        "y": 480,
         "wires": []
     },
     {
@@ -3307,6 +3407,76 @@
         ]
     },
     {
+        "id": "d7dcb0b4081c919c",
+        "type": "delay",
+        "z": "e3c37262fcb472bd",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 950,
+        "y": 420,
+        "wires": [
+            [
+                "112c832c3d3cb857"
+            ]
+        ]
+    },
+    {
+        "id": "a3e69ee53f0edc11",
+        "type": "link out",
+        "z": "e3c37262fcb472bd",
+        "name": "获取设备通知边缘输出",
+        "mode": "link",
+        "links": [
+            "800621f0c9f46a27"
+        ],
+        "x": 1155,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "85576523df118e2f",
+        "type": "debug",
+        "z": "e3c37262fcb472bd",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1270,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "0986da6ec9f87061",
+        "type": "debug",
+        "z": "e3c37262fcb472bd",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1030,
+        "y": 560,
+        "wires": []
+    },
+    {
         "id": "478997ca6b48d67e",
         "type": "inject",
         "z": "8ef2d550b8e4f725",
@@ -3488,6 +3658,43 @@
                 "f9bd9e62bdf28047",
                 "4ebb953fc2da0575"
             ]
+        ]
+    },
+    {
+        "id": "9fec21ad22324992",
+        "type": "inject",
+        "z": "8ef2d550b8e4f725",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 330,
+        "y": 620,
+        "wires": [
+            [
+                "d4fc805e85e8896e"
+            ]
+        ]
+    },
+    {
+        "id": "d4fc805e85e8896e",
+        "type": "function",
+        "z": "8ef2d550b8e4f725",
+        "name": "获取设备通知边缘",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n\nlet sid = common.guid(10);\n\nnode.warn(\"333333333333333333: \" + sid)\ncommon.eventEmitter.once(sid, function(abc) {\n    node.warn(abc)\n    // node.send([null, _msg])\n    // let recs = _msg.payload;\n    // if (recs.length > 0) {\n    //     let dev = recs[0];\n    //     let doms = data.domains;\n    //     let dom_id = dev.dom_id || \"default\";\n    //     let dom = doms[dom_id];\n    //     let edg_id = dom && dom.edg_id || \"ndiot-edg-default\";\n        \n    //     msg.topic = \"0/0/0/0/edg/\" + edg_id + \"/0/0\"\n    //     node.send([null, msg])\n    // }\n\n})\n\n\ncommon.eventEmitter.emit(sid, {aa:123})\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 620,
+        "wires": [
+            [],
+            []
         ]
     }
 ]

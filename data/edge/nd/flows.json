@@ -3447,7 +3447,7 @@
         "z": "0d352f1d7c785601",
         "name": "shadows_get_plugins",
         "props": [],
-        "repeat": "5400",
+        "repeat": "",
         "crontab": "",
         "once": true,
         "onceDelay": "300",

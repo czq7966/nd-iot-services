@@ -2047,7 +2047,7 @@
         "type": "function",
         "z": "8790bac5eca885ba",
         "name": "北向连接",
-        "func": "let data = global.get(\"data\")\n\nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    force: false\n}\nObject.assign(msg.broker, data.shadows.mqtt.north.broker);\n\nreturn msg;",
+        "func": "let data = global.get(\"data\");\nlet common = global.get(\"common\");\n \nmsg = {};\nmsg.action = \"connect\";\nmsg.broker = {\n    autoConnect: true,\n    cleansession: false,\n    force: false,\n}\nmsg.broker.clientid = \"north_\" + common.guid(8)\n\nObject.assign(msg.broker, data.shadows.mqtt.north.broker);\nreturn msg;\n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
