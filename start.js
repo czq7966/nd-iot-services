@@ -302,6 +302,36 @@ let startLOG = () => {
     console.log("log started");
 }
 
+//Mongo数据库服务L
+let startMDB = () => {    
+    if (useSpawn) {
+        let cmd = "mongod"; 
+        let args = [];
+        let cwd = path.resolve("/usr/bin");
+
+        let child = spawn(cmd, args, { stdio: 'inherit', cwd: cwd});    
+        child.on("error", (code) => {
+            console.error("mongo error: " + code);
+        })       
+        child.on("close", (code, signal) => {
+                console.error("mongo closed");
+                setTimeout(() => {
+                    startMDB();               
+                }, 1000);
+        });
+    }else {
+        let cmd = "/usr/bin/mongod";
+        exec(cmd, function(error, stdout, stderr) {
+            if (error || stderr)
+                console.error("mongo service error: %s , %s!", error, stderr);
+
+            if (isWin32()) 
+                console.error("mongo service stopped");
+        });
+    }
+    console.log("mongo started");
+}
+
 let testZ2M = (datadir) => {
     process.env.ZIGBEE2MQTT_DATA = datadir;
     let cmd = "node"; 
@@ -367,6 +397,11 @@ if (process.env.IOT_ENABLE_PLF_BFY == "1") {
 //启动LOG
 if (process.env.IOT_ENABLE_LOG == "1") {
     startLOG();
+}
+
+//启动MongoDB
+if (process.env.IOT_ENABLE_MDB == "1") {
+    startMDB();
 }
 
 // testZ2M("E:/iotdata/zigbee2mqtt/data/ESP8266x00c17ca1");
